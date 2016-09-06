@@ -13,8 +13,8 @@ final class RGBA
 
     public function __construct(
         Red $red,
-        Blue $blue,
         Green $green,
+        Blue $blue,
         Alpha $alpha = null
     ) {
         $this->red = $red;
@@ -28,8 +28,8 @@ final class RGBA
             $this->string = sprintf(
                 'rgba(%s, %s, %s, %s)',
                 $this->red->toInt(),
-                $this->blue->toInt(),
                 $this->green->toInt(),
+                $this->blue->toInt(),
                 $this->alpha->toFloat()
             );
         }
@@ -59,8 +59,8 @@ final class RGBA
     {
         return new self(
             $this->red->add($red),
-            $this->blue,
             $this->green,
+            $this->blue,
             $this->alpha
         );
     }
@@ -69,8 +69,8 @@ final class RGBA
     {
         return new self(
             $this->red->subtract($red),
-            $this->blue,
             $this->green,
+            $this->blue,
             $this->alpha
         );
     }
@@ -79,8 +79,8 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue->add($blue),
             $this->green,
+            $this->blue->add($blue),
             $this->alpha
         );
     }
@@ -89,8 +89,8 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue->subtract($blue),
             $this->green,
+            $this->blue->subtract($blue),
             $this->alpha
         );
     }
@@ -99,8 +99,8 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue,
             $this->green->add($green),
+            $this->blue,
             $this->alpha
         );
     }
@@ -109,8 +109,8 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue,
             $this->green->subtract($green),
+            $this->blue,
             $this->alpha
         );
     }
@@ -119,8 +119,8 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue,
             $this->green,
+            $this->blue,
             $this->alpha->add($alpha)
         );
     }
@@ -129,15 +129,15 @@ final class RGBA
     {
         return new self(
             $this->red,
-            $this->blue,
             $this->green,
+            $this->blue,
             $this->alpha->subtract($alpha)
         );
     }
 
     public function toHexadecimal(): string
     {
-        $hex = $this->red.$this->blue.$this->green;
+        $hex = $this->red.$this->green.$this->blue;
 
         if (!$this->alpha->atMaximum()) {
             $hex .= $this->alpha()->toHexadecimal();

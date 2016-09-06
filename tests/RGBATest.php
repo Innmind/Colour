@@ -17,8 +17,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             $red = new Red(0),
-            $blue = new Blue(122),
             $green = new Green(255),
+            $blue = new Blue(122),
             $alpha = new Alpha(0.5)
         );
 
@@ -26,15 +26,15 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame($blue, $rgba->blue());
         $this->assertSame($green, $rgba->green());
         $this->assertSame($alpha, $rgba->alpha());
-        $this->assertSame('rgba(0, 122, 255, 0.5)', (string) $rgba);
+        $this->assertSame('rgba(0, 255, 122, 0.5)', (string) $rgba);
     }
 
     public function testWithoutAlpha()
     {
         $rgba = new RGBA(
             new Red(0),
-            new Blue(122),
-            new Green(255)
+            new Green(255),
+            new Blue(122)
         );
 
         $this->assertSame(1.0, $rgba->alpha()->toFloat());
@@ -44,13 +44,13 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(0),
-            new Blue(122),
-            new Green(255)
+            new Green(255),
+            new Blue(122)
         );
 
-        $this->assertSame('#007aff', (string) $rgba);
+        $this->assertSame('#00ff7a', (string) $rgba);
         $this->assertSame(
-            'rgba(0, 122, 255, 0.5)',
+            'rgba(0, 255, 122, 0.5)',
             (string) $rgba->subtractAlpha(new Alpha(0.5))
         );
     }
@@ -59,16 +59,16 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(0),
-            new Blue(122),
-            new Green(255)
+            new Green(255),
+            new Blue(122)
         );
 
         $this->assertSame(
-            '007aff',
+            '00ff7a',
             $rgba->toHexadecimal()
         );
         $this->assertSame(
-            '007aff80',
+            '00ff7a80',
             $rgba->subtractAlpha(new Alpha(0.5))->toHexadecimal()
         );
     }
@@ -77,8 +77,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(10),
-            new Blue(122),
             new Green(255),
+            new Blue(122),
             new Alpha(0.5)
         );
 
@@ -99,8 +99,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(150),
-            new Blue(122),
             new Green(255),
+            new Blue(122),
             new Alpha(0.5)
         );
 
@@ -121,8 +121,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(10),
-            new Blue(122),
             new Green(255),
+            new Blue(122),
             new Alpha(0.5)
         );
 
@@ -143,8 +143,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(10),
-            new Blue(122),
             new Green(255),
+            new Blue(122),
             new Alpha(0.5)
         );
 
@@ -165,8 +165,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(10),
-            new Blue(122),
             new Green(205),
+            new Blue(122),
             new Alpha(0.5)
         );
 
@@ -187,8 +187,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         $rgba = new RGBA(
             new Red(10),
-            new Blue(122),
             new Green(255),
+            new Blue(122),
             new Alpha(0.5)
         );
 
