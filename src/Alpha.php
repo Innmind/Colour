@@ -27,6 +27,15 @@ final class Alpha
         );
     }
 
+    public static function fromHexadecimal(string $hex): self
+    {
+        if (mb_strlen($hex) === 1) {
+            $hex .= $hex;
+        }
+
+        return new self(round(hexdec($hex) / 255, 2));
+    }
+
     public function add(self $alpha): self
     {
         return new self(

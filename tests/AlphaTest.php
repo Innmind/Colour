@@ -80,12 +80,16 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
             $hex,
             (new Alpha($percent))->toHexadecimal()
         );
+
+        $alpha = Alpha::fromHexadecimal($hex);
+        $this->assertInstanceOf(Alpha::class, $alpha);
+        $this->assertSame($percent, $alpha->toFloat());
     }
 
     public function hexadecimals()
     {
         return [
-            ['ff', 1],
+            ['ff', 1.0],
             ['f2', 0.95],
             ['e6', 0.9],
             ['d9', 0.85],
@@ -105,7 +109,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
             ['26', 0.15],
             ['1a', 0.1],
             ['0d', 0.05],
-            ['00', 0],
+            ['00', 0.0],
         ];
     }
 }
