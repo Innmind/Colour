@@ -10,6 +10,7 @@ use Innmind\Colour\{
     Alpha,
     RGBA
 };
+use Innmind\Immutable\StringPrimitive as Str;
 
 class RGBATest extends \PHPUnit_Framework_TestCase
 {
@@ -203,5 +204,110 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(122, $rgba2->blue()->toInt());
         $this->assertSame(245, $rgba2->green()->toInt());
         $this->assertSame(0.5, $rgba2->alpha()->toFloat());
+    }
+
+    /**
+     * @dataProvider hexadecimalWithAlpha
+     */
+    public function testFromHexadecimalWithAlpha(
+        string $string,
+        int $red,
+        int $green,
+        int $blue,
+        float $alpha
+    ) {
+        $rgba = RGBA::fromHexadecimalWithAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame($red, $rgba->red()->toInt());
+        $this->assertSame($blue, $rgba->blue()->toInt());
+        $this->assertSame($green, $rgba->green()->toInt());
+        $this->assertSame($alpha, $rgba->alpha()->toFloat());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromHexadecimalWithUnfoundAlpha()
+    {
+        RGBA::fromHexadecimalWithAlpha(
+            new Str('#39F')
+        );
+    }
+
+    public function hexadecimalWithAlpha()
+    {
+        return [
+            ['#39FF', 51, 153, 255, 1.0],
+            ['39F0', 51, 153, 255, 0.0],
+            ['#3399FFFF', 51, 153, 255, 1.0],
+            ['3399FF00', 51, 153, 255, 0.0],
+        ];
+    }
+
+    /**
+     * @dataProvider hexadecimalWithoutAlpha
+     */
+    public function testFromHexadecimalWithoutAlpha(
+        string $string,
+        int $red,
+        int $green,
+        int $blue
+    ) {
+        $rgba = RGBA::fromHexadecimalWithoutAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame($red, $rgba->red()->toInt());
+        $this->assertSame($blue, $rgba->blue()->toInt());
+        $this->assertSame($green, $rgba->green()->toInt());
+        $this->assertTrue($rgba->alpha()->atMaximum());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromStringWithFoundAlpha()
+    {
+        RGBA::fromHexadecimalWithoutAlpha(
+            new Str('#39FF')
+        );
+    }
+
+    public function hexadecimalWithoutAlpha()
+    {
+        return [
+            ['#39F', 51, 153, 255],
+            ['39F', 51, 153, 255],
+            ['#3399FF', 51, 153, 255],
+            ['3399FF', 51, 153, 255],
+        ];
+    }
+
+    /**
+     * @dataProvider hexadecimals
+     */
+    public function testFromHexadecimal(
+        string $string,
+        int $red,
+        int $green,
+        int $blue,
+        float $alpha = null
+    ) {
+        $rgba = RGBA::fromHexadecimal($string);
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame($red, $rgba->red()->toInt());
+        $this->assertSame($blue, $rgba->blue()->toInt());
+        $this->assertSame($green, $rgba->green()->toInt());
+        $this->assertSame($alpha ?? 1.0, $rgba->alpha()->toFloat());
+    }
+
+    public function hexadecimals()
+    {
+        return array_merge($this->hexadecimalWithAlpha(), $this->hexadecimalWithoutAlpha());
     }
 }

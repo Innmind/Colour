@@ -3,8 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
+use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Immutable\StringPrimitive as Str;
+
 final class RGBA
 {
+    const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
+    const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
+
     private $red;
     private $blue;
     private $green;
@@ -33,6 +39,70 @@ final class RGBA
                 $this->alpha->toFloat()
             );
         }
+    }
+
+    public static function fromHexadecimal(string $colour): self
+    {
+        $colour = (new Str($colour))->trim();
+
+        try {
+            return self::fromHexadecimalWithAlpha($colour);
+        } catch (InvalidArgumentException $e) {
+            return self::fromHexadecimalWithoutAlpha($colour);
+        }
+    }
+
+    public static function fromHexadecimalWithAlpha(Str $colour): self
+    {
+        if (!$colour->match(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
+            throw new InvalidArgumentException;
+        }
+
+        if ($colour->match('/^#/')) {
+            $colour = $colour->substring(1);
+        }
+
+        if (
+            $colour->length() !== 4 &&
+            $colour->length() !== 8
+        ) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
+
+        return new self(
+            Red::fromHexadecimal((string) $matches->get('red')),
+            Green::fromHexadecimal((string) $matches->get('green')),
+            Blue::fromHexadecimal((string) $matches->get('blue')),
+            Alpha::fromHexadecimal((string) $matches->get('alpha'))
+        );
+    }
+
+    public static function fromHexadecimalWithoutAlpha(Str $colour): self
+    {
+        if (!$colour->match(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
+            throw new InvalidArgumentException;
+        }
+
+        if ($colour->match('/^#/')) {
+            $colour = $colour->substring(1);
+        }
+
+        if (
+            $colour->length() !== 3 &&
+            $colour->length() !== 6
+        ) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
+
+        return new self(
+            Red::fromHexadecimal((string) $matches->get('red')),
+            Green::fromHexadecimal((string) $matches->get('green')),
+            Blue::fromHexadecimal((string) $matches->get('blue'))
+        );
     }
 
     public function red(): Red
