@@ -11,6 +11,7 @@ use Innmind\Colour\{
     Black,
     Alpha
 };
+use Innmind\Immutable\StringPrimitive as Str;
 
 class CMYKATest extends \PHPUnit_Framework_TestCase
 {
@@ -291,5 +292,116 @@ class CMYKATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(30, $cmyk2->yellow()->toInt());
         $this->assertSame(40, $cmyk2->black()->toInt());
         $this->assertSame(0.1, $cmyk2->alpha()->toFloat());
+    }
+
+    /**
+     * @dataProvider withAlpha
+     */
+    public function testFromStringWithAlpha(
+        string $string,
+        int $cyan,
+        int $magenta,
+        int $yellow,
+        int $black,
+        float $alpha
+    ) {
+        $cmyka = CMYKA::fromStringWithAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(CMYKA::class, $cmyka);
+        $this->assertSame($cyan, $cmyka->cyan()->toInt());
+        $this->assertSame($magenta, $cmyka->magenta()->toInt());
+        $this->assertSame($yellow, $cmyka->yellow()->toInt());
+        $this->assertSame($black, $cmyka->black()->toInt());
+        $this->assertSame($alpha, $cmyka->alpha()->toFloat());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
+    {
+        CMYKA::fromStringWithAlpha(
+            new Str('device-cmyk(10%, 20%, 30%, 40%)')
+        );
+    }
+
+    public function withAlpha()
+    {
+        return [
+            ['device-cmyk(10%, 20%, 30%, 40%, 1.0)', 10, 20, 30, 40, 1.0],
+            ['device-cmyk(10%, 20%, 30%, 40%, 1)', 10, 20, 30, 40, 1.0],
+            ['device-cmyk(10%, 20%, 30%, 40%, 0)', 10, 20, 30, 40, 0.0],
+            ['device-cmyk(10%, 20%, 30%, 40%, 0.0)', 10, 20, 30, 40, 0.0],
+            ['device-cmyk(10%, 20%, 30%, 40%, 0.5)', 10, 20, 30, 40, 0.5],
+            ['device-cmyk(40%,30%,20%,10%,0.5)', 40, 30, 20, 10, 0.5],
+        ];
+    }
+
+    /**
+     * @dataProvider withoutAlpha
+     */
+    public function testFromStringWithoutAlpha(
+        string $string,
+        int $cyan,
+        int $magenta,
+        int $yellow,
+        int $black
+    ) {
+        $cmyka = CMYKA::fromStringWithoutAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(CMYKA::class, $cmyka);
+        $this->assertSame($cyan, $cmyka->cyan()->toInt());
+        $this->assertSame($magenta, $cmyka->magenta()->toInt());
+        $this->assertSame($yellow, $cmyka->yellow()->toInt());
+        $this->assertSame($black, $cmyka->black()->toInt());
+        $this->assertTrue($cmyka->alpha()->atMaximum());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromStringWithFoundAlpha()
+    {
+        CMYKA::fromStringWithoutAlpha(
+            new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
+        );
+    }
+
+    public function withoutAlpha()
+    {
+        return [
+            ['device-cmyk(10%, 20%, 30%, 40%)', 10, 20, 30, 40],
+            ['device-cmyk(40%,30%,20%,10%)', 40, 30, 20, 10],
+        ];
+    }
+
+    /**
+     * @dataProvider colours
+     */
+    public function testFromString(
+        string $string,
+        int $cyan,
+        int $magenta,
+        int $yellow,
+        int $black,
+        float $alpha = null
+    ) {
+        $cmyka = CMYKA::fromString($string);
+
+        $this->assertInstanceOf(CMYKA::class, $cmyka);
+        $this->assertSame($cyan, $cmyka->cyan()->toInt());
+        $this->assertSame($magenta, $cmyka->magenta()->toInt());
+        $this->assertSame($yellow, $cmyka->yellow()->toInt());
+        $this->assertSame($black, $cmyka->black()->toInt());
+        $this->assertSame($alpha ?? 1.0, $cmyka->alpha()->toFloat());
+    }
+
+    public function colours()
+    {
+        return array_merge($this->withAlpha(), $this->withoutAlpha());
     }
 }

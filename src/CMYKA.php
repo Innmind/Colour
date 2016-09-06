@@ -3,8 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
+use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Immutable\StringPrimitive as Str;
+
 final class CMYKA
 {
+    const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
+
     private $cyan;
     private $magenta;
     private $yellow;
@@ -43,6 +49,50 @@ final class CMYKA
                 $this->alpha->toFloat()
             );
         }
+    }
+
+    public static function fromString(string $colour): self
+    {
+        $colour = (new Str($colour))->trim();
+
+        try {
+            return self::fromStringWithAlpha($colour);
+        } catch (InvalidArgumentException $e) {
+            return self::fromStringWithoutAlpha($colour);
+        }
+    }
+
+    public static function fromStringWithAlpha(Str $colour): self
+    {
+        if (!$colour->match(self::PATTERN_WITH_ALPHA)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::PATTERN_WITH_ALPHA);
+
+        return new self(
+            new Cyan((int) (string) $matches->get('cyan')),
+            new Magenta((int) (string) $matches->get('magenta')),
+            new Yellow((int) (string) $matches->get('yellow')),
+            new Black((int) (string) $matches->get('black')),
+            new Alpha((float) (string) $matches->get('alpha'))
+        );
+    }
+
+    public static function fromStringWithoutAlpha(Str $colour): self
+    {
+        if (!$colour->match(self::PATTERN_WITHOUT_ALPHA)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::PATTERN_WITHOUT_ALPHA);
+
+        return new self(
+            new Cyan((int) (string) $matches->get('cyan')),
+            new Magenta((int) (string) $matches->get('magenta')),
+            new Yellow((int) (string) $matches->get('yellow')),
+            new Black((int) (string) $matches->get('black'))
+        );
     }
 
     public function cyan(): Cyan
