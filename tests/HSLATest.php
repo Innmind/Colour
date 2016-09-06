@@ -10,6 +10,7 @@ use Innmind\Colour\{
     Lightness,
     Alpha
 };
+use Innmind\Immutable\StringPrimitive as Str;
 
 class HSLATest extends \PHPUnit_Framework_TestCase
 {
@@ -191,5 +192,110 @@ class HSLATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(42, $hsl2->saturation()->toInt());
         $this->assertSame(24, $hsl2->lightness()->toInt());
         $this->assertSame(0.7, $hsl2->alpha()->toFloat());
+    }
+
+    /**
+     * @dataProvider withAlpha
+     */
+    public function testFromStringWithAlpha(
+        string $string,
+        int $hue,
+        int $saturation,
+        int $lightness,
+        float $alpha
+    ) {
+        $hsla = HSLA::fromStringWithAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(HSLA::class, $hsla);
+        $this->assertSame($hue, $hsla->hue()->toInt());
+        $this->assertSame($saturation, $hsla->saturation()->toInt());
+        $this->assertSame($lightness, $hsla->lightness()->toInt());
+        $this->assertSame($alpha, $hsla->alpha()->toFloat());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
+    {
+        HSLA::fromStringWithAlpha(
+            new Str('hsl(10, 20%, 30%)')
+        );
+    }
+
+    public function withAlpha()
+    {
+        return [
+            ['hsla(10, 20%, 30%, 1.0)', 10, 20, 30, 1.0],
+            ['hsla(10, 20%, 30%, 1)', 10, 20, 30, 1.0],
+            ['hsla(10, 20%, 30%, 0)', 10, 20, 30, 0.0],
+            ['hsla(10, 20%, 30%, 0.0)', 10, 20, 30, 0.0],
+            ['hsla(10, 20%, 30%, 0.5)', 10, 20, 30, 0.5],
+            ['hsla(30,20%,10%,0.5)', 30, 20, 10, 0.5],
+        ];
+    }
+
+    /**
+     * @dataProvider withoutAlpha
+     */
+    public function testFromStringWithoutAlpha(
+        string $string,
+        int $hue,
+        int $saturation,
+        int $lightness
+    ) {
+        $hsla = HSLA::fromStringWithoutAlpha(
+            new Str($string)
+        );
+
+        $this->assertInstanceOf(HSLA::class, $hsla);
+        $this->assertSame($hue, $hsla->hue()->toInt());
+        $this->assertSame($saturation, $hsla->saturation()->toInt());
+        $this->assertSame($lightness, $hsla->lightness()->toInt());
+        $this->assertTrue($hsla->alpha()->atMaximum());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenBuildingFromStringWithFoundAlpha()
+    {
+        HSLA::fromStringWithoutAlpha(
+            new Str('hsla(10, 20%, 30%, 1.0)')
+        );
+    }
+
+    public function withoutAlpha()
+    {
+        return [
+            ['hsl(10, 20%, 30%)', 10, 20, 30],
+            ['hsl(30,20%,10%)', 30, 20, 10],
+        ];
+    }
+
+    /**
+     * @dataProvider colours
+     */
+    public function testFromString(
+        string $string,
+        int $hue,
+        int $saturation,
+        int $lightness,
+        float $alpha = null
+    ) {
+        $hsla = HSLA::fromString($string);
+
+        $this->assertInstanceOf(HSLA::class, $hsla);
+        $this->assertSame($hue, $hsla->hue()->toInt());
+        $this->assertSame($saturation, $hsla->saturation()->toInt());
+        $this->assertSame($lightness, $hsla->lightness()->toInt());
+        $this->assertSame($alpha ?? 1.0, $hsla->alpha()->toFloat());
+    }
+
+    public function colours()
+    {
+        return array_merge($this->withAlpha(), $this->withoutAlpha());
     }
 }
