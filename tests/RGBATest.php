@@ -310,4 +310,69 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     {
         return array_merge($this->hexadecimalWithAlpha(), $this->hexadecimalWithoutAlpha());
     }
+
+    public function testFromRGBFunctionWithPoints()
+    {
+        $rgb = RGBA::fromRGBFunctionWithPoints(
+            new Str('rgb(10, 20, 30)')
+        );
+
+        $this->assertInstanceOf(RGBA::class, $rgb);
+        $this->assertSame(10, $rgb->red()->toInt());
+        $this->assertSame(20, $rgb->green()->toInt());
+        $this->assertSame(30, $rgb->blue()->toInt());
+        $this->assertTrue($rgb->alpha()->atMaximum());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenInvalidRGBFunctionWithPoints()
+    {
+        RGBA::fromRGBFunctionWithPoints(
+            new Str('rgb(10, 20%, 30)')
+        );
+    }
+
+    public function testFromRGBFunctionWithPercents()
+    {
+        $rgb = RGBA::fromRGBFunctionWithPercents(
+            new Str('rgb(10%, 20%, 30%)')
+        );
+
+        $this->assertInstanceOf(RGBA::class, $rgb);
+        $this->assertSame(26, $rgb->red()->toInt());
+        $this->assertSame(51, $rgb->green()->toInt());
+        $this->assertSame(77, $rgb->blue()->toInt());
+        $this->assertTrue($rgb->alpha()->atMaximum());
+    }
+
+    /**
+     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenInvalidRGBFunctionWithPercents()
+    {
+        RGBA::fromRGBFunctionWithPercents(
+            new Str('rgb(10, 20%, 30)')
+        );
+    }
+
+    public function testFromRGBFunction()
+    {
+        $rgb = RGBA::fromRGBFunction('rgb(10, 20, 30)');
+
+        $this->assertInstanceOf(RGBA::class, $rgb);
+        $this->assertSame(10, $rgb->red()->toInt());
+        $this->assertSame(20, $rgb->green()->toInt());
+        $this->assertSame(30, $rgb->blue()->toInt());
+        $this->assertTrue($rgb->alpha()->atMaximum());
+
+        $rgb = RGBA::fromRGBFunction('rgb(10%, 20%, 30%)');
+
+        $this->assertInstanceOf(RGBA::class, $rgb);
+        $this->assertSame(26, $rgb->red()->toInt());
+        $this->assertSame(51, $rgb->green()->toInt());
+        $this->assertSame(77, $rgb->blue()->toInt());
+        $this->assertTrue($rgb->alpha()->atMaximum());
+    }
 }

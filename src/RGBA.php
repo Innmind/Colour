@@ -10,6 +10,8 @@ final class RGBA
 {
     const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
     const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
+    const RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3})\)$~';
+    const PERCENTED_RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%\)$~';
 
     private $red;
     private $blue;
@@ -102,6 +104,47 @@ final class RGBA
             Red::fromHexadecimal((string) $matches->get('red')),
             Green::fromHexadecimal((string) $matches->get('green')),
             Blue::fromHexadecimal((string) $matches->get('blue'))
+        );
+    }
+
+    public static function fromRGBFunction(string $colour): self
+    {
+        $colour = (new Str($colour))->trim();
+
+        try {
+            return self::fromRGBFunctionWithPoints($colour);
+        } catch (InvalidArgumentException $e) {
+            return self::fromRGBFunctionWithPercents($colour);
+        }
+    }
+
+    public static function fromRGBFunctionWithPoints(Str $colour): self
+    {
+        if (!$colour->match(self::RGB_FUNCTION_PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::RGB_FUNCTION_PATTERN);
+
+        return new self(
+            new Red((int) (string) $matches->get('red')),
+            new Green((int) (string) $matches->get('green')),
+            new Blue((int) (string) $matches->get('blue'))
+        );
+    }
+
+    public static function fromRGBFunctionWithPercents(Str $colour): self
+    {
+        if (!$colour->match(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::PERCENTED_RGB_FUNCTION_PATTERN);
+
+        return new self(
+            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
+            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
+            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue')))
         );
     }
 
