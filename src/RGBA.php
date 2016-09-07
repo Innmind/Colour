@@ -12,6 +12,8 @@ final class RGBA
     const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
     const RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3})\)$~';
     const PERCENTED_RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%\)$~';
+    const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
 
     private $red;
     private $blue;
@@ -145,6 +147,49 @@ final class RGBA
             Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
             Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
             Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue')))
+        );
+    }
+
+    public static function fromRGBAFunction(string $colour): self
+    {
+        $colour = (new Str($colour))->trim();
+
+        try {
+            return self::fromRGBAFunctionWithPoints($colour);
+        } catch (InvalidArgumentException $e) {
+            return self::fromRGBAFunctionWithPercents($colour);
+        }
+    }
+
+    public static function fromRGBAFunctionWithPoints(Str $colour): self
+    {
+        if (!$colour->match(self::RGBA_FUNCTION_PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::RGBA_FUNCTION_PATTERN);
+
+        return new self(
+            new Red((int) (string) $matches->get('red')),
+            new Green((int) (string) $matches->get('green')),
+            new Blue((int) (string) $matches->get('blue')),
+            new Alpha((float) (string) $matches->get('alpha'))
+        );
+    }
+
+    public static function fromRGBAFunctionWithPercents(Str $colour): self
+    {
+        if (!$colour->match(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
+            throw new InvalidArgumentException;
+        }
+
+        $matches = $colour->getMatches(self::PERCENTED_RGBA_FUNCTION_PATTERN);
+
+        return new self(
+            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
+            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
+            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue'))),
+            new Alpha((float) (string) $matches->get('alpha'))
         );
     }
 
