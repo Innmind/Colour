@@ -321,6 +321,50 @@ final class RGBA
         return $hex;
     }
 
+    public function toHSLA(): HSLA
+    {
+        $red = $this->red->toInt() / 255;
+        $green = $this->green->toInt() / 255;
+        $blue = $this->blue->toInt() / 255;
+
+        $max = max($red, $green, $blue);
+        $min = min($red, $green, $blue);
+        $lightness = ($max + $min) / 2;
+
+        if ($max === $min) {
+            return new HSLA(
+                new Hue(0),
+                new Saturation(0),
+                new Lightness((int) round($lightness * 100)),
+                $this->alpha
+            );
+        }
+
+        $delta = $max - $min;
+        $saturation = $lightness > 0.5 ? $delta / (2 - $max - $min) : $delta / ($max + $min);
+
+        switch ($max) {
+            case $red:
+                $hue = (($green - $blue) / $delta) + ($green < $blue ? 6 : 0);
+                break;
+            case $green:
+                $hue = (($blue - $red) / $delta) + 2;
+                break;
+            case $blue:
+                $hue = (($red - $green) / $delta) + 4;
+                break;
+        }
+
+        $hue *= 60;
+
+        return new HSLA(
+            new Hue((int) round($hue)),
+            new Saturation((int) round($saturation * 100)),
+            new Lightness((int) round($lightness * 100)),
+            $this->alpha
+        );
+    }
+
     public function __toString(): string
     {
         return $this->string;
