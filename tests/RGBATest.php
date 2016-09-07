@@ -440,4 +440,45 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(77, $rgb->blue()->toInt());
         $this->assertTrue($rgb->alpha()->atMaximum());
     }
+
+    /**
+     * @dataProvider allFormats
+     */
+    public function testFromString(
+        string $colour,
+        int $red,
+        int $green,
+        int $blue,
+        float $alpha
+    ) {
+        $rgba = RGBA::fromString($colour);
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame($red, $rgba->red()->toInt());
+        $this->assertSame($green, $rgba->green()->toInt());
+        $this->assertSame($blue, $rgba->blue()->toInt());
+        $this->assertSame($alpha, round($rgba->alpha()->toFloat(), 1));
+    }
+
+    public function allFormats()
+    {
+        return [
+            ['#39F', 51, 153, 255, 1.0],
+            ['#3399FF', 51, 153, 255, 1.0],
+            ['#39F8', 51, 153, 255, 0.5],
+            ['#3399FF80', 51, 153, 255, 0.5],
+            ['39F', 51, 153, 255, 1.0],
+            ['3399FF', 51, 153, 255, 1.0],
+            ['39F8', 51, 153, 255, 0.5],
+            ['3399FF80', 51, 153, 255, 0.5],
+            ['rgb(51, 153, 255)', 51, 153, 255, 1.0],
+            ['rgb(51,153,255)', 51, 153, 255, 1.0],
+            ['rgb(20%, 60%, 100%)', 51, 153, 255, 1.0],
+            ['rgb(20%,60%,100%)', 51, 153, 255, 1.0],
+            ['rgba(51, 153, 255, 0.5)', 51, 153, 255, 0.5],
+            ['rgba(51,153,255,0.5)', 51, 153, 255, 0.5],
+            ['rgba(20%, 60%, 100%, 0.5)', 51, 153, 255, 0.5],
+            ['rgba(20%,60%,100%,0.5)', 51, 153, 255, 0.5],
+        ];
+    }
 }

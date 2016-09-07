@@ -45,6 +45,23 @@ final class RGBA
         }
     }
 
+    public static function fromString(string $colour): self
+    {
+        try {
+            return self::fromHexadecimal($colour);
+        } catch (InvalidArgumentException $e) {
+            //attempt next format
+        }
+
+        try {
+            return self::fromRGBFunction($colour);
+        } catch (InvalidArgumentException $e) {
+            //attempt next format
+        }
+
+        return self::fromRGBAFunction($colour);
+    }
+
     public static function fromHexadecimal(string $colour): self
     {
         $colour = (new Str($colour))->trim();
