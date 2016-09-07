@@ -365,6 +365,40 @@ final class RGBA
         );
     }
 
+    public function toCMYKA(): CMYKA
+    {
+        $red = $this->red->toInt() / 255;
+        $green = $this->green->toInt() / 255;
+        $blue = $this->blue->toInt() / 255;
+
+        if (
+            $this->red->atMinimum() &&
+            $this->green->atMinimum() &&
+            $this->blue->atMinimum()
+        ) {
+            return new CMYKA(
+                new Cyan(0),
+                new Magenta(0),
+                new Yellow(0),
+                new Black(100),
+                $this->alpha
+            );
+        }
+
+        $black = min(1 - $red, 1 - $green, 1 - $blue);
+        $cyan = (1 - $red - $black) / (1 - $black);
+        $magenta = (1 - $green - $black) / (1 - $black);
+        $yellow = (1 - $blue - $black) / (1 - $black);
+
+        return new CMYKA(
+            new Cyan((int) round($cyan * 100)),
+            new Magenta((int) round($magenta * 100)),
+            new Yellow((int) round($yellow * 100)),
+            new Black((int) round($black * 100)),
+            $this->alpha
+        );
+    }
+
     public function __toString(): string
     {
         return $this->string;

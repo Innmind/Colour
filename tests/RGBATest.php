@@ -9,7 +9,8 @@ use Innmind\Colour\{
     Green,
     Alpha,
     RGBA,
-    HSLA
+    HSLA,
+    CMYKA
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -508,5 +509,26 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $black->saturation()->toInt());
         $this->assertSame(0, $black->lightness()->toInt());
         $this->assertSame(1.0, $black->alpha()->toFloat());
+    }
+
+    public function testToCMYKA()
+    {
+        $cmyka = RGBA::fromString('3399FF80')->toCMYKA();
+
+        $this->assertInstanceOf(CMYKA::class, $cmyka);
+        $this->assertSame(80, $cmyka->cyan()->toInt());
+        $this->assertSame(40, $cmyka->magenta()->toInt());
+        $this->assertSame(0, $cmyka->yellow()->toInt());
+        $this->assertSame(0, $cmyka->black()->toInt());
+        $this->assertSame(0.5, $cmyka->alpha()->toFloat());
+
+        $black = RGBA::fromString('00000080')->toCMYKA();
+
+        $this->assertInstanceOf(CMYKA::class, $black);
+        $this->assertSame(0, $black->cyan()->toInt());
+        $this->assertSame(0, $black->magenta()->toInt());
+        $this->assertSame(0, $black->yellow()->toInt());
+        $this->assertSame(100, $black->black()->toInt());
+        $this->assertSame(0.5, $black->alpha()->toFloat());
     }
 }
