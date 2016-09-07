@@ -9,7 +9,8 @@ use Innmind\Colour\{
     Magenta,
     Yellow,
     Black,
-    Alpha
+    Alpha,
+    RGBA
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -403,5 +404,16 @@ class CMYKATest extends \PHPUnit_Framework_TestCase
     public function colours()
     {
         return array_merge($this->withAlpha(), $this->withoutAlpha());
+    }
+
+    public function testToRGBA()
+    {
+        $rgba = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->toRGBA();
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame(51, $rgba->red()->toInt());
+        $this->assertSame(153, $rgba->green()->toInt());
+        $this->assertSame(255, $rgba->blue()->toInt());
+        $this->assertSame(0.5, $rgba->alpha()->toFloat());
     }
 }

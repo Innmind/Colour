@@ -230,6 +230,25 @@ final class CMYKA
         );
     }
 
+    public function toRGBA(): RGBA
+    {
+        $cyan = $this->cyan->toInt() / 100;
+        $magenta = $this->magenta->toInt() / 100;
+        $yellow = $this->yellow->toInt() / 100;
+        $black = $this->black->toInt() / 100;
+
+        $red = 1 - min(1, $cyan * (1 - $black) + $black);
+        $green = 1 - min(1, $magenta * (1 - $black) + $black);
+        $blue = 1 - min(1, $yellow * (1 - $black) + $black);
+
+        return new RGBA(
+            new Red((int) round($red * 255)),
+            new Green((int) round($green * 255)),
+            new Blue((int) round($blue * 255)),
+            $this->alpha
+        );
+    }
+
     public function __toString(): string
     {
         return $this->string;
