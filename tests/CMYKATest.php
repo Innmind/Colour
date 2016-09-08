@@ -417,6 +417,13 @@ class CMYKATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0.5, $rgba->alpha()->toFloat());
     }
 
+    public function testToHSLA()
+    {
+        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+
+        $this->assertTrue($cmyka->toHSLA()->equals($cmyka->toRGBA()->toHSLA()));
+    }
+
     public function testEquals()
     {
         $this->assertTrue(
