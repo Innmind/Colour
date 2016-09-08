@@ -486,34 +486,37 @@ class RGBATest extends \PHPUnit_Framework_TestCase
 
     public function testToHSLA()
     {
-        $hsla = RGBA::fromString('3399FF80')->toHSLA();
+        $hsla = ($rgba = RGBA::fromString('3399FF80'))->toHSLA();
 
         $this->assertInstanceOf(HSLA::class, $hsla);
         $this->assertSame(210, $hsla->hue()->toInt());
         $this->assertSame(100, $hsla->saturation()->toInt());
         $this->assertSame(60, $hsla->lightness()->toInt());
         $this->assertSame(0.5, $hsla->alpha()->toFloat());
+        $this->assertSame($hsla, $rgba->toHSLA());
 
-        $white = RGBA::fromString('fff')->toHSLA();
+        $white = ($rgba = RGBA::fromString('fff'))->toHSLA();
 
         $this->assertInstanceOf(HSLA::class, $white);
         $this->assertSame(0, $white->hue()->toInt());
         $this->assertSame(0, $white->saturation()->toInt());
         $this->assertSame(100, $white->lightness()->toInt());
         $this->assertSame(1.0, $white->alpha()->toFloat());
+        $this->assertSame($white, $rgba->toHSLA());
 
-        $black = RGBA::fromString('000')->toHSLA();
+        $black = ($rgba = RGBA::fromString('000'))->toHSLA();
 
         $this->assertInstanceOf(HSLA::class, $black);
         $this->assertSame(0, $black->hue()->toInt());
         $this->assertSame(0, $black->saturation()->toInt());
         $this->assertSame(0, $black->lightness()->toInt());
         $this->assertSame(1.0, $black->alpha()->toFloat());
+        $this->assertSame($black, $rgba->toHSLA());
     }
 
     public function testToCMYKA()
     {
-        $cmyka = RGBA::fromString('3399FF80')->toCMYKA();
+        $cmyka = ($rgba = RGBA::fromString('3399FF80'))->toCMYKA();
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
         $this->assertSame(80, $cmyka->cyan()->toInt());
@@ -521,8 +524,9 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $cmyka->yellow()->toInt());
         $this->assertSame(0, $cmyka->black()->toInt());
         $this->assertSame(0.5, $cmyka->alpha()->toFloat());
+        $this->assertSame($cmyka, $rgba->toCMYKA());
 
-        $black = RGBA::fromString('00000080')->toCMYKA();
+        $black = ($rgba = RGBA::fromString('00000080'))->toCMYKA();
 
         $this->assertInstanceOf(CMYKA::class, $black);
         $this->assertSame(0, $black->cyan()->toInt());
@@ -530,6 +534,7 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $black->yellow()->toInt());
         $this->assertSame(100, $black->black()->toInt());
         $this->assertSame(0.5, $black->alpha()->toFloat());
+        $this->assertSame($black, $rgba->toCMYKA());
     }
 
     public function testEquals()

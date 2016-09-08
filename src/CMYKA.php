@@ -17,6 +17,7 @@ final class CMYKA
     private $black;
     private $alpha;
     private $string;
+    private $rgba;
 
     public function __construct(
         Cyan $cyan,
@@ -241,6 +242,10 @@ final class CMYKA
 
     public function toRGBA(): RGBA
     {
+        if ($this->rgba instanceof RGBA) {
+            return $this->rgba;
+        }
+
         $cyan = $this->cyan->toInt() / 100;
         $magenta = $this->magenta->toInt() / 100;
         $yellow = $this->yellow->toInt() / 100;
@@ -250,7 +255,7 @@ final class CMYKA
         $green = 1 - min(1, $magenta * (1 - $black) + $black);
         $blue = 1 - min(1, $yellow * (1 - $black) + $black);
 
-        return new RGBA(
+        return $this->rgba = new RGBA(
             new Red((int) round($red * 255)),
             new Green((int) round($green * 255)),
             new Blue((int) round($blue * 255)),
