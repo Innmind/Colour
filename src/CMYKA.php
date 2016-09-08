@@ -6,7 +6,7 @@ namespace Innmind\Colour;
 use Innmind\Colour\Exception\InvalidArgumentException;
 use Innmind\Immutable\StringPrimitive as Str;
 
-final class CMYKA
+final class CMYKA implements ConvertibleInterface
 {
     const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
@@ -266,6 +266,11 @@ final class CMYKA
     public function toHSLA(): HSLA
     {
         return $this->toRGBA()->toHSLA();
+    }
+
+    public function toCMYKA(): self
+    {
+        return $this;
     }
 
     public function __toString(): string

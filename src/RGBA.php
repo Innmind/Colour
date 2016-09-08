@@ -6,7 +6,7 @@ namespace Innmind\Colour;
 use Innmind\Colour\Exception\InvalidArgumentException;
 use Innmind\Immutable\StringPrimitive as Str;
 
-final class RGBA
+final class RGBA implements ConvertibleInterface
 {
     const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
     const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
@@ -415,6 +415,11 @@ final class RGBA
             new Black((int) round($black * 100)),
             $this->alpha
         );
+    }
+
+    public function toRGBA(): self
+    {
+        return $this;
     }
 
     public function __toString(): string

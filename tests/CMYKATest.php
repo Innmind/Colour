@@ -10,7 +10,8 @@ use Innmind\Colour\{
     Yellow,
     Black,
     Alpha,
-    RGBA
+    RGBA,
+    ConvertibleInterface
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -438,5 +439,13 @@ class CMYKATest extends \PHPUnit_Framework_TestCase
                 CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
             )
         );
+    }
+
+    public function testConvertible()
+    {
+        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+
+        $this->assertInstanceOf(ConvertibleInterface::class, $cmyka);
+        $this->assertSame($cmyka, $cmyka->toCMYKA());
     }
 }

@@ -10,7 +10,8 @@ use Innmind\Colour\{
     Lightness,
     Alpha,
     RGBA,
-    CMYKA
+    CMYKA,
+    ConvertibleInterface
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -341,5 +342,13 @@ class HSLATest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(CMYKA::class, $hsla->toCMYKA());
         $this->assertSame($hsla->toCMYKA(), $hsla->toCMYKA());
         $this->assertTrue($hsla->toCMYKA()->equals($hsla->toRGBA()->toCMYKA()));
+    }
+
+    public function testConvertible()
+    {
+        $hsla = HSLA::fromString('hsl(0, 0%, 0%)');
+
+        $this->assertInstanceOf(ConvertibleInterface::class, $hsla);
+        $this->assertSame($hsla, $hsla->toHSLA());
     }
 }

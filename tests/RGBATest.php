@@ -10,7 +10,8 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     HSLA,
-    CMYKA
+    CMYKA,
+    ConvertibleInterface
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -549,5 +550,13 @@ class RGBATest extends \PHPUnit_Framework_TestCase
                 RGBA::fromString('39F')
             )
         );
+    }
+
+    public function testConvertible()
+    {
+        $rgba = RGBA::fromString('39F');
+
+        $this->assertInstanceOf(ConvertibleInterface::class, $rgba);
+        $this->assertSame($rgba, $rgba->toRGBA());
     }
 }
