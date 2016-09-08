@@ -219,6 +219,11 @@ final class HSLA
         );
     }
 
+    public function toCMYKA(): CMYKA
+    {
+        return $this->toRGBA()->toCMYKA();
+    }
+
     public function __toString(): string
     {
         return $this->string;

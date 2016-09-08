@@ -9,7 +9,8 @@ use Innmind\Colour\{
     Saturation,
     Lightness,
     Alpha,
-    RGBA
+    RGBA,
+    CMYKA
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -331,5 +332,14 @@ class HSLATest extends \PHPUnit_Framework_TestCase
             $rgba->toHexadecimal()
         );
         $this->assertSame($rgba, $hsla->toRGBA());
+    }
+
+    public function testToCMYKA()
+    {
+        $hsla = HSLA::fromString('hsla(210, 100%, 60%, 0.5)');
+
+        $this->assertInstanceOf(CMYKA::class, $hsla->toCMYKA());
+        $this->assertSame($hsla->toCMYKA(), $hsla->toCMYKA());
+        $this->assertTrue($hsla->toCMYKA()->equals($hsla->toRGBA()->toCMYKA()));
     }
 }
