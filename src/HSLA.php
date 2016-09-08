@@ -16,6 +16,7 @@ final class HSLA
     private $lightness;
     private $alpha;
     private $string;
+    private $rgba;
 
     public function __construct(
         Hue $hue,
@@ -186,8 +187,73 @@ final class HSLA
             $this->alpha->equals($hsla->alpha());
     }
 
+    public function toRGBA(): RGBA
+    {
+        if ($this->rgba instanceof RGBA) {
+            return $this->rgba;
+        }
+
+        $lightness = $this->lightness->toInt() / 100;
+
+        if ($this->saturation->atMinimum()) {
+            return $this->rgba = new RGBA(
+                new Red((int) round($lightness * 255)),
+                new Green((int) round($lightness * 255)),
+                new Blue((int) round($lightness * 255)),
+                $this->alpha
+            );
+        }
+
+        $hue = $this->hue->toInt() / 360;
+        $saturation = $this->saturation->toInt() / 100;
+
+        //can't find a formula on internet where $q and $p are explained
+        $q = $lightness < 0.5 ? $lightness * (1 + $saturation) : $lightness + $saturation - $lightness * $saturation;
+        $p = 2 * $lightness - $q;
+
+        return $this->rgba = new RGBA(
+            new Red((int) round($this->hueToPoint($p, $q, $hue + 1/3) * 255)),
+            new Green((int) round($this->hueToPoint($p, $q, $hue) * 255)),
+            new Blue((int) round($this->hueToPoint($p, $q, $hue - 1/3) * 255)),
+            $this->alpha
+        );
+    }
+
     public function __toString(): string
     {
         return $this->string;
+    }
+
+    /**
+     * Formula taken from the internet, don't know what it means
+     *
+     * @param float $p Don't know what it represents
+     * @param float $q Don't know what it represents
+     * @param float $t Don't know what it represents
+     *
+     * @return float
+     */
+    private function hueToPoint(float $p, float $q, float $t): float
+    {
+        if ($t < 0) {
+            $t += 1;
+        }
+
+        if ($t > 1) {
+            $t -= 1;
+        }
+
+        switch (true) {
+            case $t < 1/6:
+                return $p + ($q - $p) * 6 * $t;
+
+            case $t < 1/2:
+                return $q;
+
+            case $t < 2/3:
+                return $p + ($q - $p) * (2/3 - $t) * 6;
+        }
+
+        return $p;
     }
 }

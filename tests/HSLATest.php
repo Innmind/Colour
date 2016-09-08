@@ -8,7 +8,8 @@ use Innmind\Colour\{
     Hue,
     Saturation,
     Lightness,
-    Alpha
+    Alpha,
+    RGBA
 };
 use Innmind\Immutable\StringPrimitive as Str;
 
@@ -311,5 +312,24 @@ class HSLATest extends \PHPUnit_Framework_TestCase
                 HSLA::fromString('hsl(10, 20%, 30%)')
             )
         );
+    }
+
+    public function testToRGBA()
+    {
+        $hsla = HSLA::fromString('hsla(210, 100%, 60%, 0.5)');
+
+        $rgba = $hsla->toRGBA();
+
+        $this->assertInstanceOf(RGBA::class, $rgba);
+        $this->assertSame('3399ff80', $rgba->toHexadecimal());
+        $this->assertSame($rgba, $hsla->toRGBA());
+
+        $hsla = HSLA::fromString('hsla(210, 0%, 60%, 0.5)');
+        $rgba = $hsla->toRGBA();
+        $this->assertSame(
+            '99999980',
+            $rgba->toHexadecimal()
+        );
+        $this->assertSame($rgba, $hsla->toRGBA());
     }
 }
