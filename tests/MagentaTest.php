@@ -60,4 +60,18 @@ class MagentaTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Magenta(50))->equals(new Magenta(50)));
         $this->assertFalse((new Magenta(100))->equals(new Magenta(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Magenta(100))->atMaximum());
+        $this->assertFalse((new Magenta(0))->atMaximum());
+        $this->assertFalse((new Magenta(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Magenta(100))->atMinimum());
+        $this->assertTrue((new Magenta(0))->atMinimum());
+        $this->assertFalse((new Magenta(50))->atMinimum());
+    }
 }

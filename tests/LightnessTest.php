@@ -62,4 +62,18 @@ class LightnessTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Lightness(50))->equals(new Lightness(50)));
         $this->assertFalse((new Lightness(100))->equals(new Lightness(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Lightness(100))->atMaximum());
+        $this->assertFalse((new Lightness(0))->atMaximum());
+        $this->assertFalse((new Lightness(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Lightness(100))->atMinimum());
+        $this->assertTrue((new Lightness(0))->atMinimum());
+        $this->assertFalse((new Lightness(50))->atMinimum());
+    }
 }

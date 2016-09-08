@@ -60,4 +60,18 @@ class YellowTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Yellow(50))->equals(new Yellow(50)));
         $this->assertFalse((new Yellow(100))->equals(new Yellow(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Yellow(100))->atMaximum());
+        $this->assertFalse((new Yellow(0))->atMaximum());
+        $this->assertFalse((new Yellow(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Yellow(100))->atMinimum());
+        $this->assertTrue((new Yellow(0))->atMinimum());
+        $this->assertFalse((new Yellow(50))->atMinimum());
+    }
 }

@@ -60,4 +60,18 @@ class BlackTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Black(50))->equals(new Black(50)));
         $this->assertFalse((new Black(100))->equals(new Black(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Black(100))->atMaximum());
+        $this->assertFalse((new Black(0))->atMaximum());
+        $this->assertFalse((new Black(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Black(100))->atMinimum());
+        $this->assertTrue((new Black(0))->atMinimum());
+        $this->assertFalse((new Black(50))->atMinimum());
+    }
 }

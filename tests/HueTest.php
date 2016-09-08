@@ -65,4 +65,18 @@ class HueTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Hue(50))->equals(new Hue(50)));
         $this->assertFalse((new Hue(100))->equals(new Hue(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Hue(359))->atMaximum());
+        $this->assertFalse((new Hue(0))->atMaximum());
+        $this->assertFalse((new Hue(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Hue(359))->atMinimum());
+        $this->assertTrue((new Hue(0))->atMinimum());
+        $this->assertFalse((new Hue(50))->atMinimum());
+    }
 }

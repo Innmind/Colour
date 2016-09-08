@@ -62,4 +62,18 @@ class SaturationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Saturation(50))->equals(new Saturation(50)));
         $this->assertFalse((new Saturation(100))->equals(new Saturation(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Saturation(100))->atMaximum());
+        $this->assertFalse((new Saturation(0))->atMaximum());
+        $this->assertFalse((new Saturation(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Saturation(100))->atMinimum());
+        $this->assertTrue((new Saturation(0))->atMinimum());
+        $this->assertFalse((new Saturation(50))->atMinimum());
+    }
 }

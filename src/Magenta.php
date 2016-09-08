@@ -43,6 +43,16 @@ final class Magenta
         return $this->value === $magenta->toInt();
     }
 
+    public function atMaximum(): bool
+    {
+        return $this->value === 100;
+    }
+
+    public function atMinimum(): bool
+    {
+        return $this->value === 0;
+    }
+
     public function toInt(): int
     {
         return $this->value;

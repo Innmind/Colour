@@ -60,4 +60,18 @@ class CyanTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Cyan(50))->equals(new Cyan(50)));
         $this->assertFalse((new Cyan(100))->equals(new Cyan(50)));
     }
+
+    public function testAtMaximum()
+    {
+        $this->assertTrue((new Cyan(100))->atMaximum());
+        $this->assertFalse((new Cyan(0))->atMaximum());
+        $this->assertFalse((new Cyan(50))->atMaximum());
+    }
+
+    public function testAtMinimum()
+    {
+        $this->assertFalse((new Cyan(100))->atMinimum());
+        $this->assertTrue((new Cyan(0))->atMinimum());
+        $this->assertFalse((new Cyan(50))->atMinimum());
+    }
 }
