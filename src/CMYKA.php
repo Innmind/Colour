@@ -230,6 +230,15 @@ final class CMYKA
         );
     }
 
+    public function equals(self $cmyka): bool
+    {
+        return $this->cyan->equals($cmyka->cyan()) &&
+            $this->magenta->equals($cmyka->magenta()) &&
+            $this->yellow->equals($cmyka->yellow()) &&
+            $this->black->equals($cmyka->black()) &&
+            $this->alpha->equals($cmyka->alpha());
+    }
+
     public function toRGBA(): RGBA
     {
         $cyan = $this->cyan->toInt() / 100;

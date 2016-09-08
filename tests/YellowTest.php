@@ -54,4 +54,10 @@ class YellowTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(50, $yellow->toInt());
         $this->assertSame(25, $yellow2->toInt());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Yellow(50))->equals(new Yellow(50)));
+        $this->assertFalse((new Yellow(100))->equals(new Yellow(50)));
+    }
 }

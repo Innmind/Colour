@@ -36,6 +36,11 @@ final class Hue
         return $this->rotateBy(180);
     }
 
+    public function equals(self $hue): bool
+    {
+        return $this->value === $hue->toInt();
+    }
+
     public function toInt(): int
     {
         return $this->value;

@@ -531,4 +531,18 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame(100, $black->black()->toInt());
         $this->assertSame(0.5, $black->alpha()->toFloat());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(
+            RGBA::fromString('39F')->equals(
+                RGBA::fromString('39F')
+            )
+        );
+        $this->assertFalse(
+            RGBA::fromString('39F8')->equals(
+                RGBA::fromString('39F')
+            )
+        );
+    }
 }

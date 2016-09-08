@@ -38,6 +38,11 @@ final class Cyan
         );
     }
 
+    public function equals(self $cyan): bool
+    {
+        return $this->value === $cyan->toInt();
+    }
+
     public function toInt(): int
     {
         return $this->value;

@@ -60,6 +60,11 @@ final class Green
         );
     }
 
+    public function equals(self $green): bool
+    {
+        return $this->integer === $green->toInt();
+    }
+
     public function atMaximum(): bool
     {
         return $this->integer === 255;

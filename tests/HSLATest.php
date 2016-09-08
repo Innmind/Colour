@@ -298,4 +298,18 @@ class HSLATest extends \PHPUnit_Framework_TestCase
     {
         return array_merge($this->withAlpha(), $this->withoutAlpha());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue(
+            HSLA::fromString('hsl(10, 20%, 30%)')->equals(
+                HSLA::fromString('hsl(10, 20%, 30%)')
+            )
+        );
+        $this->assertFalse(
+            HSLA::fromString('hsla(10, 20%, 30%, 0.5)')->equals(
+                HSLA::fromString('hsl(10, 20%, 30%)')
+            )
+        );
+    }
 }

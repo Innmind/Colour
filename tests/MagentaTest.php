@@ -54,4 +54,10 @@ class MagentaTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(50, $magenta->toInt());
         $this->assertSame(25, $magenta2->toInt());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Magenta(50))->equals(new Magenta(50)));
+        $this->assertFalse((new Magenta(100))->equals(new Magenta(50)));
+    }
 }

@@ -38,6 +38,11 @@ final class Black
         );
     }
 
+    public function equals(self $black): bool
+    {
+        return $this->value === $black->toInt();
+    }
+
     public function toInt(): int
     {
         return $this->value;

@@ -56,4 +56,10 @@ class LightnessTest extends \PHPUnit_Framework_TestCase
     {
         new Lightness(101);
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Lightness(50))->equals(new Lightness(50)));
+        $this->assertFalse((new Lightness(100))->equals(new Lightness(50)));
+    }
 }

@@ -105,4 +105,10 @@ class BlueTest extends \PHPUnit_Framework_TestCase
             Blue::fromIntensity(new Intensity(0))->toInt()
         );
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Blue(50))->equals(new Blue(50)));
+        $this->assertFalse((new Blue(100))->equals(new Blue(50)));
+    }
 }

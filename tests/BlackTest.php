@@ -54,4 +54,10 @@ class BlackTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(50, $black->toInt());
         $this->assertSame(25, $black2->toInt());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Black(50))->equals(new Black(50)));
+        $this->assertFalse((new Black(100))->equals(new Black(50)));
+    }
 }

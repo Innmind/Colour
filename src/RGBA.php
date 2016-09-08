@@ -310,6 +310,14 @@ final class RGBA
         );
     }
 
+    public function equals(self $rgba): bool
+    {
+        return $this->red->equals($rgba->red()) &&
+            $this->green->equals($rgba->green()) &&
+            $this->blue->equals($rgba->blue()) &&
+            $this->alpha->equals($rgba->alpha());
+    }
+
     public function toHexadecimal(): string
     {
         $hex = $this->red.$this->green.$this->blue;

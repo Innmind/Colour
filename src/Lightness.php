@@ -38,6 +38,11 @@ final class Lightness
         );
     }
 
+    public function equals(self $lightness): bool
+    {
+        return $this->value === $lightness->toInt();
+    }
+
     public function toInt(): int
     {
         return $this->value;

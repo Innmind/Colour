@@ -105,4 +105,10 @@ class GreenTest extends \PHPUnit_Framework_TestCase
             Green::fromIntensity(new Intensity(0))->toInt()
         );
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Green(50))->equals(new Green(50)));
+        $this->assertFalse((new Green(100))->equals(new Green(50)));
+    }
 }

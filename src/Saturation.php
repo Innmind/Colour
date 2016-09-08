@@ -38,6 +38,11 @@ final class Saturation
         );
     }
 
+    public function equals(self $saturation): bool
+    {
+        return $this->value === $saturation->toInt();
+    }
+
     public function toInt(): int
     {
         return $this->value;

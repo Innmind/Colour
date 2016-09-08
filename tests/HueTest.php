@@ -59,4 +59,10 @@ class HueTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Hue::class, $hue);
         $this->assertSame(330, $hue->toInt());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Hue(50))->equals(new Hue(50)));
+        $this->assertFalse((new Hue(100))->equals(new Hue(50)));
+    }
 }

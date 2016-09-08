@@ -105,4 +105,10 @@ class RedTest extends \PHPUnit_Framework_TestCase
             Red::fromIntensity(new Intensity(0))->toInt()
         );
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Red(50))->equals(new Red(50)));
+        $this->assertFalse((new Red(100))->equals(new Red(50)));
+    }
 }

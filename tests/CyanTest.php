@@ -54,4 +54,10 @@ class CyanTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(50, $cyan->toInt());
         $this->assertSame(25, $cyan2->toInt());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Cyan(50))->equals(new Cyan(50)));
+        $this->assertFalse((new Cyan(100))->equals(new Cyan(50)));
+    }
 }

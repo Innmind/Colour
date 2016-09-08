@@ -56,6 +56,11 @@ final class Alpha
         );
     }
 
+    public function equals(self $alpha): bool
+    {
+        return $this->value === $alpha->toFloat();
+    }
+
     public function atMaximum(): bool
     {
         return $this->value === 1.0;

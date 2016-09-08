@@ -56,4 +56,10 @@ class SaturationTest extends \PHPUnit_Framework_TestCase
     {
         new Saturation(101);
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Saturation(50))->equals(new Saturation(50)));
+        $this->assertFalse((new Saturation(100))->equals(new Saturation(50)));
+    }
 }

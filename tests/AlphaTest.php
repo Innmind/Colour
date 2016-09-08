@@ -112,4 +112,10 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
             ['00', 0.0],
         ];
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Alpha(0.5))->equals(new Alpha(0.5)));
+        $this->assertFalse((new Alpha(1.0))->equals(new Alpha(0.5)));
+    }
 }

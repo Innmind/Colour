@@ -178,6 +178,14 @@ final class HSLA
         );
     }
 
+    public function equals(self $hsla): bool
+    {
+        return $this->hue->equals($hsla->hue()) &&
+            $this->saturation->equals($hsla->saturation()) &&
+            $this->lightness->equals($hsla->lightness()) &&
+            $this->alpha->equals($hsla->alpha());
+    }
+
     public function __toString(): string
     {
         return $this->string;
