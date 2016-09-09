@@ -212,9 +212,9 @@ final class HSLA implements ConvertibleInterface
         $p = 2 * $lightness - $q;
 
         return $this->rgba = new RGBA(
-            new Red((int) round($this->hueToPoint($p, $q, $hue + 1/3) * 255)),
+            new Red((int) round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
             new Green((int) round($this->hueToPoint($p, $q, $hue) * 255)),
-            new Blue((int) round($this->hueToPoint($p, $q, $hue - 1/3) * 255)),
+            new Blue((int) round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
             $this->alpha
         );
     }
@@ -254,14 +254,14 @@ final class HSLA implements ConvertibleInterface
         }
 
         switch (true) {
-            case $t < 1/6:
+            case $t < 1 / 6:
                 return $p + ($q - $p) * 6 * $t;
 
-            case $t < 1/2:
+            case $t < 1 / 2:
                 return $q;
 
-            case $t < 2/3:
-                return $p + ($q - $p) * (2/3 - $t) * 6;
+            case $t < 2 / 3:
+                return $p + ($q - $p) * (2 / 3 - $t) * 6;
         }
 
         return $p;
