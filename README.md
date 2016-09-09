@@ -19,7 +19,7 @@ It supports these formats:
 * `hsl()`
 * `hsla()`
 * `device-cmyk()`
-* literals (as [defined](http://www.w3schools.com/colors/colors_names.asp) by the W3C)
+* literals (as [defined](https://www.w3.org/wiki/CSS/Properties/color/keywords) by the W3C)
 
 ## Installation
 
