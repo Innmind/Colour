@@ -10,16 +10,16 @@ This library helps you build an object representation of a colour out of a strin
 
 It supports these formats:
 
-    * `#39f`
-    * `#39ff` (last hexadecimal value for the alpha)
-    * `#3399ff`
-    * `#3399ffff` (last 2 hexadecimal values for the alpha)
-    * `rgb()`
-    * `rgba()`
-    * `hsl()`
-    * `hsla()`
-    * `device-cmyk()`
-    * literals (as [defined](http://www.w3schools.com/colors/colors_names.asp) by the W3C)
+* `#39f`
+* `#39ff` (last hexadecimal value for the alpha)
+* `#3399ff`
+* `#3399ffff` (last 2 hexadecimal values for the alpha)
+* `rgb()`
+* `rgba()`
+* `hsl()`
+* `hsla()`
+* `device-cmyk()`
+* literals (as [defined](http://www.w3schools.com/colors/colors_names.asp) by the W3C)
 
 ## Installation
 
