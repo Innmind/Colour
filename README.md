@@ -9,6 +9,7 @@
 This library helps you build an object representation of a colour out of a string (all objects are immutable). You can easily extract any information out of the colors, transform their representation and modify the colours.
 
 It supports these formats:
+
     * `#39f`
     * `#39ff` (last hexadecimal value for the alpha)
     * `#3399ff`
