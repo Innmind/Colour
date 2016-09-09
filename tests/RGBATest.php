@@ -257,7 +257,8 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         string $string,
         int $red,
         int $green,
-        int $blue
+        int $blue,
+        string $hexa
     ) {
         $rgba = RGBA::fromHexadecimalWithoutAlpha(
             new Str($string)
@@ -268,6 +269,7 @@ class RGBATest extends \PHPUnit_Framework_TestCase
         $this->assertSame($blue, $rgba->blue()->toInt());
         $this->assertSame($green, $rgba->green()->toInt());
         $this->assertTrue($rgba->alpha()->atMaximum());
+        $this->assertSame($hexa, $rgba->toHexadecimal());
     }
 
     /**
@@ -283,10 +285,11 @@ class RGBATest extends \PHPUnit_Framework_TestCase
     public function hexadecimalWithoutAlpha()
     {
         return [
-            ['#39F', 51, 153, 255],
-            ['39F', 51, 153, 255],
-            ['#3399FF', 51, 153, 255],
-            ['3399FF', 51, 153, 255],
+            ['#39F', 51, 153, 255, '3399ff'],
+            ['39F', 51, 153, 255, '3399ff'],
+            ['#3399FF', 51, 153, 255, '3399ff'],
+            ['3399FF', 51, 153, 255, '3399ff'],
+            ['b8860b', 184, 134, 11, 'b8860b'],
         ];
     }
 
@@ -311,7 +314,16 @@ class RGBATest extends \PHPUnit_Framework_TestCase
 
     public function hexadecimals()
     {
-        return array_merge($this->hexadecimalWithAlpha(), $this->hexadecimalWithoutAlpha());
+        $withoutAlpha = array_map(
+            function ($value) {
+                array_pop($value);
+
+                return $value;
+            },
+            $this->hexadecimalWithoutAlpha()
+        );
+
+        return array_merge($this->hexadecimalWithAlpha(), $withoutAlpha);
     }
 
     public function testFromRGBFunctionWithPoints()

@@ -17,11 +17,12 @@ final class Red
         }
 
         $this->integer = $integer;
-        $this->hexadecimal = dechex($integer);
-
-        if (mb_strlen($this->hexadecimal) === 1) {
-            $this->hexadecimal .= $this->hexadecimal;
-        }
+        $this->hexadecimal = str_pad(
+            dechex($integer),
+            2,
+            '0',
+            STR_PAD_LEFT
+        );
     }
 
     public static function fromHexadecimal(string $hex): self

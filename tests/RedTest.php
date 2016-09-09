@@ -24,6 +24,7 @@ class RedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Red::class, $red);
         $this->assertSame(15, $red->toInt());
+        $this->assertSame('0f', (string) $red);
     }
 
     public function testAdd()

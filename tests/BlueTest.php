@@ -24,6 +24,7 @@ class BlueTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Blue::class, $blue);
         $this->assertSame(15, $blue->toInt());
+        $this->assertSame('0f', (string) $blue);
     }
 
     public function testAdd()

@@ -24,6 +24,7 @@ class GreenTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Green::class, $green);
         $this->assertSame(15, $green->toInt());
+        $this->assertSame('0f', (string) $green);
     }
 
     public function testAdd()
