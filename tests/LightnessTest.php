@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Lightness;
+use PHPUnit\Framework\TestCase;
 
-class LightnessTest extends \PHPUnit_Framework_TestCase
+class LightnessTest extends TestCase
 {
     public function testInterface()
     {

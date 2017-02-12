@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Black;
+use PHPUnit\Framework\TestCase;
 
-class BlackTest extends \PHPUnit_Framework_TestCase
+class BlackTest extends TestCase
 {
     public function testInterface()
     {

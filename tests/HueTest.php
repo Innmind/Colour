@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Hue;
+use PHPUnit\Framework\TestCase;
 
-class HueTest extends \PHPUnit_Framework_TestCase
+class HueTest extends TestCase
 {
     public function testInterface()
     {

@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Cyan;
+use PHPUnit\Framework\TestCase;
 
-class CyanTest extends \PHPUnit_Framework_TestCase
+class CyanTest extends TestCase
 {
     public function testInterface()
     {
