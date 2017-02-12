@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidArgumentException;
-use Innmind\Immutable\StringPrimitive as Str;
+use Innmind\Immutable\Str;
 
 final class CMYKA implements ConvertibleInterface
 {
@@ -65,7 +65,7 @@ final class CMYKA implements ConvertibleInterface
 
     public static function fromStringWithAlpha(Str $colour): self
     {
-        if (!$colour->match(self::PATTERN_WITH_ALPHA)) {
+        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
             throw new InvalidArgumentException;
         }
 
@@ -82,7 +82,7 @@ final class CMYKA implements ConvertibleInterface
 
     public static function fromStringWithoutAlpha(Str $colour): self
     {
-        if (!$colour->match(self::PATTERN_WITHOUT_ALPHA)) {
+        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
             throw new InvalidArgumentException;
         }
 

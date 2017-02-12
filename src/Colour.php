@@ -7,7 +7,7 @@ use Innmind\Colour\Exception\InvalidArgumentException;
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    StringPrimitive as Str
+    Str
 };
 
 final class Colour
