@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Magenta;
+use PHPUnit\Framework\TestCase;
 
-class MagentaTest extends \PHPUnit_Framework_TestCase
+class MagentaTest extends TestCase
 {
     public function testInterface()
     {

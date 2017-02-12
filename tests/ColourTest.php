@@ -10,8 +10,9 @@ use Innmind\Colour\{
     CMYKA
 };
 use Innmind\Immutable\MapInterface;
+use PHPUnit\Framework\TestCase;
 
-class ColourTest extends \PHPUnit_Framework_TestCase
+class ColourTest extends TestCase
 {
     public function testFromString()
     {

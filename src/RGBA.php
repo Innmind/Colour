@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidArgumentException;
-use Innmind\Immutable\StringPrimitive as Str;
+use Innmind\Immutable\Str;
 
 final class RGBA implements ConvertibleInterface
 {
@@ -77,11 +77,11 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromHexadecimalWithAlpha(Str $colour): self
     {
-        if (!$colour->match(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
+        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
             throw new InvalidArgumentException;
         }
 
-        if ($colour->match('/^#/')) {
+        if ($colour->matches('/^#/')) {
             $colour = $colour->substring(1);
         }
 
@@ -104,11 +104,11 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromHexadecimalWithoutAlpha(Str $colour): self
     {
-        if (!$colour->match(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
+        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
             throw new InvalidArgumentException;
         }
 
-        if ($colour->match('/^#/')) {
+        if ($colour->matches('/^#/')) {
             $colour = $colour->substring(1);
         }
 
@@ -141,7 +141,7 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromRGBFunctionWithPoints(Str $colour): self
     {
-        if (!$colour->match(self::RGB_FUNCTION_PATTERN)) {
+        if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
             throw new InvalidArgumentException;
         }
 
@@ -156,7 +156,7 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromRGBFunctionWithPercents(Str $colour): self
     {
-        if (!$colour->match(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
+        if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
             throw new InvalidArgumentException;
         }
 
@@ -182,7 +182,7 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromRGBAFunctionWithPoints(Str $colour): self
     {
-        if (!$colour->match(self::RGBA_FUNCTION_PATTERN)) {
+        if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
             throw new InvalidArgumentException;
         }
 
@@ -198,7 +198,7 @@ final class RGBA implements ConvertibleInterface
 
     public static function fromRGBAFunctionWithPercents(Str $colour): self
     {
-        if (!$colour->match(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
+        if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
             throw new InvalidArgumentException;
         }
 

@@ -16,12 +16,22 @@
     },
     "require": {
         "php": "~7.0",
-        "innmind/immutable": "^1.9"
+        "innmind/immutable": "~2.0"
     },
     "autoload": {
         "psr-4": {
-            "Innmind\\Colour\\": "src/",
+            "Innmind\\Colour\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\Innmind\\Colour\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0"
     }
 }

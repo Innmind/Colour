@@ -13,9 +13,10 @@ use Innmind\Colour\{
     RGBA,
     ConvertibleInterface
 };
-use Innmind\Immutable\StringPrimitive as Str;
+use Innmind\Immutable\Str;
+use PHPUnit\Framework\TestCase;
 
-class CMYKATest extends \PHPUnit_Framework_TestCase
+class CMYKATest extends TestCase
 {
     public function testInterface()
     {

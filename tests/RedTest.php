@@ -7,8 +7,9 @@ use Innmind\Colour\{
     Red,
     Intensity
 };
+use PHPUnit\Framework\TestCase;
 
-class RedTest extends \PHPUnit_Framework_TestCase
+class RedTest extends TestCase
 {
     public function testInterface()
     {

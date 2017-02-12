@@ -7,8 +7,9 @@ use Innmind\Colour\{
     Green,
     Intensity
 };
+use PHPUnit\Framework\TestCase;
 
-class GreenTest extends \PHPUnit_Framework_TestCase
+class GreenTest extends TestCase
 {
     public function testInterface()
     {
