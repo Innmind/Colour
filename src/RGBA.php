@@ -92,7 +92,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
+        $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
 
         return new self(
             Red::fromHexadecimal((string) $matches->get('red')),
@@ -119,7 +119,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
+        $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
 
         return new self(
             Red::fromHexadecimal((string) $matches->get('red')),
@@ -145,7 +145,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::RGB_FUNCTION_PATTERN);
+        $matches = $colour->capture(self::RGB_FUNCTION_PATTERN);
 
         return new self(
             new Red((int) (string) $matches->get('red')),
@@ -160,7 +160,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::PERCENTED_RGB_FUNCTION_PATTERN);
+        $matches = $colour->capture(self::PERCENTED_RGB_FUNCTION_PATTERN);
 
         return new self(
             Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
@@ -186,7 +186,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::RGBA_FUNCTION_PATTERN);
+        $matches = $colour->capture(self::RGBA_FUNCTION_PATTERN);
 
         return new self(
             new Red((int) (string) $matches->get('red')),
@@ -202,7 +202,7 @@ final class RGBA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::PERCENTED_RGBA_FUNCTION_PATTERN);
+        $matches = $colour->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN);
 
         return new self(
             Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),

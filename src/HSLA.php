@@ -64,7 +64,7 @@ final class HSLA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::PATTERN_WITH_ALPHA);
+        $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
 
         return new self(
             new Hue((int) (string) $matches->get('hue')),
@@ -80,7 +80,7 @@ final class HSLA implements ConvertibleInterface
             throw new InvalidArgumentException;
         }
 
-        $matches = $colour->getMatches(self::PATTERN_WITHOUT_ALPHA);
+        $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
 
         return new self(
             new Hue((int) (string) $matches->get('hue')),
