@@ -15,8 +15,8 @@
         "issues": "http://github.com/Innmind/Colour/issues"
     },
     "require": {
-        "php": "~7.0",
-        "innmind/immutable": "~2.0"
+        "php": "~7.1",
+        "innmind/immutable": "~2.10"
     },
     "autoload": {
         "psr-4": {
@@ -32,6 +32,6 @@
         "test": "vendor/bin/phpunit --colors=always"
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~7.0"
     }
 }
