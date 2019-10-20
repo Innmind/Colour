@@ -52,9 +52,9 @@ final class HSLA implements ConvertibleInterface
         $colour = (new Str($colour))->trim();
 
         try {
-            return self::fromStringWithAlpha($colour);
+            return self::withAlpha($colour);
         } catch (InvalidArgumentException $e) {
-            return self::fromStringWithoutAlpha($colour);
+            return self::withoutAlpha($colour);
         }
     }
 
