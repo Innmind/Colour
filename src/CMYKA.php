@@ -52,18 +52,27 @@ final class CMYKA implements ConvertibleInterface
         }
     }
 
-    public static function fromString(string $colour): self
+    public static function of(string $colour): self
     {
         $colour = (new Str($colour))->trim();
 
         try {
-            return self::fromStringWithAlpha($colour);
+            return self::withAlpha($colour);
         } catch (InvalidArgumentException $e) {
-            return self::fromStringWithoutAlpha($colour);
+            return self::withoutAlpha($colour);
         }
     }
 
-    public static function fromStringWithAlpha(Str $colour): self
+    /**
+     * @deprecated
+     * @see self::of()
+     */
+    public static function fromString(string $colour): self
+    {
+        return self::of($colour);
+    }
+
+    public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
             throw new InvalidArgumentException;
@@ -80,7 +89,16 @@ final class CMYKA implements ConvertibleInterface
         );
     }
 
-    public static function fromStringWithoutAlpha(Str $colour): self
+    /**
+     * @deprecated
+     * @see self::withAlpha()
+     */
+    public static function fromStringWithAlpha(Str $colour): self
+    {
+        return self::withAlpha($colour);
+    }
+
+    public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
             throw new InvalidArgumentException;
@@ -94,6 +112,15 @@ final class CMYKA implements ConvertibleInterface
             new Yellow((int) (string) $matches->get('yellow')),
             new Black((int) (string) $matches->get('black'))
         );
+    }
+
+    /**
+     * @deprecated
+     * @see self::withoutAlpha()
+     */
+    public static function fromStringWithoutAlpha(Str $colour): self
+    {
+        return self::withoutAlpha($colour);
     }
 
     public function cyan(): Cyan

@@ -47,7 +47,7 @@ final class RGBA implements ConvertibleInterface
         }
     }
 
-    public static function fromString(string $colour): self
+    public static function of(string $colour): self
     {
         try {
             return self::fromHexadecimal($colour);
@@ -62,6 +62,15 @@ final class RGBA implements ConvertibleInterface
         }
 
         return self::fromRGBAFunction($colour);
+    }
+
+    /**
+     * @deprecated
+     * @see self::of()
+     */
+    public static function fromString(string $colour): self
+    {
+        return self::of($colour);
     }
 
     public static function fromHexadecimal(string $colour): self
