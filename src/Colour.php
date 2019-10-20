@@ -18,16 +18,16 @@ final class Colour
     {
     }
 
-    public static function fromString(string $colour): ConvertibleInterface
+    public static function of(string $colour): ConvertibleInterface
     {
         try {
-            return RGBA::fromString($colour);
+            return RGBA::of($colour);
         } catch (InvalidArgumentException $e) {
             //attempt next format
         }
 
         try {
-            return HSLA::fromString($colour);
+            return HSLA::of($colour);
         } catch (InvalidArgumentException $e) {
             //attempt next format
         }
@@ -38,7 +38,16 @@ final class Colour
             return self::literals()->get($literal);
         }
 
-        return CMYKA::fromString($colour);
+        return CMYKA::of($colour);
+    }
+
+    /**
+     * @deprecated
+     * @see self::of()
+     */
+    public static function fromString(string $colour): ConvertibleInterface
+    {
+        return self::of($colour);
     }
 
     /**
