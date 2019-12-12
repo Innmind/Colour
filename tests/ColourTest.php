@@ -15,19 +15,19 @@ use PHPUnit\Framework\TestCase;
 
 class ColourTest extends TestCase
 {
-    public function testFromString()
+    public function testOf()
     {
         $this->assertInstanceOf(
             RGBA::class,
-            Colour::fromString('39F')
+            Colour::of('39F')
         );
         $this->assertInstanceOf(
             HSLA::class,
-            Colour::fromString('hsl(0, 0%, 0%)')
+            Colour::of('hsl(0, 0%, 0%)')
         );
         $this->assertInstanceOf(
             CMYKA::class,
-            Colour::fromString('device-cmyk(10%, 20%, 30%, 40%)')
+            Colour::of('device-cmyk(10%, 20%, 30%, 40%)')
         );
     }
 
@@ -35,7 +35,7 @@ class ColourTest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        Colour::fromString('foo');
+        Colour::of('foo');
     }
 
     public function testLiterals()
@@ -51,7 +51,7 @@ class ColourTest extends TestCase
      */
     public function testFromLiteral(string $name, string $hex)
     {
-        $rgba = Colour::fromString($name);
+        $rgba = Colour::of($name);
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($hex, $rgba->toHexadecimal());

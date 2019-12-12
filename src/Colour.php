@@ -42,15 +42,6 @@ final class Colour
     }
 
     /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): Convertible
-    {
-        return self::of($colour);
-    }
-
-    /**
      * @see http://www.w3schools.com/colors/colors_names.asp
      */
     public static function literals(): MapInterface

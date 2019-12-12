@@ -58,15 +58,6 @@ final class HSLA implements Convertible
         }
     }
 
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): self
-    {
-        return self::of($colour);
-    }
-
     public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
@@ -83,15 +74,6 @@ final class HSLA implements Convertible
         );
     }
 
-    /**
-     * @deprecated
-     * @see self::withAlpha()
-     */
-    public static function fromStringWithAlpha(Str $colour): self
-    {
-        return self::withAlpha($colour);
-    }
-
     public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
@@ -105,15 +87,6 @@ final class HSLA implements Convertible
             new Saturation((int) (string) $matches->get('saturation')),
             new Lightness((int) (string) $matches->get('lightness'))
         );
-    }
-
-    /**
-     * @deprecated
-     * @see self::withoutAlpha()
-     */
-    public static function fromStringWithoutAlpha(Str $colour): self
-    {
-        return self::withoutAlpha($colour);
     }
 
     public function hue(): Hue

@@ -64,15 +64,6 @@ final class RGBA implements Convertible
         return self::fromRGBAFunction($colour);
     }
 
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): self
-    {
-        return self::of($colour);
-    }
-
     public static function fromHexadecimal(string $colour): self
     {
         $colour = (new Str($colour))->trim();

@@ -301,7 +301,7 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider withAlpha
      */
-    public function testFromStringWithAlpha(
+    public function testWithAlpha(
         string $string,
         int $cyan,
         int $magenta,
@@ -309,7 +309,7 @@ class CMYKATest extends TestCase
         int $black,
         float $alpha
     ) {
-        $cmyka = CMYKA::fromStringWithAlpha(
+        $cmyka = CMYKA::withAlpha(
             new Str($string)
         );
 
@@ -325,7 +325,7 @@ class CMYKATest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        CMYKA::fromStringWithAlpha(
+        CMYKA::withAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%)')
         );
     }
@@ -345,14 +345,14 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider withoutAlpha
      */
-    public function testFromStringWithoutAlpha(
+    public function testWithoutAlpha(
         string $string,
         int $cyan,
         int $magenta,
         int $yellow,
         int $black
     ) {
-        $cmyka = CMYKA::fromStringWithoutAlpha(
+        $cmyka = CMYKA::withoutAlpha(
             new Str($string)
         );
 
@@ -368,7 +368,7 @@ class CMYKATest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        CMYKA::fromStringWithoutAlpha(
+        CMYKA::withoutAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
         );
     }
@@ -384,7 +384,7 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider colours
      */
-    public function testFromString(
+    public function testOf(
         string $string,
         int $cyan,
         int $magenta,
@@ -392,7 +392,7 @@ class CMYKATest extends TestCase
         int $black,
         float $alpha = null
     ) {
-        $cmyka = CMYKA::fromString($string);
+        $cmyka = CMYKA::of($string);
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
         $this->assertSame($cyan, $cmyka->cyan()->toInt());
@@ -409,7 +409,7 @@ class CMYKATest extends TestCase
 
     public function testToRGBA()
     {
-        $rgba = ($cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)'))->toRGBA();
+        $rgba = ($cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)'))->toRGBA();
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame(51, $rgba->red()->toInt());
@@ -421,7 +421,7 @@ class CMYKATest extends TestCase
 
     public function testToHSLA()
     {
-        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+        $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
         $this->assertTrue($cmyka->toHSLA()->equals($cmyka->toRGBA()->toHSLA()));
         $this->assertSame($cmyka->toHSLA(), $cmyka->toHSLA());
@@ -430,20 +430,20 @@ class CMYKATest extends TestCase
     public function testEquals()
     {
         $this->assertTrue(
-            CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->equals(
-                CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
+            CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->equals(
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
             )
         );
         $this->assertFalse(
-            CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 1.0)')->equals(
-                CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
+            CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 1.0)')->equals(
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
             )
         );
     }
 
     public function testConvertible()
     {
-        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+        $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
         $this->assertInstanceOf(Convertible::class, $cmyka);
         $this->assertSame($cmyka, $cmyka->toCMYKA());
