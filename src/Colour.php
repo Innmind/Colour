@@ -18,7 +18,7 @@ final class Colour
     {
     }
 
-    public static function of(string $colour): ConvertibleInterface
+    public static function of(string $colour): Convertible
     {
         try {
             return RGBA::of($colour);
@@ -45,7 +45,7 @@ final class Colour
      * @deprecated
      * @see self::of()
      */
-    public static function fromString(string $colour): ConvertibleInterface
+    public static function fromString(string $colour): Convertible
     {
         return self::of($colour);
     }

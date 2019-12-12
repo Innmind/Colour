@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-interface ConvertibleInterface
+interface Convertible
 {
     public function toRGBA(): RGBA;
     public function toHSLA(): HSLA;

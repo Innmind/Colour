@@ -11,7 +11,7 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     CMYKA,
-    ConvertibleInterface,
+    Convertible,
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
@@ -348,7 +348,7 @@ class HSLATest extends TestCase
     {
         $hsla = HSLA::fromString('hsl(0, 0%, 0%)');
 
-        $this->assertInstanceOf(ConvertibleInterface::class, $hsla);
+        $this->assertInstanceOf(Convertible::class, $hsla);
         $this->assertSame($hsla, $hsla->toHSLA());
     }
 }

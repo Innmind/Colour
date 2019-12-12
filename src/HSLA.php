@@ -6,7 +6,7 @@ namespace Innmind\Colour;
 use Innmind\Colour\Exception\InvalidArgumentException;
 use Innmind\Immutable\Str;
 
-final class HSLA implements ConvertibleInterface
+final class HSLA implements Convertible
 {
     const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     const PATTERN_WITHOUT_ALPHA = '~^hsl\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%\)$~';

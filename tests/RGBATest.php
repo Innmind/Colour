@@ -11,7 +11,7 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    ConvertibleInterface,
+    Convertible,
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
@@ -564,7 +564,7 @@ class RGBATest extends TestCase
     {
         $rgba = RGBA::fromString('39F');
 
-        $this->assertInstanceOf(ConvertibleInterface::class, $rgba);
+        $this->assertInstanceOf(Convertible::class, $rgba);
         $this->assertSame($rgba, $rgba->toRGBA());
     }
 }

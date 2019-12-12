@@ -11,7 +11,7 @@ use Innmind\Colour\{
     Black,
     Alpha,
     RGBA,
-    ConvertibleInterface,
+    Convertible,
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
@@ -445,7 +445,7 @@ class CMYKATest extends TestCase
     {
         $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
-        $this->assertInstanceOf(ConvertibleInterface::class, $cmyka);
+        $this->assertInstanceOf(Convertible::class, $cmyka);
         $this->assertSame($cmyka, $cmyka->toCMYKA());
     }
 }
