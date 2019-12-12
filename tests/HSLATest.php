@@ -210,7 +210,7 @@ class HSLATest extends TestCase
         float $alpha
     ) {
         $hsla = HSLA::withAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(HSLA::class, $hsla);
@@ -225,7 +225,7 @@ class HSLATest extends TestCase
         $this->expectException(DomainException::class);
 
         HSLA::withAlpha(
-            new Str('hsl(10, 20%, 30%)')
+            Str::of('hsl(10, 20%, 30%)')
         );
     }
 
@@ -251,7 +251,7 @@ class HSLATest extends TestCase
         int $lightness
     ) {
         $hsla = HSLA::withoutAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(HSLA::class, $hsla);
@@ -266,7 +266,7 @@ class HSLATest extends TestCase
         $this->expectException(DomainException::class);
 
         HSLA::withoutAlpha(
-            new Str('hsla(10, 20%, 30%, 1.0)')
+            Str::of('hsla(10, 20%, 30%, 1.0)')
         );
     }
 

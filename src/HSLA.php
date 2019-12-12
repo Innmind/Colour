@@ -49,7 +49,7 @@ final class HSLA implements Convertible
 
     public static function of(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::withAlpha($colour);
@@ -67,10 +67,10 @@ final class HSLA implements Convertible
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
 
         return new self(
-            new Hue((int) (string) $matches->get('hue')),
-            new Saturation((int) (string) $matches->get('saturation')),
-            new Lightness((int) (string) $matches->get('lightness')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Hue((int) $matches->get('hue')->toString()),
+            new Saturation((int) $matches->get('saturation')->toString()),
+            new Lightness((int) $matches->get('lightness')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString())
         );
     }
 
@@ -83,9 +83,9 @@ final class HSLA implements Convertible
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            new Hue((int) (string) $matches->get('hue')),
-            new Saturation((int) (string) $matches->get('saturation')),
-            new Lightness((int) (string) $matches->get('lightness'))
+            new Hue((int) $matches->get('hue')->toString()),
+            new Saturation((int) $matches->get('saturation')->toString()),
+            new Lightness((int) $matches->get('lightness')->toString())
         );
     }
 

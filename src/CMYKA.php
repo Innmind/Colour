@@ -54,7 +54,7 @@ final class CMYKA implements Convertible
 
     public static function of(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::withAlpha($colour);
@@ -72,11 +72,11 @@ final class CMYKA implements Convertible
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
 
         return new self(
-            new Cyan((int) (string) $matches->get('cyan')),
-            new Magenta((int) (string) $matches->get('magenta')),
-            new Yellow((int) (string) $matches->get('yellow')),
-            new Black((int) (string) $matches->get('black')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Cyan((int) $matches->get('cyan')->toString()),
+            new Magenta((int) $matches->get('magenta')->toString()),
+            new Yellow((int) $matches->get('yellow')->toString()),
+            new Black((int) $matches->get('black')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString())
         );
     }
 
@@ -89,10 +89,10 @@ final class CMYKA implements Convertible
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            new Cyan((int) (string) $matches->get('cyan')),
-            new Magenta((int) (string) $matches->get('magenta')),
-            new Yellow((int) (string) $matches->get('yellow')),
-            new Black((int) (string) $matches->get('black'))
+            new Cyan((int) $matches->get('cyan')->toString()),
+            new Magenta((int) $matches->get('magenta')->toString()),
+            new Yellow((int) $matches->get('yellow')->toString()),
+            new Black((int) $matches->get('black')->toString())
         );
     }
 

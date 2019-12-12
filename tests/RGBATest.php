@@ -222,7 +222,7 @@ class RGBATest extends TestCase
         float $alpha
     ) {
         $rgba = RGBA::fromHexadecimalWithAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(RGBA::class, $rgba);
@@ -237,7 +237,7 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromHexadecimalWithAlpha(
-            new Str('#39F')
+            Str::of('#39F')
         );
     }
 
@@ -262,7 +262,7 @@ class RGBATest extends TestCase
         string $hexa
     ) {
         $rgba = RGBA::fromHexadecimalWithoutAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(RGBA::class, $rgba);
@@ -278,7 +278,7 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromHexadecimalWithoutAlpha(
-            new Str('#39FF')
+            Str::of('#39FF')
         );
     }
 
@@ -329,7 +329,7 @@ class RGBATest extends TestCase
     public function testFromRGBFunctionWithPoints()
     {
         $rgb = RGBA::fromRGBFunctionWithPoints(
-            new Str('rgb(10, 20, 30)')
+            Str::of('rgb(10, 20, 30)')
         );
 
         $this->assertInstanceOf(RGBA::class, $rgb);
@@ -344,14 +344,14 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPoints(
-            new Str('rgb(10, 20%, 30)')
+            Str::of('rgb(10, 20%, 30)')
         );
     }
 
     public function testFromRGBFunctionWithPercents()
     {
         $rgb = RGBA::fromRGBFunctionWithPercents(
-            new Str('rgb(10%, 20%, 30%)')
+            Str::of('rgb(10%, 20%, 30%)')
         );
 
         $this->assertInstanceOf(RGBA::class, $rgb);
@@ -366,7 +366,7 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPercents(
-            new Str('rgb(10, 20%, 30)')
+            Str::of('rgb(10, 20%, 30)')
         );
     }
 
@@ -392,7 +392,7 @@ class RGBATest extends TestCase
     public function testFromRGBAFunctionWithPoints()
     {
         $rgb = RGBA::fromRGBAFunctionWithPoints(
-            new Str('rgba(10, 20, 30, 0.5)')
+            Str::of('rgba(10, 20, 30, 0.5)')
         );
 
         $this->assertInstanceOf(RGBA::class, $rgb);
@@ -407,14 +407,14 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromRGBAFunctionWithPoints(
-            new Str('rgba(10, 20%, 30, 2.0)')
+            Str::of('rgba(10, 20%, 30, 2.0)')
         );
     }
 
     public function testFromRGBAFunctionWithPercents()
     {
         $rgb = RGBA::fromRGBAFunctionWithPercents(
-            new Str('rgba(10%, 20%, 30%, 0)')
+            Str::of('rgba(10%, 20%, 30%, 0)')
         );
 
         $this->assertInstanceOf(RGBA::class, $rgb);
@@ -429,7 +429,7 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPercents(
-            new Str('rgba(10, 20%, 30, 1)')
+            Str::of('rgba(10, 20%, 30, 1)')
         );
     }
 

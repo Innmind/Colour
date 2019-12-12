@@ -66,7 +66,7 @@ final class RGBA implements Convertible
 
     public static function fromHexadecimal(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromHexadecimalWithAlpha($colour);
@@ -95,10 +95,10 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
 
         return new self(
-            Red::fromHexadecimal((string) $matches->get('red')),
-            Green::fromHexadecimal((string) $matches->get('green')),
-            Blue::fromHexadecimal((string) $matches->get('blue')),
-            Alpha::fromHexadecimal((string) $matches->get('alpha'))
+            Red::fromHexadecimal($matches->get('red')->toString()),
+            Green::fromHexadecimal($matches->get('green')->toString()),
+            Blue::fromHexadecimal($matches->get('blue')->toString()),
+            Alpha::fromHexadecimal($matches->get('alpha')->toString())
         );
     }
 
@@ -122,15 +122,15 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            Red::fromHexadecimal((string) $matches->get('red')),
-            Green::fromHexadecimal((string) $matches->get('green')),
-            Blue::fromHexadecimal((string) $matches->get('blue'))
+            Red::fromHexadecimal($matches->get('red')->toString()),
+            Green::fromHexadecimal($matches->get('green')->toString()),
+            Blue::fromHexadecimal($matches->get('blue')->toString())
         );
     }
 
     public static function fromRGBFunction(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromRGBFunctionWithPoints($colour);
@@ -148,9 +148,9 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::RGB_FUNCTION_PATTERN);
 
         return new self(
-            new Red((int) (string) $matches->get('red')),
-            new Green((int) (string) $matches->get('green')),
-            new Blue((int) (string) $matches->get('blue'))
+            new Red((int) $matches->get('red')->toString()),
+            new Green((int) $matches->get('green')->toString()),
+            new Blue((int) $matches->get('blue')->toString())
         );
     }
 
@@ -163,15 +163,15 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::PERCENTED_RGB_FUNCTION_PATTERN);
 
         return new self(
-            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
-            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
-            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue')))
+            Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
+            Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
+            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString()))
         );
     }
 
     public static function fromRGBAFunction(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromRGBAFunctionWithPoints($colour);
@@ -189,10 +189,10 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::RGBA_FUNCTION_PATTERN);
 
         return new self(
-            new Red((int) (string) $matches->get('red')),
-            new Green((int) (string) $matches->get('green')),
-            new Blue((int) (string) $matches->get('blue')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Red((int) $matches->get('red')->toString()),
+            new Green((int) $matches->get('green')->toString()),
+            new Blue((int) $matches->get('blue')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString())
         );
     }
 
@@ -205,10 +205,10 @@ final class RGBA implements Convertible
         $matches = $colour->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN);
 
         return new self(
-            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
-            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
-            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue'))),
-            new Alpha((float) (string) $matches->get('alpha'))
+            Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
+            Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
+            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString())),
+            new Alpha((float) $matches->get('alpha')->toString())
         );
     }
 

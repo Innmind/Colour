@@ -10,7 +10,7 @@ use Innmind\Colour\{
     CMYKA,
     Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class ColourTest extends TestCase
@@ -40,7 +40,7 @@ class ColourTest extends TestCase
 
     public function testLiterals()
     {
-        $this->assertInstanceOf(MapInterface::class, Colour::literals());
+        $this->assertInstanceOf(Map::class, Colour::literals());
         $this->assertSame('string', (string) Colour::literals()->keyType());
         $this->assertSame(RGBA::class, (string) Colour::literals()->valueType());
         $this->assertCount(148, Colour::literals());

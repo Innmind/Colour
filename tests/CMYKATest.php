@@ -310,7 +310,7 @@ class CMYKATest extends TestCase
         float $alpha
     ) {
         $cmyka = CMYKA::withAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
@@ -326,7 +326,7 @@ class CMYKATest extends TestCase
         $this->expectException(DomainException::class);
 
         CMYKA::withAlpha(
-            new Str('device-cmyk(10%, 20%, 30%, 40%)')
+            Str::of('device-cmyk(10%, 20%, 30%, 40%)')
         );
     }
 
@@ -353,7 +353,7 @@ class CMYKATest extends TestCase
         int $black
     ) {
         $cmyka = CMYKA::withoutAlpha(
-            new Str($string)
+            Str::of($string)
         );
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
@@ -369,7 +369,7 @@ class CMYKATest extends TestCase
         $this->expectException(DomainException::class);
 
         CMYKA::withoutAlpha(
-            new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
+            Str::of('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
         );
     }
 
