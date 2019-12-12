@@ -11,12 +11,12 @@ final class HSLA implements Convertible
     const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     const PATTERN_WITHOUT_ALPHA = '~^hsl\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%\)$~';
 
-    private $hue;
-    private $saturation;
-    private $lightness;
-    private $alpha;
-    private $string;
-    private $rgba;
+    private Hue $hue;
+    private Saturation $saturation;
+    private Lightness $lightness;
+    private Alpha $alpha;
+    private string $string;
+    private ?RGBA $rgba = null;
 
     public function __construct(
         Hue $hue,

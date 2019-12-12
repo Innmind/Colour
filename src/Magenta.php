@@ -7,7 +7,7 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Magenta
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {

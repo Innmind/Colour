@@ -7,8 +7,8 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Alpha
 {
-    private $value;
-    private $hexadecimal;
+    private float $value;
+    private string $hexadecimal;
 
     public function __construct(float $value)
     {

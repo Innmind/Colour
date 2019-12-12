@@ -7,8 +7,8 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Green
 {
-    private $integer;
-    private $hexadecimal;
+    private int $integer;
+    private string $hexadecimal;
 
     public function __construct(int $integer)
     {

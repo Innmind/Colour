@@ -15,13 +15,13 @@ final class RGBA implements Convertible
     const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
 
-    private $red;
-    private $blue;
-    private $green;
-    private $alpha;
-    private $string;
-    private $hsla;
-    private $cmyka;
+    private Red $red;
+    private Blue $blue;
+    private Green $green;
+    private Alpha $alpha;
+    private string $string;
+    private ?HSLA $hsla = null;
+    private ?CMYKA $cmyka = null;
 
     public function __construct(
         Red $red,

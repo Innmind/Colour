@@ -11,13 +11,13 @@ final class CMYKA implements Convertible
     const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
 
-    private $cyan;
-    private $magenta;
-    private $yellow;
-    private $black;
-    private $alpha;
-    private $string;
-    private $rgba;
+    private Cyan $cyan;
+    private Magenta $magenta;
+    private Yellow $yellow;
+    private Black $black;
+    private Alpha $alpha;
+    private string $string;
+    private ?RGBA $rgba = null;
 
     public function __construct(
         Cyan $cyan,

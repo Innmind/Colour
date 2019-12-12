@@ -11,7 +11,7 @@ use Innmind\Immutable\{
 
 final class Colour
 {
-    private static $literals;
+    private static Map $literals;
 
     private function __construct()
     {
