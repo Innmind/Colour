@@ -21,20 +21,20 @@ final class Saturation
     public function add(self $saturation): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $saturation->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $saturation): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $saturation->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

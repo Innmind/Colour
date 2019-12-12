@@ -38,7 +38,7 @@ final class CMYKA implements Convertible
                 $this->cyan,
                 $this->magenta,
                 $this->yellow,
-                $this->black
+                $this->black,
             );
         } else {
             $this->string = sprintf(
@@ -47,7 +47,7 @@ final class CMYKA implements Convertible
                 $this->magenta,
                 $this->yellow,
                 $this->black,
-                $this->alpha->toFloat()
+                $this->alpha->toFloat(),
             );
         }
     }
@@ -76,7 +76,7 @@ final class CMYKA implements Convertible
             new Magenta((int) $matches->get('magenta')->toString()),
             new Yellow((int) $matches->get('yellow')->toString()),
             new Black((int) $matches->get('black')->toString()),
-            new Alpha((float) $matches->get('alpha')->toString())
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
@@ -92,7 +92,7 @@ final class CMYKA implements Convertible
             new Cyan((int) $matches->get('cyan')->toString()),
             new Magenta((int) $matches->get('magenta')->toString()),
             new Yellow((int) $matches->get('yellow')->toString()),
-            new Black((int) $matches->get('black')->toString())
+            new Black((int) $matches->get('black')->toString()),
         );
     }
 
@@ -128,7 +128,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -139,7 +139,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -150,7 +150,7 @@ final class CMYKA implements Convertible
             $this->magenta->add($magenta),
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -161,7 +161,7 @@ final class CMYKA implements Convertible
             $this->magenta->subtract($magenta),
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -172,7 +172,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow->add($yellow),
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -183,7 +183,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow->subtract($yellow),
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -194,7 +194,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black->add($black),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -205,7 +205,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black->subtract($black),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -216,7 +216,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -227,7 +227,7 @@ final class CMYKA implements Convertible
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -251,15 +251,15 @@ final class CMYKA implements Convertible
         $yellow = $this->yellow->toInt() / 100;
         $black = $this->black->toInt() / 100;
 
-        $red = 1 - min(1, $cyan * (1 - $black) + $black);
-        $green = 1 - min(1, $magenta * (1 - $black) + $black);
-        $blue = 1 - min(1, $yellow * (1 - $black) + $black);
+        $red = 1 - \min(1, $cyan * (1 - $black) + $black);
+        $green = 1 - \min(1, $magenta * (1 - $black) + $black);
+        $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
         return $this->rgba = new RGBA(
-            new Red((int) round($red * 255)),
-            new Green((int) round($green * 255)),
-            new Blue((int) round($blue * 255)),
-            $this->alpha
+            new Red((int) \round($red * 255)),
+            new Green((int) \round($green * 255)),
+            new Blue((int) \round($blue * 255)),
+            $this->alpha,
         );
     }
 

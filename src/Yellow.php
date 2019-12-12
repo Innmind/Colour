@@ -21,20 +21,20 @@ final class Yellow
     public function add(self $yellow): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $yellow->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $yellow): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $yellow->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

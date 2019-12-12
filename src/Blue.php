@@ -17,47 +17,47 @@ final class Blue
         }
 
         $this->integer = $integer;
-        $this->hexadecimal = str_pad(
-            dechex($integer),
+        $this->hexadecimal = \str_pad(
+            \dechex($integer),
             2,
             '0',
-            STR_PAD_LEFT
+            STR_PAD_LEFT,
         );
     }
 
     public static function fromHexadecimal(string $hex): self
     {
-        if (mb_strlen($hex) === 1) {
+        if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
         }
 
-        return new self(hexdec($hex));
+        return new self(\hexdec($hex));
     }
 
     public static function fromIntensity(Intensity $intensity): self
     {
         return new self(
-            (int) round((255 * $intensity->toInt()) / 100)
+            (int) \round((255 * $intensity->toInt()) / 100),
         );
     }
 
     public function add(self $blue): self
     {
         return new self(
-            min(
+            \min(
                 $this->integer + $blue->toInt(),
-                255
-            )
+                255,
+            ),
         );
     }
 
     public function subtract(self $blue): self
     {
         return new self(
-            max(
+            \max(
                 $this->integer - $blue->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

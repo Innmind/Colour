@@ -17,42 +17,42 @@ final class Alpha
         }
 
         $this->value = $value;
-        $this->hexadecimal = str_pad(
-            dechex(
-                (int) round(255 * $this->value)
+        $this->hexadecimal = \str_pad(
+            \dechex(
+                (int) \round(255 * $this->value),
             ),
             2,
             '0',
-            STR_PAD_LEFT
+            STR_PAD_LEFT,
         );
     }
 
     public static function fromHexadecimal(string $hex): self
     {
-        if (mb_strlen($hex) === 1) {
+        if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
         }
 
-        return new self(round(hexdec($hex) / 255, 2));
+        return new self(\round(\hexdec($hex) / 255, 2));
     }
 
     public function add(self $alpha): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $alpha->toFloat(),
-                1
-            )
+                1,
+            ),
         );
     }
 
     public function subtract(self $alpha): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $alpha->toFloat(),
-                0
-            )
+                0,
+            ),
         );
     }
 

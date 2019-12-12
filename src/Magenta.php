@@ -21,20 +21,20 @@ final class Magenta
     public function add(self $magenta): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $magenta->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $magenta): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $magenta->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

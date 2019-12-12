@@ -42,7 +42,7 @@ final class RGBA implements Convertible
                 $this->red->toInt(),
                 $this->green->toInt(),
                 $this->blue->toInt(),
-                $this->alpha->toFloat()
+                $this->alpha->toFloat(),
             );
         }
     }
@@ -98,7 +98,7 @@ final class RGBA implements Convertible
             Red::fromHexadecimal($matches->get('red')->toString()),
             Green::fromHexadecimal($matches->get('green')->toString()),
             Blue::fromHexadecimal($matches->get('blue')->toString()),
-            Alpha::fromHexadecimal($matches->get('alpha')->toString())
+            Alpha::fromHexadecimal($matches->get('alpha')->toString()),
         );
     }
 
@@ -124,7 +124,7 @@ final class RGBA implements Convertible
         return new self(
             Red::fromHexadecimal($matches->get('red')->toString()),
             Green::fromHexadecimal($matches->get('green')->toString()),
-            Blue::fromHexadecimal($matches->get('blue')->toString())
+            Blue::fromHexadecimal($matches->get('blue')->toString()),
         );
     }
 
@@ -150,7 +150,7 @@ final class RGBA implements Convertible
         return new self(
             new Red((int) $matches->get('red')->toString()),
             new Green((int) $matches->get('green')->toString()),
-            new Blue((int) $matches->get('blue')->toString())
+            new Blue((int) $matches->get('blue')->toString()),
         );
     }
 
@@ -165,7 +165,7 @@ final class RGBA implements Convertible
         return new self(
             Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
             Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
-            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString()))
+            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString())),
         );
     }
 
@@ -192,7 +192,7 @@ final class RGBA implements Convertible
             new Red((int) $matches->get('red')->toString()),
             new Green((int) $matches->get('green')->toString()),
             new Blue((int) $matches->get('blue')->toString()),
-            new Alpha((float) $matches->get('alpha')->toString())
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
@@ -208,7 +208,7 @@ final class RGBA implements Convertible
             Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
             Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
             Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString())),
-            new Alpha((float) $matches->get('alpha')->toString())
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
@@ -238,7 +238,7 @@ final class RGBA implements Convertible
             $this->red->add($red),
             $this->green,
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -248,7 +248,7 @@ final class RGBA implements Convertible
             $this->red->subtract($red),
             $this->green,
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -258,7 +258,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green,
             $this->blue->add($blue),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -268,7 +268,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green,
             $this->blue->subtract($blue),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -278,7 +278,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green->add($green),
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -288,7 +288,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green->subtract($green),
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -298,7 +298,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green,
             $this->blue,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -308,7 +308,7 @@ final class RGBA implements Convertible
             $this->red,
             $this->green,
             $this->blue,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -341,16 +341,16 @@ final class RGBA implements Convertible
         $green = $this->green->toInt() / 255;
         $blue = $this->blue->toInt() / 255;
 
-        $max = max($red, $green, $blue);
-        $min = min($red, $green, $blue);
+        $max = \max($red, $green, $blue);
+        $min = \min($red, $green, $blue);
         $lightness = ($max + $min) / 2;
 
         if ($max === $min) {
             return $this->hsla = new HSLA(
                 new Hue(0),
                 new Saturation(0),
-                new Lightness((int) round($lightness * 100)),
-                $this->alpha
+                new Lightness((int) \round($lightness * 100)),
+                $this->alpha,
             );
         }
 
@@ -372,10 +372,10 @@ final class RGBA implements Convertible
         $hue *= 60;
 
         return $this->hsla = new HSLA(
-            new Hue((int) round($hue)),
-            new Saturation((int) round($saturation * 100)),
-            new Lightness((int) round($lightness * 100)),
-            $this->alpha
+            new Hue((int) \round($hue)),
+            new Saturation((int) \round($saturation * 100)),
+            new Lightness((int) \round($lightness * 100)),
+            $this->alpha,
         );
     }
 
@@ -399,21 +399,21 @@ final class RGBA implements Convertible
                 new Magenta(0),
                 new Yellow(0),
                 new Black(100),
-                $this->alpha
+                $this->alpha,
             );
         }
 
-        $black = min(1 - $red, 1 - $green, 1 - $blue);
+        $black = \min(1 - $red, 1 - $green, 1 - $blue);
         $cyan = (1 - $red - $black) / (1 - $black);
         $magenta = (1 - $green - $black) / (1 - $black);
         $yellow = (1 - $blue - $black) / (1 - $black);
 
         return $this->cmyka = new CMYKA(
-            new Cyan((int) round($cyan * 100)),
-            new Magenta((int) round($magenta * 100)),
-            new Yellow((int) round($yellow * 100)),
-            new Black((int) round($black * 100)),
-            $this->alpha
+            new Cyan((int) \round($cyan * 100)),
+            new Magenta((int) \round($magenta * 100)),
+            new Yellow((int) \round($yellow * 100)),
+            new Black((int) \round($black * 100)),
+            $this->alpha,
         );
     }
 

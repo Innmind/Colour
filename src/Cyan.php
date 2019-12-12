@@ -21,20 +21,20 @@ final class Cyan
     public function add(self $cyan): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $cyan->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $cyan): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $cyan->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

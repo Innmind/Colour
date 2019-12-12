@@ -34,7 +34,7 @@ final class HSLA implements Convertible
                 'hsl(%s, %s%%, %s%%)',
                 $this->hue,
                 $this->saturation,
-                $this->lightness
+                $this->lightness,
             );
         } else {
             $this->string = sprintf(
@@ -42,7 +42,7 @@ final class HSLA implements Convertible
                 $this->hue,
                 $this->saturation,
                 $this->lightness,
-                $this->alpha->toFloat()
+                $this->alpha->toFloat(),
             );
         }
     }
@@ -70,7 +70,7 @@ final class HSLA implements Convertible
             new Hue((int) $matches->get('hue')->toString()),
             new Saturation((int) $matches->get('saturation')->toString()),
             new Lightness((int) $matches->get('lightness')->toString()),
-            new Alpha((float) $matches->get('alpha')->toString())
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
@@ -85,7 +85,7 @@ final class HSLA implements Convertible
         return new self(
             new Hue((int) $matches->get('hue')->toString()),
             new Saturation((int) $matches->get('saturation')->toString()),
-            new Lightness((int) $matches->get('lightness')->toString())
+            new Lightness((int) $matches->get('lightness')->toString()),
         );
     }
 
@@ -115,7 +115,7 @@ final class HSLA implements Convertible
             $this->hue->rotateBy($degress),
             $this->saturation,
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -125,7 +125,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation->add($saturation),
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -135,7 +135,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation->subtract($saturation),
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -145,7 +145,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation,
             $this->lightness->add($lightness),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -155,7 +155,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation,
             $this->lightness->subtract($lightness),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -165,7 +165,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation,
             $this->lightness,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -175,7 +175,7 @@ final class HSLA implements Convertible
             $this->hue,
             $this->saturation,
             $this->lightness,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -197,10 +197,10 @@ final class HSLA implements Convertible
 
         if ($this->saturation->atMinimum()) {
             return $this->rgba = new RGBA(
-                new Red((int) round($lightness * 255)),
-                new Green((int) round($lightness * 255)),
-                new Blue((int) round($lightness * 255)),
-                $this->alpha
+                new Red((int) \round($lightness * 255)),
+                new Green((int) \round($lightness * 255)),
+                new Blue((int) \round($lightness * 255)),
+                $this->alpha,
             );
         }
 
@@ -212,10 +212,10 @@ final class HSLA implements Convertible
         $p = 2 * $lightness - $q;
 
         return $this->rgba = new RGBA(
-            new Red((int) round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
-            new Green((int) round($this->hueToPoint($p, $q, $hue) * 255)),
-            new Blue((int) round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
-            $this->alpha
+            new Red((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
+            new Green((int) \round($this->hueToPoint($p, $q, $hue) * 255)),
+            new Blue((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
+            $this->alpha,
         );
     }
 

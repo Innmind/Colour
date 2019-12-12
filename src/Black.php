@@ -21,20 +21,20 @@ final class Black
     public function add(self $black): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $black->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $black): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $black->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 

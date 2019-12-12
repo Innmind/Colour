@@ -21,20 +21,20 @@ final class Lightness
     public function add(self $lightness): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $lightness->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $lightness): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $lightness->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 
