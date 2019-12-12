@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour\Exception;
 
-class InvalidValueRangeException extends DomainException
+class DomainException extends \DomainException implements Exception
 {
 }

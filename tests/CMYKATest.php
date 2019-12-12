@@ -12,7 +12,7 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     Convertible,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -323,7 +323,7 @@ class CMYKATest extends TestCase
 
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         CMYKA::fromStringWithAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%)')
@@ -366,7 +366,7 @@ class CMYKATest extends TestCase
 
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         CMYKA::fromStringWithoutAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')

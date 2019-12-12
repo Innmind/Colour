@@ -8,7 +8,7 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ class ColourTest extends TestCase
 
     public function testThrowWhenNoFormatRecognized()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         Colour::fromString('foo');
     }

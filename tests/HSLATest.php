@@ -12,7 +12,7 @@ use Innmind\Colour\{
     RGBA,
     CMYKA,
     Convertible,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -222,7 +222,7 @@ class HSLATest extends TestCase
 
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         HSLA::fromStringWithAlpha(
             new Str('hsl(10, 20%, 30%)')
@@ -263,7 +263,7 @@ class HSLATest extends TestCase
 
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         HSLA::fromStringWithoutAlpha(
             new Str('hsla(10, 20%, 30%, 1.0)')

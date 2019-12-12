@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\Str;
 
 final class HSLA implements Convertible
@@ -53,7 +53,7 @@ final class HSLA implements Convertible
 
         try {
             return self::withAlpha($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::withoutAlpha($colour);
         }
     }
@@ -70,7 +70,7 @@ final class HSLA implements Convertible
     public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
@@ -95,7 +95,7 @@ final class HSLA implements Convertible
     public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);

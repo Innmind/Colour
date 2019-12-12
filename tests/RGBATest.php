@@ -12,7 +12,7 @@ use Innmind\Colour\{
     HSLA,
     CMYKA,
     Convertible,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -234,7 +234,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenBuildingFromHexadecimalWithUnfoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromHexadecimalWithAlpha(
             new Str('#39F')
@@ -275,7 +275,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromHexadecimalWithoutAlpha(
             new Str('#39FF')
@@ -341,7 +341,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPoints(
             new Str('rgb(10, 20%, 30)')
@@ -363,7 +363,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPercents(
             new Str('rgb(10, 20%, 30)')
@@ -404,7 +404,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromRGBAFunctionWithPoints(
             new Str('rgba(10, 20%, 30, 2.0)')
@@ -426,7 +426,7 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         RGBA::fromRGBFunctionWithPercents(
             new Str('rgba(10, 20%, 30, 1)')

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     MapInterface,
     Map,
@@ -22,13 +22,13 @@ final class Colour
     {
         try {
             return RGBA::of($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
         try {
             return HSLA::of($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
