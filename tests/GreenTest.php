@@ -5,7 +5,8 @@ namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\{
     Green,
-    Intensity
+    Intensity,
+    Exception\InvalidValueRangeException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -54,19 +55,17 @@ class GreenTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+
         new Green(-42);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+
         new Green(512);
     }
 

@@ -11,7 +11,8 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     CMYKA,
-    ConvertibleInterface
+    ConvertibleInterface,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -219,11 +220,10 @@ class HSLATest extends TestCase
         $this->assertSame($alpha, $hsla->alpha()->toFloat());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         HSLA::fromStringWithAlpha(
             new Str('hsl(10, 20%, 30%)')
         );
@@ -261,11 +261,10 @@ class HSLATest extends TestCase
         $this->assertTrue($hsla->alpha()->atMaximum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         HSLA::fromStringWithoutAlpha(
             new Str('hsla(10, 20%, 30%, 1.0)')
         );

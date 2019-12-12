@@ -11,7 +11,8 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    ConvertibleInterface
+    ConvertibleInterface,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -231,11 +232,10 @@ class RGBATest extends TestCase
         $this->assertSame($alpha, $rgba->alpha()->toFloat());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromHexadecimalWithUnfoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromHexadecimalWithAlpha(
             new Str('#39F')
         );
@@ -273,11 +273,10 @@ class RGBATest extends TestCase
         $this->assertSame($hexa, $rgba->toHexadecimal());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromHexadecimalWithoutAlpha(
             new Str('#39FF')
         );
@@ -340,11 +339,10 @@ class RGBATest extends TestCase
         $this->assertTrue($rgb->alpha()->atMaximum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromRGBFunctionWithPoints(
             new Str('rgb(10, 20%, 30)')
         );
@@ -363,11 +361,10 @@ class RGBATest extends TestCase
         $this->assertTrue($rgb->alpha()->atMaximum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromRGBFunctionWithPercents(
             new Str('rgb(10, 20%, 30)')
         );
@@ -405,11 +402,10 @@ class RGBATest extends TestCase
         $this->assertSame(0.5, $rgb->alpha()->toFloat());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromRGBAFunctionWithPoints(
             new Str('rgba(10, 20%, 30, 2.0)')
         );
@@ -428,11 +424,10 @@ class RGBATest extends TestCase
         $this->assertTrue($rgb->alpha()->atMinimum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         RGBA::fromRGBFunctionWithPercents(
             new Str('rgba(10, 20%, 30, 1)')
         );

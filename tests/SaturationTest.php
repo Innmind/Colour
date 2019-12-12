@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\Saturation;
+use Innmind\Colour\{
+    Saturation,
+    Exception\InvalidValueRangeException,
+};
 use PHPUnit\Framework\TestCase;
 
 class SaturationTest extends TestCase
@@ -42,19 +45,17 @@ class SaturationTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+
         new Saturation(-42);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+
         new Saturation(101);
     }
 

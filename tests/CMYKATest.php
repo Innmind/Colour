@@ -11,7 +11,8 @@ use Innmind\Colour\{
     Black,
     Alpha,
     RGBA,
-    ConvertibleInterface
+    ConvertibleInterface,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -320,11 +321,10 @@ class CMYKATest extends TestCase
         $this->assertSame($alpha, $cmyka->alpha()->toFloat());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         CMYKA::fromStringWithAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%)')
         );
@@ -364,11 +364,10 @@ class CMYKATest extends TestCase
         $this->assertTrue($cmyka->alpha()->atMaximum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         CMYKA::fromStringWithoutAlpha(
             new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
         );
