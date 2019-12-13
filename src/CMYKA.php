@@ -33,7 +33,7 @@ final class CMYKA implements Convertible
         $this->alpha = $alpha ?? new Alpha(1);
 
         if ($this->alpha->atMaximum()) {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
                 $this->cyan,
                 $this->magenta,
@@ -41,7 +41,7 @@ final class CMYKA implements Convertible
                 $this->black,
             );
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
                 $this->cyan,
                 $this->magenta,

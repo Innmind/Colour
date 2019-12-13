@@ -37,7 +37,7 @@ final class RGBA implements Convertible
         if ($this->alpha->atMaximum()) {
             $this->string = '#'.$this->toHexadecimal();
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'rgba(%s, %s, %s, %s)',
                 $this->red->toInt(),
                 $this->green->toInt(),

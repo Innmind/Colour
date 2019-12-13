@@ -21,7 +21,7 @@ final class Blue
             \dechex($integer),
             2,
             '0',
-            STR_PAD_LEFT,
+            \STR_PAD_LEFT,
         );
     }
 

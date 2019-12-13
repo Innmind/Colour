@@ -30,14 +30,14 @@ final class HSLA implements Convertible
         $this->alpha = $alpha ?? new Alpha(1);
 
         if ($this->alpha->atMaximum()) {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'hsl(%s, %s%%, %s%%)',
                 $this->hue,
                 $this->saturation,
                 $this->lightness,
             );
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'hsla(%s, %s%%, %s%%, %s)',
                 $this->hue,
                 $this->saturation,
