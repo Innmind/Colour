@@ -66,7 +66,7 @@ final class CMYKA implements Convertible
     public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
@@ -83,7 +83,7 @@ final class CMYKA implements Convertible
     public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);

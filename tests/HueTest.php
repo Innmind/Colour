@@ -22,6 +22,7 @@ class HueTest extends TestCase
     public function testThrowWhenValueTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-20');
 
         new Hue(-20);
     }
@@ -29,6 +30,7 @@ class HueTest extends TestCase
     public function testThrowWhenValueTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('360');
 
         new Hue(360);
     }

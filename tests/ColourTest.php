@@ -34,6 +34,7 @@ class ColourTest extends TestCase
     public function testThrowWhenNoFormatRecognized()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo');
 
         Colour::of('foo');
     }

@@ -22,6 +22,7 @@ class BlackTest extends TestCase
     public function testThrowWhenValueTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-1');
 
         new Black(-1);
     }
@@ -29,6 +30,7 @@ class BlackTest extends TestCase
     public function testThrowWhenValueTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
 
         new Black(101);
     }

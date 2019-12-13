@@ -13,7 +13,7 @@ final class Red
     public function __construct(int $integer)
     {
         if ($integer < 0 || $integer > 255) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $integer);
         }
 
         $this->integer = $integer;

@@ -235,6 +235,7 @@ class RGBATest extends TestCase
     public function testThrowWhenBuildingFromHexadecimalWithUnfoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('#39F');
 
         RGBA::fromHexadecimalWithAlpha(
             Str::of('#39F')
@@ -276,6 +277,7 @@ class RGBATest extends TestCase
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('39FF');
 
         RGBA::fromHexadecimalWithoutAlpha(
             Str::of('#39FF')
@@ -342,6 +344,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('rgb(10, 20%, 30)');
 
         RGBA::fromRGBFunctionWithPoints(
             Str::of('rgb(10, 20%, 30)')
@@ -364,6 +367,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('rgb(10, 20%, 30)');
 
         RGBA::fromRGBFunctionWithPercents(
             Str::of('rgb(10, 20%, 30)')
@@ -405,6 +409,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('rgba(10, 20%, 30, 2.0)');
 
         RGBA::fromRGBAFunctionWithPoints(
             Str::of('rgba(10, 20%, 30, 2.0)')
@@ -427,6 +432,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('rgba(10, 20%, 30, 1)');
 
         RGBA::fromRGBFunctionWithPercents(
             Str::of('rgba(10, 20%, 30, 1)')

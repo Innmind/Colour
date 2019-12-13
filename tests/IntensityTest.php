@@ -21,6 +21,7 @@ class IntensityTest extends TestCase
     public function testThrowWhenValueIsTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-1');
 
         new Intensity(-1);
     }
@@ -28,6 +29,7 @@ class IntensityTest extends TestCase
     public function testThrowWhenValueIsTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
 
         new Intensity(101);
     }

@@ -223,6 +223,7 @@ class HSLATest extends TestCase
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('hsl(10, 20%, 30%)');
 
         HSLA::withAlpha(
             Str::of('hsl(10, 20%, 30%)')
@@ -264,6 +265,7 @@ class HSLATest extends TestCase
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('hsla(10, 20%, 30%, 1.0)');
 
         HSLA::withoutAlpha(
             Str::of('hsla(10, 20%, 30%, 1.0)')

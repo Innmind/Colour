@@ -22,6 +22,7 @@ class YellowTest extends TestCase
     public function testThrowWhenValueTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-1');
 
         new Yellow(-1);
     }
@@ -29,6 +30,7 @@ class YellowTest extends TestCase
     public function testThrowWhenValueTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
 
         new Yellow(101);
     }

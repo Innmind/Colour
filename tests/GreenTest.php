@@ -58,6 +58,7 @@ class GreenTest extends TestCase
     public function testThrowWhenValueIsTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-42');
 
         new Green(-42);
     }
@@ -65,6 +66,7 @@ class GreenTest extends TestCase
     public function testThrowWhenValueIsTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('512');
 
         new Green(512);
     }

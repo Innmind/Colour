@@ -324,6 +324,7 @@ class CMYKATest extends TestCase
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%)');
 
         CMYKA::withAlpha(
             Str::of('device-cmyk(10%, 20%, 30%, 40%)')
@@ -367,6 +368,7 @@ class CMYKATest extends TestCase
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
         $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%, 1.0)');
 
         CMYKA::withoutAlpha(
             Str::of('device-cmyk(10%, 20%, 30%, 40%, 1.0)')

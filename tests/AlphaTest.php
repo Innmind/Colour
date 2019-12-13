@@ -48,6 +48,7 @@ class AlphaTest extends TestCase
     public function testThrowWhenValueIsTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-0.1');
 
         new Alpha(-0.1);
     }
@@ -55,6 +56,7 @@ class AlphaTest extends TestCase
     public function testThrowWhenValueIsTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('1.1');
 
         new Alpha(1.1);
     }

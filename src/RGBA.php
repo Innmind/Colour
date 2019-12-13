@@ -78,7 +78,7 @@ final class RGBA implements Convertible
     public static function fromHexadecimalWithAlpha(Str $colour): self
     {
         if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         if ($colour->matches('/^#/')) {
@@ -89,7 +89,7 @@ final class RGBA implements Convertible
             $colour->length() !== 4 &&
             $colour->length() !== 8
         ) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
@@ -105,7 +105,7 @@ final class RGBA implements Convertible
     public static function fromHexadecimalWithoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         if ($colour->matches('/^#/')) {
@@ -116,7 +116,7 @@ final class RGBA implements Convertible
             $colour->length() !== 3 &&
             $colour->length() !== 6
         ) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
@@ -142,7 +142,7 @@ final class RGBA implements Convertible
     public static function fromRGBFunctionWithPoints(Str $colour): self
     {
         if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::RGB_FUNCTION_PATTERN);
@@ -157,7 +157,7 @@ final class RGBA implements Convertible
     public static function fromRGBFunctionWithPercents(Str $colour): self
     {
         if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PERCENTED_RGB_FUNCTION_PATTERN);
@@ -183,7 +183,7 @@ final class RGBA implements Convertible
     public static function fromRGBAFunctionWithPoints(Str $colour): self
     {
         if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::RGBA_FUNCTION_PATTERN);
@@ -199,7 +199,7 @@ final class RGBA implements Convertible
     public static function fromRGBAFunctionWithPercents(Str $colour): self
     {
         if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
-            throw new DomainException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN);

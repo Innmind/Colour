@@ -48,6 +48,7 @@ class SaturationTest extends TestCase
     public function testThrowWhenValueIsTooLow()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-42');
 
         new Saturation(-42);
     }
@@ -55,6 +56,7 @@ class SaturationTest extends TestCase
     public function testThrowWhenValueIsTooHigh()
     {
         $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
 
         new Saturation(101);
     }

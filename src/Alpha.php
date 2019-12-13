@@ -13,7 +13,7 @@ final class Alpha
     public function __construct(float $value)
     {
         if ($value < 0 || $value > 1) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
