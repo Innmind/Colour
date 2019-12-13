@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\Cyan;
+use Innmind\Colour\{
+    Cyan,
+    Exception\InvalidValueRangeException,
+};
 use PHPUnit\Framework\TestCase;
 
 class CyanTest extends TestCase
@@ -13,22 +16,22 @@ class CyanTest extends TestCase
         $cyan = new Cyan(50);
 
         $this->assertSame(50, $cyan->toInt());
-        $this->assertSame('50', (string) $cyan);
+        $this->assertSame('50', $cyan->toString());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-1');
+
         new Cyan(-1);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
+
         new Cyan(101);
     }
 

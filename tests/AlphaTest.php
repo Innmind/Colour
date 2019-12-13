@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\Alpha;
+use Innmind\Colour\{
+    Alpha,
+    Exception\InvalidValueRangeException,
+};
 use PHPUnit\Framework\TestCase;
 
 class AlphaTest extends TestCase
@@ -13,7 +16,7 @@ class AlphaTest extends TestCase
         $alpha = new Alpha(0.5);
 
         $this->assertSame(0.5, $alpha->toFloat());
-        $this->assertSame('0.5', (string) $alpha);
+        $this->assertSame('0.5', $alpha->toString());
     }
 
     public function testAdd()
@@ -42,19 +45,19 @@ class AlphaTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-0.1');
+
         new Alpha(-0.1);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('1.1');
+
         new Alpha(1.1);
     }
 

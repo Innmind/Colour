@@ -11,7 +11,8 @@ use Innmind\Colour\{
     Black,
     Alpha,
     RGBA,
-    ConvertibleInterface
+    Convertible,
+    Exception\DomainException,
 };
 use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +33,7 @@ class CMYKATest extends TestCase
         $this->assertSame($yellow, $cmyk->yellow());
         $this->assertSame($black, $cmyk->black());
         $this->assertSame(1.0, $cmyk->alpha()->toFloat());
-        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%)', (string) $cmyk);
+        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%)', $cmyk->toString());
 
         $cmyka = new CMYKA(
             new Cyan(10),
@@ -43,7 +44,7 @@ class CMYKATest extends TestCase
         );
 
         $this->assertSame($alpha, $cmyka->alpha());
-        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%, 0.5)', (string) $cmyka);
+        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%, 0.5)', $cmyka->toString());
     }
 
     public function testAddCyan()
@@ -300,7 +301,7 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider withAlpha
      */
-    public function testFromStringWithAlpha(
+    public function testWithAlpha(
         string $string,
         int $cyan,
         int $magenta,
@@ -308,8 +309,8 @@ class CMYKATest extends TestCase
         int $black,
         float $alpha
     ) {
-        $cmyka = CMYKA::fromStringWithAlpha(
-            new Str($string)
+        $cmyka = CMYKA::withAlpha(
+            Str::of($string)
         );
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
@@ -320,13 +321,13 @@ class CMYKATest extends TestCase
         $this->assertSame($alpha, $cmyka->alpha()->toFloat());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
     {
-        CMYKA::fromStringWithAlpha(
-            new Str('device-cmyk(10%, 20%, 30%, 40%)')
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%)');
+
+        CMYKA::withAlpha(
+            Str::of('device-cmyk(10%, 20%, 30%, 40%)')
         );
     }
 
@@ -345,15 +346,15 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider withoutAlpha
      */
-    public function testFromStringWithoutAlpha(
+    public function testWithoutAlpha(
         string $string,
         int $cyan,
         int $magenta,
         int $yellow,
         int $black
     ) {
-        $cmyka = CMYKA::fromStringWithoutAlpha(
-            new Str($string)
+        $cmyka = CMYKA::withoutAlpha(
+            Str::of($string)
         );
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
@@ -364,13 +365,13 @@ class CMYKATest extends TestCase
         $this->assertTrue($cmyka->alpha()->atMaximum());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenBuildingFromStringWithFoundAlpha()
     {
-        CMYKA::fromStringWithoutAlpha(
-            new Str('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%, 1.0)');
+
+        CMYKA::withoutAlpha(
+            Str::of('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
         );
     }
 
@@ -385,7 +386,7 @@ class CMYKATest extends TestCase
     /**
      * @dataProvider colours
      */
-    public function testFromString(
+    public function testOf(
         string $string,
         int $cyan,
         int $magenta,
@@ -393,7 +394,7 @@ class CMYKATest extends TestCase
         int $black,
         float $alpha = null
     ) {
-        $cmyka = CMYKA::fromString($string);
+        $cmyka = CMYKA::of($string);
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
         $this->assertSame($cyan, $cmyka->cyan()->toInt());
@@ -410,7 +411,7 @@ class CMYKATest extends TestCase
 
     public function testToRGBA()
     {
-        $rgba = ($cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)'))->toRGBA();
+        $rgba = ($cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)'))->toRGBA();
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame(51, $rgba->red()->toInt());
@@ -422,7 +423,7 @@ class CMYKATest extends TestCase
 
     public function testToHSLA()
     {
-        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+        $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
         $this->assertTrue($cmyka->toHSLA()->equals($cmyka->toRGBA()->toHSLA()));
         $this->assertSame($cmyka->toHSLA(), $cmyka->toHSLA());
@@ -431,22 +432,22 @@ class CMYKATest extends TestCase
     public function testEquals()
     {
         $this->assertTrue(
-            CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->equals(
-                CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
+            CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->equals(
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
             )
         );
         $this->assertFalse(
-            CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 1.0)')->equals(
-                CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
+            CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 1.0)')->equals(
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
             )
         );
     }
 
     public function testConvertible()
     {
-        $cmyka = CMYKA::fromString('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
+        $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
-        $this->assertInstanceOf(ConvertibleInterface::class, $cmyka);
+        $this->assertInstanceOf(Convertible::class, $cmyka);
         $this->assertSame($cmyka, $cmyka->toCMYKA());
     }
 }

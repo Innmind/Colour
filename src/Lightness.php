@@ -7,12 +7,12 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Lightness
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
@@ -21,20 +21,20 @@ final class Lightness
     public function add(self $lightness): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $lightness->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $lightness): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $lightness->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 
@@ -58,7 +58,7 @@ final class Lightness
         return $this->value;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }

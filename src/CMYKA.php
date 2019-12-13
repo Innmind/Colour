@@ -3,21 +3,21 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\Str;
 
-final class CMYKA implements ConvertibleInterface
+final class CMYKA implements Convertible
 {
-    const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
-    const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
+    private const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    private const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
 
-    private $cyan;
-    private $magenta;
-    private $yellow;
-    private $black;
-    private $alpha;
-    private $string;
-    private $rgba;
+    private Cyan $cyan;
+    private Magenta $magenta;
+    private Yellow $yellow;
+    private Black $black;
+    private Alpha $alpha;
+    private string $string;
+    private ?RGBA $rgba = null;
 
     public function __construct(
         Cyan $cyan,
@@ -33,94 +33,67 @@ final class CMYKA implements ConvertibleInterface
         $this->alpha = $alpha ?? new Alpha(1);
 
         if ($this->alpha->atMaximum()) {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
-                $this->cyan,
-                $this->magenta,
-                $this->yellow,
-                $this->black
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
             );
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
-                $this->cyan,
-                $this->magenta,
-                $this->yellow,
-                $this->black,
-                $this->alpha->toFloat()
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
+                $this->alpha->toFloat(),
             );
         }
     }
 
     public static function of(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::withAlpha($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::withoutAlpha($colour);
         }
-    }
-
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): self
-    {
-        return self::of($colour);
     }
 
     public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
 
         return new self(
-            new Cyan((int) (string) $matches->get('cyan')),
-            new Magenta((int) (string) $matches->get('magenta')),
-            new Yellow((int) (string) $matches->get('yellow')),
-            new Black((int) (string) $matches->get('black')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Cyan((int) $matches->get('cyan')->toString()),
+            new Magenta((int) $matches->get('magenta')->toString()),
+            new Yellow((int) $matches->get('yellow')->toString()),
+            new Black((int) $matches->get('black')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
-    }
-
-    /**
-     * @deprecated
-     * @see self::withAlpha()
-     */
-    public static function fromStringWithAlpha(Str $colour): self
-    {
-        return self::withAlpha($colour);
     }
 
     public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            new Cyan((int) (string) $matches->get('cyan')),
-            new Magenta((int) (string) $matches->get('magenta')),
-            new Yellow((int) (string) $matches->get('yellow')),
-            new Black((int) (string) $matches->get('black'))
+            new Cyan((int) $matches->get('cyan')->toString()),
+            new Magenta((int) $matches->get('magenta')->toString()),
+            new Yellow((int) $matches->get('yellow')->toString()),
+            new Black((int) $matches->get('black')->toString()),
         );
-    }
-
-    /**
-     * @deprecated
-     * @see self::withoutAlpha()
-     */
-    public static function fromStringWithoutAlpha(Str $colour): self
-    {
-        return self::withoutAlpha($colour);
     }
 
     public function cyan(): Cyan
@@ -155,7 +128,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -166,7 +139,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -177,7 +150,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta->add($magenta),
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -188,7 +161,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta->subtract($magenta),
             $this->yellow,
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -199,7 +172,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow->add($yellow),
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -210,7 +183,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow->subtract($yellow),
             $this->black,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -221,7 +194,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black->add($black),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -232,7 +205,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black->subtract($black),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -243,7 +216,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -254,7 +227,7 @@ final class CMYKA implements ConvertibleInterface
             $this->magenta,
             $this->yellow,
             $this->black,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -278,15 +251,15 @@ final class CMYKA implements ConvertibleInterface
         $yellow = $this->yellow->toInt() / 100;
         $black = $this->black->toInt() / 100;
 
-        $red = 1 - min(1, $cyan * (1 - $black) + $black);
-        $green = 1 - min(1, $magenta * (1 - $black) + $black);
-        $blue = 1 - min(1, $yellow * (1 - $black) + $black);
+        $red = 1 - \min(1, $cyan * (1 - $black) + $black);
+        $green = 1 - \min(1, $magenta * (1 - $black) + $black);
+        $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
         return $this->rgba = new RGBA(
-            new Red((int) round($red * 255)),
-            new Green((int) round($green * 255)),
-            new Blue((int) round($blue * 255)),
-            $this->alpha
+            new Red((int) \round($red * 255)),
+            new Green((int) \round($green * 255)),
+            new Blue((int) \round($blue * 255)),
+            $this->alpha,
         );
     }
 
@@ -300,7 +273,7 @@ final class CMYKA implements ConvertibleInterface
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

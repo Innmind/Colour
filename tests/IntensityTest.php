@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\Intensity;
+use Innmind\Colour\{
+    Intensity,
+    Exception\InvalidValueRangeException,
+};
 use PHPUnit\Framework\TestCase;
 
 class IntensityTest extends TestCase
@@ -15,19 +18,19 @@ class IntensityTest extends TestCase
         $this->assertSame(42, $intensity->toInt());
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-1');
+
         new Intensity(-1);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
+
         new Intensity(101);
     }
 }

@@ -3,36 +3,32 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    Str
+    Str,
 };
 
 final class Colour
 {
-    private static $literals;
+    /** @var Map<string, RGBA> */
+    private static ?Map $literals = null;
 
-    private function __construct()
-    {
-    }
-
-    public static function of(string $colour): ConvertibleInterface
+    public static function of(string $colour): Convertible
     {
         try {
             return RGBA::of($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
         try {
             return HSLA::of($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
-        $literal = (string) (new Str($colour))->trim()->toLower();
+        $literal = Str::of($colour)->trim()->toLower()->toString();
 
         if (self::literals()->contains($literal)) {
             return self::literals()->get($literal);
@@ -42,21 +38,15 @@ final class Colour
     }
 
     /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): ConvertibleInterface
-    {
-        return self::of($colour);
-    }
-
-    /**
      * @see http://www.w3schools.com/colors/colors_names.asp
+     *
+     * @return Map<string, RGBA>
      */
-    public static function literals(): MapInterface
+    public static function literals(): Map
     {
-        if (self::$literals === null) {
-            self::$literals = (new Map('string', RGBA::class))
+        if (\is_null(self::$literals)) {
+            /** @var Map<string, RGBA> */
+            self::$literals = Map::of('string', RGBA::class)
                 ->put('aliceblue', RGBA::of('f0f8ff'))
                 ->put('antiquewhite', RGBA::of('faebd7'))
                 ->put('aqua', RGBA::of('0ff'))

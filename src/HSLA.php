@@ -3,20 +3,20 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\Str;
 
-final class HSLA implements ConvertibleInterface
+final class HSLA implements Convertible
 {
-    const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
-    const PATTERN_WITHOUT_ALPHA = '~^hsl\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%\)$~';
+    private const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    private const PATTERN_WITHOUT_ALPHA = '~^hsl\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%\)$~';
 
-    private $hue;
-    private $saturation;
-    private $lightness;
-    private $alpha;
-    private $string;
-    private $rgba;
+    private Hue $hue;
+    private Saturation $saturation;
+    private Lightness $lightness;
+    private Alpha $alpha;
+    private string $string;
+    private ?RGBA $rgba = null;
 
     public function __construct(
         Hue $hue,
@@ -30,90 +30,63 @@ final class HSLA implements ConvertibleInterface
         $this->alpha = $alpha ?? new Alpha(1);
 
         if ($this->alpha->atMaximum()) {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'hsl(%s, %s%%, %s%%)',
-                $this->hue,
-                $this->saturation,
-                $this->lightness
+                $this->hue->toString(),
+                $this->saturation->toString(),
+                $this->lightness->toString(),
             );
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'hsla(%s, %s%%, %s%%, %s)',
-                $this->hue,
-                $this->saturation,
-                $this->lightness,
-                $this->alpha->toFloat()
+                $this->hue->toString(),
+                $this->saturation->toString(),
+                $this->lightness->toString(),
+                $this->alpha->toFloat(),
             );
         }
     }
 
     public static function of(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::withAlpha($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::withoutAlpha($colour);
         }
-    }
-
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): self
-    {
-        return self::of($colour);
     }
 
     public static function withAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
 
         return new self(
-            new Hue((int) (string) $matches->get('hue')),
-            new Saturation((int) (string) $matches->get('saturation')),
-            new Lightness((int) (string) $matches->get('lightness')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Hue((int) $matches->get('hue')->toString()),
+            new Saturation((int) $matches->get('saturation')->toString()),
+            new Lightness((int) $matches->get('lightness')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
-    }
-
-    /**
-     * @deprecated
-     * @see self::withAlpha()
-     */
-    public static function fromStringWithAlpha(Str $colour): self
-    {
-        return self::withAlpha($colour);
     }
 
     public static function withoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            new Hue((int) (string) $matches->get('hue')),
-            new Saturation((int) (string) $matches->get('saturation')),
-            new Lightness((int) (string) $matches->get('lightness'))
+            new Hue((int) $matches->get('hue')->toString()),
+            new Saturation((int) $matches->get('saturation')->toString()),
+            new Lightness((int) $matches->get('lightness')->toString()),
         );
-    }
-
-    /**
-     * @deprecated
-     * @see self::withoutAlpha()
-     */
-    public static function fromStringWithoutAlpha(Str $colour): self
-    {
-        return self::withoutAlpha($colour);
     }
 
     public function hue(): Hue
@@ -142,7 +115,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue->rotateBy($degress),
             $this->saturation,
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -152,7 +125,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation->add($saturation),
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -162,7 +135,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation->subtract($saturation),
             $this->lightness,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -172,7 +145,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation,
             $this->lightness->add($lightness),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -182,7 +155,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation,
             $this->lightness->subtract($lightness),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -192,7 +165,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation,
             $this->lightness,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -202,7 +175,7 @@ final class HSLA implements ConvertibleInterface
             $this->hue,
             $this->saturation,
             $this->lightness,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -224,10 +197,10 @@ final class HSLA implements ConvertibleInterface
 
         if ($this->saturation->atMinimum()) {
             return $this->rgba = new RGBA(
-                new Red((int) round($lightness * 255)),
-                new Green((int) round($lightness * 255)),
-                new Blue((int) round($lightness * 255)),
-                $this->alpha
+                new Red((int) \round($lightness * 255)),
+                new Green((int) \round($lightness * 255)),
+                new Blue((int) \round($lightness * 255)),
+                $this->alpha,
             );
         }
 
@@ -239,10 +212,10 @@ final class HSLA implements ConvertibleInterface
         $p = 2 * $lightness - $q;
 
         return $this->rgba = new RGBA(
-            new Red((int) round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
-            new Green((int) round($this->hueToPoint($p, $q, $hue) * 255)),
-            new Blue((int) round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
-            $this->alpha
+            new Red((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
+            new Green((int) \round($this->hueToPoint($p, $q, $hue) * 255)),
+            new Blue((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
+            $this->alpha,
         );
     }
 
@@ -256,7 +229,7 @@ final class HSLA implements ConvertibleInterface
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

@@ -3,25 +3,25 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidArgumentException;
+use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\Str;
 
-final class RGBA implements ConvertibleInterface
+final class RGBA implements Convertible
 {
-    const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
-    const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
-    const RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3})\)$~';
-    const PERCENTED_RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%\)$~';
-    const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
-    const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    private const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
+    private const HEXADECIMAL_PATTERN_WITHOUT_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})$~';
+    private const RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3})\)$~';
+    private const PERCENTED_RGB_FUNCTION_PATTERN = '~^rgb\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%\)$~';
+    private const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
+    private const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
 
-    private $red;
-    private $blue;
-    private $green;
-    private $alpha;
-    private $string;
-    private $hsla;
-    private $cmyka;
+    private Red $red;
+    private Blue $blue;
+    private Green $green;
+    private Alpha $alpha;
+    private string $string;
+    private ?HSLA $hsla = null;
+    private ?CMYKA $cmyka = null;
 
     public function __construct(
         Red $red,
@@ -37,12 +37,12 @@ final class RGBA implements ConvertibleInterface
         if ($this->alpha->atMaximum()) {
             $this->string = '#'.$this->toHexadecimal();
         } else {
-            $this->string = sprintf(
+            $this->string = \sprintf(
                 'rgba(%s, %s, %s, %s)',
                 $this->red->toInt(),
                 $this->green->toInt(),
                 $this->blue->toInt(),
-                $this->alpha->toFloat()
+                $this->alpha->toFloat(),
             );
         }
     }
@@ -51,35 +51,26 @@ final class RGBA implements ConvertibleInterface
     {
         try {
             return self::fromHexadecimal($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
         try {
             return self::fromRGBFunction($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             //attempt next format
         }
 
         return self::fromRGBAFunction($colour);
     }
 
-    /**
-     * @deprecated
-     * @see self::of()
-     */
-    public static function fromString(string $colour): self
-    {
-        return self::of($colour);
-    }
-
     public static function fromHexadecimal(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromHexadecimalWithAlpha($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::fromHexadecimalWithoutAlpha($colour);
         }
     }
@@ -87,7 +78,7 @@ final class RGBA implements ConvertibleInterface
     public static function fromHexadecimalWithAlpha(Str $colour): self
     {
         if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         if ($colour->matches('/^#/')) {
@@ -98,23 +89,23 @@ final class RGBA implements ConvertibleInterface
             $colour->length() !== 4 &&
             $colour->length() !== 8
         ) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA);
 
         return new self(
-            Red::fromHexadecimal((string) $matches->get('red')),
-            Green::fromHexadecimal((string) $matches->get('green')),
-            Blue::fromHexadecimal((string) $matches->get('blue')),
-            Alpha::fromHexadecimal((string) $matches->get('alpha'))
+            Red::fromHexadecimal($matches->get('red')->toString()),
+            Green::fromHexadecimal($matches->get('green')->toString()),
+            Blue::fromHexadecimal($matches->get('blue')->toString()),
+            Alpha::fromHexadecimal($matches->get('alpha')->toString()),
         );
     }
 
     public static function fromHexadecimalWithoutAlpha(Str $colour): self
     {
         if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         if ($colour->matches('/^#/')) {
@@ -125,25 +116,25 @@ final class RGBA implements ConvertibleInterface
             $colour->length() !== 3 &&
             $colour->length() !== 6
         ) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA);
 
         return new self(
-            Red::fromHexadecimal((string) $matches->get('red')),
-            Green::fromHexadecimal((string) $matches->get('green')),
-            Blue::fromHexadecimal((string) $matches->get('blue'))
+            Red::fromHexadecimal($matches->get('red')->toString()),
+            Green::fromHexadecimal($matches->get('green')->toString()),
+            Blue::fromHexadecimal($matches->get('blue')->toString()),
         );
     }
 
     public static function fromRGBFunction(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromRGBFunctionWithPoints($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::fromRGBFunctionWithPercents($colour);
         }
     }
@@ -151,40 +142,40 @@ final class RGBA implements ConvertibleInterface
     public static function fromRGBFunctionWithPoints(Str $colour): self
     {
         if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::RGB_FUNCTION_PATTERN);
 
         return new self(
-            new Red((int) (string) $matches->get('red')),
-            new Green((int) (string) $matches->get('green')),
-            new Blue((int) (string) $matches->get('blue'))
+            new Red((int) $matches->get('red')->toString()),
+            new Green((int) $matches->get('green')->toString()),
+            new Blue((int) $matches->get('blue')->toString()),
         );
     }
 
     public static function fromRGBFunctionWithPercents(Str $colour): self
     {
         if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PERCENTED_RGB_FUNCTION_PATTERN);
 
         return new self(
-            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
-            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
-            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue')))
+            Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
+            Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
+            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString())),
         );
     }
 
     public static function fromRGBAFunction(string $colour): self
     {
-        $colour = (new Str($colour))->trim();
+        $colour = Str::of($colour)->trim();
 
         try {
             return self::fromRGBAFunctionWithPoints($colour);
-        } catch (InvalidArgumentException $e) {
+        } catch (DomainException $e) {
             return self::fromRGBAFunctionWithPercents($colour);
         }
     }
@@ -192,32 +183,32 @@ final class RGBA implements ConvertibleInterface
     public static function fromRGBAFunctionWithPoints(Str $colour): self
     {
         if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::RGBA_FUNCTION_PATTERN);
 
         return new self(
-            new Red((int) (string) $matches->get('red')),
-            new Green((int) (string) $matches->get('green')),
-            new Blue((int) (string) $matches->get('blue')),
-            new Alpha((float) (string) $matches->get('alpha'))
+            new Red((int) $matches->get('red')->toString()),
+            new Green((int) $matches->get('green')->toString()),
+            new Blue((int) $matches->get('blue')->toString()),
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
     public static function fromRGBAFunctionWithPercents(Str $colour): self
     {
         if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
-            throw new InvalidArgumentException;
+            throw new DomainException($colour->toString());
         }
 
         $matches = $colour->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN);
 
         return new self(
-            Red::fromIntensity(new Intensity((int) (string) $matches->get('red'))),
-            Green::fromIntensity(new Intensity((int) (string) $matches->get('green'))),
-            Blue::fromIntensity(new Intensity((int) (string) $matches->get('blue'))),
-            new Alpha((float) (string) $matches->get('alpha'))
+            Red::fromIntensity(new Intensity((int) $matches->get('red')->toString())),
+            Green::fromIntensity(new Intensity((int) $matches->get('green')->toString())),
+            Blue::fromIntensity(new Intensity((int) $matches->get('blue')->toString())),
+            new Alpha((float) $matches->get('alpha')->toString()),
         );
     }
 
@@ -247,7 +238,7 @@ final class RGBA implements ConvertibleInterface
             $this->red->add($red),
             $this->green,
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -257,7 +248,7 @@ final class RGBA implements ConvertibleInterface
             $this->red->subtract($red),
             $this->green,
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -267,7 +258,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green,
             $this->blue->add($blue),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -277,7 +268,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green,
             $this->blue->subtract($blue),
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -287,7 +278,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green->add($green),
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -297,7 +288,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green->subtract($green),
             $this->blue,
-            $this->alpha
+            $this->alpha,
         );
     }
 
@@ -307,7 +298,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green,
             $this->blue,
-            $this->alpha->add($alpha)
+            $this->alpha->add($alpha),
         );
     }
 
@@ -317,7 +308,7 @@ final class RGBA implements ConvertibleInterface
             $this->red,
             $this->green,
             $this->blue,
-            $this->alpha->subtract($alpha)
+            $this->alpha->subtract($alpha),
         );
     }
 
@@ -331,7 +322,7 @@ final class RGBA implements ConvertibleInterface
 
     public function toHexadecimal(): string
     {
-        $hex = $this->red.$this->green.$this->blue;
+        $hex = $this->red->toString().$this->green->toString().$this->blue->toString();
 
         if (!$this->alpha->atMaximum()) {
             $hex .= $this->alpha()->toHexadecimal();
@@ -350,21 +341,22 @@ final class RGBA implements ConvertibleInterface
         $green = $this->green->toInt() / 255;
         $blue = $this->blue->toInt() / 255;
 
-        $max = max($red, $green, $blue);
-        $min = min($red, $green, $blue);
+        $max = \max($red, $green, $blue);
+        $min = \min($red, $green, $blue);
         $lightness = ($max + $min) / 2;
 
         if ($max === $min) {
             return $this->hsla = new HSLA(
                 new Hue(0),
                 new Saturation(0),
-                new Lightness((int) round($lightness * 100)),
-                $this->alpha
+                new Lightness((int) \round($lightness * 100)),
+                $this->alpha,
             );
         }
 
         $delta = $max - $min;
         $saturation = $lightness > 0.5 ? $delta / (2 - $max - $min) : $delta / ($max + $min);
+        $hue = 0;
 
         switch ($max) {
             case $red:
@@ -381,10 +373,10 @@ final class RGBA implements ConvertibleInterface
         $hue *= 60;
 
         return $this->hsla = new HSLA(
-            new Hue((int) round($hue)),
-            new Saturation((int) round($saturation * 100)),
-            new Lightness((int) round($lightness * 100)),
-            $this->alpha
+            new Hue((int) \round($hue)),
+            new Saturation((int) \round($saturation * 100)),
+            new Lightness((int) \round($lightness * 100)),
+            $this->alpha,
         );
     }
 
@@ -408,21 +400,21 @@ final class RGBA implements ConvertibleInterface
                 new Magenta(0),
                 new Yellow(0),
                 new Black(100),
-                $this->alpha
+                $this->alpha,
             );
         }
 
-        $black = min(1 - $red, 1 - $green, 1 - $blue);
+        $black = \min(1 - $red, 1 - $green, 1 - $blue);
         $cyan = (1 - $red - $black) / (1 - $black);
         $magenta = (1 - $green - $black) / (1 - $black);
         $yellow = (1 - $blue - $black) / (1 - $black);
 
         return $this->cmyka = new CMYKA(
-            new Cyan((int) round($cyan * 100)),
-            new Magenta((int) round($magenta * 100)),
-            new Yellow((int) round($yellow * 100)),
-            new Black((int) round($black * 100)),
-            $this->alpha
+            new Cyan((int) \round($cyan * 100)),
+            new Magenta((int) \round($magenta * 100)),
+            new Yellow((int) \round($yellow * 100)),
+            new Black((int) \round($black * 100)),
+            $this->alpha,
         );
     }
 
@@ -431,7 +423,7 @@ final class RGBA implements ConvertibleInterface
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

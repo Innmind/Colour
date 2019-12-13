@@ -7,12 +7,12 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Hue
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 359) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
@@ -56,7 +56,7 @@ final class Hue
         return $this->value;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }

@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\Lightness;
+use Innmind\Colour\{
+    Lightness,
+    Exception\InvalidValueRangeException,
+};
 use PHPUnit\Framework\TestCase;
 
 class LightnessTest extends TestCase
@@ -13,7 +16,7 @@ class LightnessTest extends TestCase
         $lightness = new Lightness(100);
 
         $this->assertSame(100, $lightness->toInt());
-        $this->assertSame('100', (string) $lightness);
+        $this->assertSame('100', $lightness->toString());
     }
 
     public function testAdd()
@@ -42,19 +45,19 @@ class LightnessTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-42');
+
         new Lightness(-42);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('101');
+
         new Lightness(101);
     }
 

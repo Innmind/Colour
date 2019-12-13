@@ -7,12 +7,12 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Intensity
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;

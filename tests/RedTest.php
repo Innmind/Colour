@@ -5,7 +5,8 @@ namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\{
     Red,
-    Intensity
+    Intensity,
+    Exception\InvalidValueRangeException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +17,7 @@ class RedTest extends TestCase
         $red = new Red(255);
 
         $this->assertSame(255, $red->toInt());
-        $this->assertSame('ff', (string) $red);
+        $this->assertSame('ff', $red->toString());
     }
 
     public function testFromHexadecimal()
@@ -25,7 +26,7 @@ class RedTest extends TestCase
 
         $this->assertInstanceOf(Red::class, $red);
         $this->assertSame(15, $red->toInt());
-        $this->assertSame('0f', (string) $red);
+        $this->assertSame('0f', $red->toString());
     }
 
     public function testAdd()
@@ -54,19 +55,19 @@ class RedTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooLow()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('-42');
+
         new Red(-42);
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidValueRangeException
-     */
     public function testThrowWhenValueIsTooHigh()
     {
+        $this->expectException(InvalidValueRangeException::class);
+        $this->expectExceptionMessage('512');
+
         new Red(512);
     }
 

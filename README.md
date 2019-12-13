@@ -1,10 +1,9 @@
 # Colour
 
-| `master` | `develop` |
-|----------|-----------|
-| [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Colour/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Colour/?branch=master) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Colour/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Colour/?branch=develop) |
-| [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Colour/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Colour/?branch=master) | [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Colour/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Colour/?branch=develop) |
-| [![Build Status](https://scrutinizer-ci.com/g/Innmind/Colour/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Colour/build-status/master) | [![Build Status](https://scrutinizer-ci.com/g/Innmind/Colour/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Colour/build-status/develop) |
+| `develop` |
+|-----------|
+| [![codecov](https://codecov.io/gh/Innmind/Colour/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Colour) |
+| [![Build Status](https://travis-ci.org/Innmind/Colour.svg?branch=develop)](https://travis-ci.org/Innmind/Colour) |
 
 This library helps you build an object representation of a colour out of a string (all objects are immutable). You can easily extract any information out of the colors, transform their representation and modify the colours.
 
@@ -32,10 +31,10 @@ composer install innmind/colour
 ```php
 use Innmind\Colour\Colour;
 
-$rgba = Colour::fromString('39f');
-$hsla = Colour::fromString('hsl(210, 100%, 60%)');
-$cmyka = Colour::fromString('device-cmyk(80%, 40%, 0%, 0%)');
-$rgba = Colour::fromString('blue');
+$rgba = Colour::of('39f');
+$hsla = Colour::of('hsl(210, 100%, 60%)');
+$cmyka = Colour::of('device-cmyk(80%, 40%, 0%, 0%)');
+$rgba = Colour::of('blue');
 ```
 
 Each representation can be represented to the other two so you can always work with your preferred format.

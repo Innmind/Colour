@@ -15,12 +15,13 @@
         "issues": "http://github.com/Innmind/Colour/issues"
     },
     "require": {
-        "php": "~7.1",
-        "innmind/immutable": "~2.10"
+        "php": "~7.4",
+        "innmind/immutable": "~3.0"
     },
     "autoload": {
         "psr-4": {
-            "Innmind\\Colour\\": "src/"
+            "Innmind\\Colour\\": "src/",
+            "Fixtures\\Innmind\\Colour\\": "fixtures/"
         }
     },
     "autoload-dev": {
@@ -28,10 +29,15 @@
             "Tests\\Innmind\\Colour\\": "tests/"
         }
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit --colors=always"
-    },
     "require-dev": {
-        "phpunit/phpunit": "~7.0"
+        "phpunit/phpunit": "~8.0",
+        "vimeo/psalm": "^3.7",
+        "innmind/black-box": "^3.0"
+    },
+    "conflict": {
+        "innmind/black-box": "<3.0|~4.0"
+    },
+    "suggest": {
+        "innmind/black-box": "For property based testing"
     }
 }

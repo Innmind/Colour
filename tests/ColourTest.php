@@ -7,40 +7,41 @@ use Innmind\Colour\{
     Colour,
     RGBA,
     HSLA,
-    CMYKA
+    CMYKA,
+    Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class ColourTest extends TestCase
 {
-    public function testFromString()
+    public function testOf()
     {
         $this->assertInstanceOf(
             RGBA::class,
-            Colour::fromString('39F')
+            Colour::of('39F')
         );
         $this->assertInstanceOf(
             HSLA::class,
-            Colour::fromString('hsl(0, 0%, 0%)')
+            Colour::of('hsl(0, 0%, 0%)')
         );
         $this->assertInstanceOf(
             CMYKA::class,
-            Colour::fromString('device-cmyk(10%, 20%, 30%, 40%)')
+            Colour::of('device-cmyk(10%, 20%, 30%, 40%)')
         );
     }
 
-    /**
-     * @expectedException Innmind\Colour\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNoFormatRecognized()
     {
-        Colour::fromString('foo');
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('foo');
+
+        Colour::of('foo');
     }
 
     public function testLiterals()
     {
-        $this->assertInstanceOf(MapInterface::class, Colour::literals());
+        $this->assertInstanceOf(Map::class, Colour::literals());
         $this->assertSame('string', (string) Colour::literals()->keyType());
         $this->assertSame(RGBA::class, (string) Colour::literals()->valueType());
         $this->assertCount(148, Colour::literals());
@@ -51,7 +52,7 @@ class ColourTest extends TestCase
      */
     public function testFromLiteral(string $name, string $hex)
     {
-        $rgba = Colour::fromString($name);
+        $rgba = Colour::of($name);
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($hex, $rgba->toHexadecimal());

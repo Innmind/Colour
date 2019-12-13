@@ -7,12 +7,12 @@ use Innmind\Colour\Exception\InvalidValueRangeException;
 
 final class Black
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException;
+            throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
@@ -21,20 +21,20 @@ final class Black
     public function add(self $black): self
     {
         return new self(
-            min(
+            \min(
                 $this->value + $black->toInt(),
-                100
-            )
+                100,
+            ),
         );
     }
 
     public function subtract(self $black): self
     {
         return new self(
-            max(
+            \max(
                 $this->value - $black->toInt(),
-                0
-            )
+                0,
+            ),
         );
     }
 
@@ -58,7 +58,7 @@ final class Black
         return $this->value;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }
