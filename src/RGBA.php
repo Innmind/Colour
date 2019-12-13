@@ -356,6 +356,7 @@ final class RGBA implements Convertible
 
         $delta = $max - $min;
         $saturation = $lightness > 0.5 ? $delta / (2 - $max - $min) : $delta / ($max + $min);
+        $hue = 0;
 
         switch ($max) {
             case $red:

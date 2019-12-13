@@ -31,7 +31,7 @@ final class Blue
             $hex .= $hex;
         }
 
-        return new self(\hexdec($hex));
+        return new self((int) \hexdec($hex));
     }
 
     public static function fromIntensity(Intensity $intensity): self
