@@ -16,7 +16,7 @@ class HueTest extends TestCase
         $hue = new Hue(260);
 
         $this->assertSame(260, $hue->toInt());
-        $this->assertSame('260', (string) $hue);
+        $this->assertSame('260', $hue->toString());
     }
 
     public function testThrowWhenValueTooLow()

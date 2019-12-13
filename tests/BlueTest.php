@@ -17,7 +17,7 @@ class BlueTest extends TestCase
         $blue = new Blue(255);
 
         $this->assertSame(255, $blue->toInt());
-        $this->assertSame('ff', (string) $blue);
+        $this->assertSame('ff', $blue->toString());
     }
 
     public function testFromHexadecimal()
@@ -26,7 +26,7 @@ class BlueTest extends TestCase
 
         $this->assertInstanceOf(Blue::class, $blue);
         $this->assertSame(15, $blue->toInt());
-        $this->assertSame('0f', (string) $blue);
+        $this->assertSame('0f', $blue->toString());
     }
 
     public function testAdd()

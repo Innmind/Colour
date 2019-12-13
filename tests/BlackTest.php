@@ -16,7 +16,7 @@ class BlackTest extends TestCase
         $black = new Black(50);
 
         $this->assertSame(50, $black->toInt());
-        $this->assertSame('50', (string) $black);
+        $this->assertSame('50', $black->toString());
     }
 
     public function testThrowWhenValueTooLow()

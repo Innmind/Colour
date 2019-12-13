@@ -32,16 +32,16 @@ final class HSLA implements Convertible
         if ($this->alpha->atMaximum()) {
             $this->string = \sprintf(
                 'hsl(%s, %s%%, %s%%)',
-                $this->hue,
-                $this->saturation,
-                $this->lightness,
+                $this->hue->toString(),
+                $this->saturation->toString(),
+                $this->lightness->toString(),
             );
         } else {
             $this->string = \sprintf(
                 'hsla(%s, %s%%, %s%%, %s)',
-                $this->hue,
-                $this->saturation,
-                $this->lightness,
+                $this->hue->toString(),
+                $this->saturation->toString(),
+                $this->lightness->toString(),
                 $this->alpha->toFloat(),
             );
         }
@@ -229,7 +229,7 @@ final class HSLA implements Convertible
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

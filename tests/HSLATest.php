@@ -31,7 +31,7 @@ class HSLATest extends TestCase
         $this->assertSame($saturation, $hsl->saturation());
         $this->assertSame($lightness, $hsl->lightness());
         $this->assertSame(1.0, $hsl->alpha()->toFloat());
-        $this->assertSame('hsl(150, 42%, 24%)', (string) $hsl);
+        $this->assertSame('hsl(150, 42%, 24%)', $hsl->toString());
 
         $hsla = new HSLA(
             new Hue(150),
@@ -41,7 +41,7 @@ class HSLATest extends TestCase
         );
 
         $this->assertSame($alpha, $hsla->alpha());
-        $this->assertSame('hsla(150, 42%, 24%, 0.5)', (string) $hsla);
+        $this->assertSame('hsla(150, 42%, 24%, 0.5)', $hsla->toString());
     }
 
     public function testRotateBy()

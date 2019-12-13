@@ -16,7 +16,7 @@ class LightnessTest extends TestCase
         $lightness = new Lightness(100);
 
         $this->assertSame(100, $lightness->toInt());
-        $this->assertSame('100', (string) $lightness);
+        $this->assertSame('100', $lightness->toString());
     }
 
     public function testAdd()

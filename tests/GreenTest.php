@@ -17,7 +17,7 @@ class GreenTest extends TestCase
         $green = new Green(255);
 
         $this->assertSame(255, $green->toInt());
-        $this->assertSame('ff', (string) $green);
+        $this->assertSame('ff', $green->toString());
     }
 
     public function testFromHexadecimal()
@@ -26,7 +26,7 @@ class GreenTest extends TestCase
 
         $this->assertInstanceOf(Green::class, $green);
         $this->assertSame(15, $green->toInt());
-        $this->assertSame('0f', (string) $green);
+        $this->assertSame('0f', $green->toString());
     }
 
     public function testAdd()

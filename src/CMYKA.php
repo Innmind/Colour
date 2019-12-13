@@ -35,18 +35,18 @@ final class CMYKA implements Convertible
         if ($this->alpha->atMaximum()) {
             $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
-                $this->cyan,
-                $this->magenta,
-                $this->yellow,
-                $this->black,
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
             );
         } else {
             $this->string = \sprintf(
                 'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
-                $this->cyan,
-                $this->magenta,
-                $this->yellow,
-                $this->black,
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
                 $this->alpha->toFloat(),
             );
         }
@@ -273,7 +273,7 @@ final class CMYKA implements Convertible
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

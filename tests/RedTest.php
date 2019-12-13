@@ -17,7 +17,7 @@ class RedTest extends TestCase
         $red = new Red(255);
 
         $this->assertSame(255, $red->toInt());
-        $this->assertSame('ff', (string) $red);
+        $this->assertSame('ff', $red->toString());
     }
 
     public function testFromHexadecimal()
@@ -26,7 +26,7 @@ class RedTest extends TestCase
 
         $this->assertInstanceOf(Red::class, $red);
         $this->assertSame(15, $red->toInt());
-        $this->assertSame('0f', (string) $red);
+        $this->assertSame('0f', $red->toString());
     }
 
     public function testAdd()

@@ -32,7 +32,7 @@ class RGBATest extends TestCase
         $this->assertSame($blue, $rgba->blue());
         $this->assertSame($green, $rgba->green());
         $this->assertSame($alpha, $rgba->alpha());
-        $this->assertSame('rgba(0, 255, 122, 0.5)', (string) $rgba);
+        $this->assertSame('rgba(0, 255, 122, 0.5)', $rgba->toString());
     }
 
     public function testWithoutAlpha()
@@ -54,10 +54,10 @@ class RGBATest extends TestCase
             new Blue(122)
         );
 
-        $this->assertSame('#00ff7a', (string) $rgba);
+        $this->assertSame('#00ff7a', $rgba->toString());
         $this->assertSame(
             'rgba(0, 255, 122, 0.5)',
-            (string) $rgba->subtractAlpha(new Alpha(0.5))
+            $rgba->subtractAlpha(new Alpha(0.5))->toString()
         );
     }
 

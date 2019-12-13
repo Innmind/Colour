@@ -81,7 +81,7 @@ final class Alpha
         return $this->hexadecimal;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }

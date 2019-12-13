@@ -16,7 +16,7 @@ class SaturationTest extends TestCase
         $saturation = new Saturation(100);
 
         $this->assertSame(100, $saturation->toInt());
-        $this->assertSame('100', (string) $saturation);
+        $this->assertSame('100', $saturation->toString());
     }
 
     public function testAdd()

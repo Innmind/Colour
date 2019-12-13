@@ -81,7 +81,7 @@ final class Red
         return $this->integer;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->hexadecimal;
     }

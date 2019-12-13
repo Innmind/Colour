@@ -322,7 +322,7 @@ final class RGBA implements Convertible
 
     public function toHexadecimal(): string
     {
-        $hex = $this->red.$this->green.$this->blue;
+        $hex = $this->red->toString().$this->green->toString().$this->blue->toString();
 
         if (!$this->alpha->atMaximum()) {
             $hex .= $this->alpha()->toHexadecimal();
@@ -422,7 +422,7 @@ final class RGBA implements Convertible
         return $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->string;
     }

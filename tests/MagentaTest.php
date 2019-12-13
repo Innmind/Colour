@@ -16,7 +16,7 @@ class MagentaTest extends TestCase
         $magenta = new Magenta(50);
 
         $this->assertSame(50, $magenta->toInt());
-        $this->assertSame('50', (string) $magenta);
+        $this->assertSame('50', $magenta->toString());
     }
 
     public function testThrowWhenValueTooLow()

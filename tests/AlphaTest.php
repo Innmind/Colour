@@ -16,7 +16,7 @@ class AlphaTest extends TestCase
         $alpha = new Alpha(0.5);
 
         $this->assertSame(0.5, $alpha->toFloat());
-        $this->assertSame('0.5', (string) $alpha);
+        $this->assertSame('0.5', $alpha->toString());
     }
 
     public function testAdd()

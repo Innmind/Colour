@@ -16,7 +16,7 @@ class CyanTest extends TestCase
         $cyan = new Cyan(50);
 
         $this->assertSame(50, $cyan->toInt());
-        $this->assertSame('50', (string) $cyan);
+        $this->assertSame('50', $cyan->toString());
     }
 
     public function testThrowWhenValueTooLow()

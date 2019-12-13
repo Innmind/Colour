@@ -16,7 +16,7 @@ class YellowTest extends TestCase
         $yellow = new Yellow(50);
 
         $this->assertSame(50, $yellow->toInt());
-        $this->assertSame('50', (string) $yellow);
+        $this->assertSame('50', $yellow->toString());
     }
 
     public function testThrowWhenValueTooLow()

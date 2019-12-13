@@ -33,7 +33,7 @@ class CMYKATest extends TestCase
         $this->assertSame($yellow, $cmyk->yellow());
         $this->assertSame($black, $cmyk->black());
         $this->assertSame(1.0, $cmyk->alpha()->toFloat());
-        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%)', (string) $cmyk);
+        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%)', $cmyk->toString());
 
         $cmyka = new CMYKA(
             new Cyan(10),
@@ -44,7 +44,7 @@ class CMYKATest extends TestCase
         );
 
         $this->assertSame($alpha, $cmyka->alpha());
-        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%, 0.5)', (string) $cmyka);
+        $this->assertSame('device-cmyk(10%, 20%, 30%, 40%, 0.5)', $cmyka->toString());
     }
 
     public function testAddCyan()
