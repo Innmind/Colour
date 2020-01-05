@@ -3,7 +3,7 @@
 | `develop` |
 |-----------|
 | [![codecov](https://codecov.io/gh/Innmind/Colour/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Colour) |
-| [![Build Status](https://travis-ci.org/Innmind/Colour.svg?branch=develop)](https://travis-ci.org/Innmind/Colour) |
+| [![Build Status](https://github.com/Innmind/Colour/workflows/CI/badge.svg)](https://github.com/Innmind/Colour/actions?query=workflow%3ACI) |
 
 This library helps you build an object representation of a colour out of a string (all objects are immutable). You can easily extract any information out of the colors, transform their representation and modify the colours.
 
