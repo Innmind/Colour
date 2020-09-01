@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Colour\Colour;
+namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\{
     Colour,
