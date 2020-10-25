@@ -46,7 +46,8 @@ final class Colour
     {
         if (\is_null(self::$literals)) {
             /** @var Map<string, RGBA> */
-            self::$literals = Map::of('string', RGBA::class)
+            $literals = Map::of('string', RGBA::class);
+            self::$literals = $literals
                 ->put('aliceblue', RGBA::of('f0f8ff'))
                 ->put('antiquewhite', RGBA::of('faebd7'))
                 ->put('aqua', RGBA::of('0ff'))
