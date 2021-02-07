@@ -406,7 +406,7 @@ class CMYKATest extends TestCase
 
     public function colours()
     {
-        return array_merge($this->withAlpha(), $this->withoutAlpha());
+        return \array_merge($this->withAlpha(), $this->withoutAlpha());
     }
 
     public function testToRGBA()

@@ -23,9 +23,11 @@ final class Hue
         $degrees = $this->value + $degrees;
 
         if ($degrees < 0) {
-            $degrees = 360 + $degrees;
-        } else if ($degrees > 359) {
-            $degrees = $degrees - 360;
+            return new self(360 + $degrees);
+        }
+
+        if ($degrees > 359) {
+            return new self($degrees - 360);
         }
 
         return new self($degrees);

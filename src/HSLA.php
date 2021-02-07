@@ -240,8 +240,6 @@ final class HSLA implements Convertible
      * @param float $p Don't know what it represents
      * @param float $q Don't know what it represents
      * @param float $t Don't know what it represents
-     *
-     * @return float
      */
     private function hueToPoint(float $p, float $q, float $t): float
     {
