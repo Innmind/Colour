@@ -316,16 +316,16 @@ class RGBATest extends TestCase
 
     public function hexadecimals()
     {
-        $withoutAlpha = array_map(
-            function ($value) {
-                array_pop($value);
+        $withoutAlpha = \array_map(
+            static function($value) {
+                \array_pop($value);
 
                 return $value;
             },
             $this->hexadecimalWithoutAlpha()
         );
 
-        return array_merge($this->hexadecimalWithAlpha(), $withoutAlpha);
+        return \array_merge($this->hexadecimalWithAlpha(), $withoutAlpha);
     }
 
     public function testFromRGBFunctionWithPoints()
@@ -474,7 +474,7 @@ class RGBATest extends TestCase
         $this->assertSame($red, $rgba->red()->toInt());
         $this->assertSame($green, $rgba->green()->toInt());
         $this->assertSame($blue, $rgba->blue()->toInt());
-        $this->assertSame($alpha, round($rgba->alpha()->toFloat(), 1));
+        $this->assertSame($alpha, \round($rgba->alpha()->toFloat(), 1));
     }
 
     public function allFormats()

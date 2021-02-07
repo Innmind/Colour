@@ -1,9 +1,8 @@
 # Colour
 
-| `develop` |
-|-----------|
-| [![codecov](https://codecov.io/gh/Innmind/Colour/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Colour) |
-| [![Build Status](https://github.com/Innmind/Colour/workflows/CI/badge.svg)](https://github.com/Innmind/Colour/actions?query=workflow%3ACI) |
+[![Build Status](https://github.com/innmind/colour/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/colour/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/innmind/colour/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/colour)
+[![Type Coverage](https://shepherd.dev/github/innmind/colour/coverage.svg)](https://shepherd.dev/github/innmind/colour)
 
 This library helps you build an object representation of a colour out of a string (all objects are immutable). You can easily extract any information out of the colors, transform their representation and modify the colours.
 
