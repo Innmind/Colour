@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\DomainException;
-use Innmind\Immutable\Str;
+use Innmind\Immutable\{
+    Str,
+    Maybe,
+};
 
 final class HSLA implements Convertible
 {
@@ -64,14 +67,41 @@ final class HSLA implements Convertible
             throw new DomainException($colour->toString());
         }
 
-        $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
+        $matches = $colour
+            ->capture(self::PATTERN_WITH_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $hue = $matches
+            ->get('hue')
+            ->filter(static fn($hue) => \is_numeric($hue))
+            ->map(static fn($hue) => (int) $hue)
+            ->map(static fn($hue) => new Hue($hue));
+        $saturation = $matches
+            ->get('saturation')
+            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->map(static fn($saturation) => (int) $saturation)
+            ->map(static fn($saturation) => new Saturation($saturation));
+        $lightness = $matches
+            ->get('lightness')
+            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->map(static fn($lightness) => (int) $lightness)
+            ->map(static fn($lightness) => new Lightness($lightness));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->map(static fn($alpha) => new Alpha($alpha));
 
-        return new self(
-            new Hue((int) $matches->get('hue')->toString()),
-            new Saturation((int) $matches->get('saturation')->toString()),
-            new Lightness((int) $matches->get('lightness')->toString()),
-            new Alpha((float) $matches->get('alpha')->toString()),
-        );
+        return Maybe::all($hue, $saturation, $lightness, $alpha)
+            ->map(static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
+                $hue,
+                $saturation,
+                $lightness,
+                $alpha,
+            ))
+            ->match(
+                static fn($self) => $self,
+                static fn() => throw new DomainException($colour->toString()),
+            );
     }
 
     public static function withoutAlpha(Str $colour): self
@@ -80,13 +110,35 @@ final class HSLA implements Convertible
             throw new DomainException($colour->toString());
         }
 
-        $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
+        $matches = $colour
+            ->capture(self::PATTERN_WITHOUT_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $hue = $matches
+            ->get('hue')
+            ->filter(static fn($hue) => \is_numeric($hue))
+            ->map(static fn($hue) => (int) $hue)
+            ->map(static fn($hue) => new Hue($hue));
+        $saturation = $matches
+            ->get('saturation')
+            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->map(static fn($saturation) => (int) $saturation)
+            ->map(static fn($saturation) => new Saturation($saturation));
+        $lightness = $matches
+            ->get('lightness')
+            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->map(static fn($lightness) => (int) $lightness)
+            ->map(static fn($lightness) => new Lightness($lightness));
 
-        return new self(
-            new Hue((int) $matches->get('hue')->toString()),
-            new Saturation((int) $matches->get('saturation')->toString()),
-            new Lightness((int) $matches->get('lightness')->toString()),
-        );
+        return Maybe::all($hue, $saturation, $lightness)
+            ->map(static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(
+                $hue,
+                $saturation,
+                $lightness,
+            ))
+            ->match(
+                static fn($self) => $self,
+                static fn() => throw new DomainException($colour->toString()),
+            );
     }
 
     public function hue(): Hue
