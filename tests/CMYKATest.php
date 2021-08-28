@@ -14,7 +14,6 @@ use Innmind\Colour\{
     Convertible,
     Exception\DomainException,
 };
-use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
 
 class CMYKATest extends TestCase
@@ -309,9 +308,7 @@ class CMYKATest extends TestCase
         int $black,
         float $alpha
     ) {
-        $cmyka = CMYKA::withAlpha(
-            Str::of($string)
-        );
+        $cmyka = CMYKA::of($string);
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
         $this->assertSame($cyan, $cmyka->cyan()->toInt());
@@ -319,16 +316,6 @@ class CMYKATest extends TestCase
         $this->assertSame($yellow, $cmyka->yellow()->toInt());
         $this->assertSame($black, $cmyka->black()->toInt());
         $this->assertSame($alpha, $cmyka->alpha()->toFloat());
-    }
-
-    public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%)');
-
-        CMYKA::withAlpha(
-            Str::of('device-cmyk(10%, 20%, 30%, 40%)')
-        );
     }
 
     public function withAlpha()
@@ -353,9 +340,7 @@ class CMYKATest extends TestCase
         int $yellow,
         int $black
     ) {
-        $cmyka = CMYKA::withoutAlpha(
-            Str::of($string)
-        );
+        $cmyka = CMYKA::of($string);
 
         $this->assertInstanceOf(CMYKA::class, $cmyka);
         $this->assertSame($cyan, $cmyka->cyan()->toInt());
@@ -363,16 +348,6 @@ class CMYKATest extends TestCase
         $this->assertSame($yellow, $cmyka->yellow()->toInt());
         $this->assertSame($black, $cmyka->black()->toInt());
         $this->assertTrue($cmyka->alpha()->atMaximum());
-    }
-
-    public function testThrowWhenBuildingFromStringWithFoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('device-cmyk(10%, 20%, 30%, 40%, 1.0)');
-
-        CMYKA::withoutAlpha(
-            Str::of('device-cmyk(10%, 20%, 30%, 40%, 1.0)')
-        );
     }
 
     public function withoutAlpha()

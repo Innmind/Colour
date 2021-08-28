@@ -57,105 +57,22 @@ final class CMYKA implements Convertible
 
     public static function of(string $colour): self
     {
+        return self::maybe($colour)->match(
+            static fn($self) => $self,
+            static fn() => throw new DomainException($colour),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    public static function maybe(string $colour): Maybe
+    {
         $colour = Str::of($colour)->trim();
 
-        try {
-            return self::withAlpha($colour);
-        } catch (DomainException $e) {
-            return self::withoutAlpha($colour);
-        }
-    }
-
-    public static function withAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PATTERN_WITH_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $cyan = $matches
-            ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
-            ->map(static fn($cyan) => (int) $cyan)
-            ->map(static fn($cyan) => new Cyan($cyan));
-        $magenta = $matches
-            ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
-            ->map(static fn($magenta) => (int) $magenta)
-            ->map(static fn($magenta) => new Magenta($magenta));
-        $yellow = $matches
-            ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
-            ->map(static fn($yellow) => (int) $yellow)
-            ->map(static fn($yellow) => new Yellow($yellow));
-        $black = $matches
-            ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
-            ->map(static fn($black) => (int) $black)
-            ->map(static fn($black) => new Black($black));
-        $alpha = $matches
-            ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
-            ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
-
-        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)
-            ->map(static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
-                $alpha,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function withoutAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PATTERN_WITHOUT_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $cyan = $matches
-            ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
-            ->map(static fn($cyan) => (int) $cyan)
-            ->map(static fn($cyan) => new Cyan($cyan));
-        $magenta = $matches
-            ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
-            ->map(static fn($magenta) => (int) $magenta)
-            ->map(static fn($magenta) => new Magenta($magenta));
-        $yellow = $matches
-            ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
-            ->map(static fn($yellow) => (int) $yellow)
-            ->map(static fn($yellow) => new Yellow($yellow));
-        $black = $matches
-            ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
-            ->map(static fn($black) => (int) $black)
-            ->map(static fn($black) => new Black($black));
-
-        return Maybe::all($cyan, $magenta, $yellow, $black)
-            ->map(static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
+        return self::withAlpha($colour)->otherwise(
+            static fn() => self::withoutAlpha($colour),
+        );
     }
 
     public function cyan(): Cyan
@@ -338,5 +255,99 @@ final class CMYKA implements Convertible
     public function toString(): string
     {
         return $this->string;
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function withAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PATTERN_WITH_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $cyan = $matches
+            ->get('cyan')
+            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->map(static fn($cyan) => (int) $cyan)
+            ->map(static fn($cyan) => new Cyan($cyan));
+        $magenta = $matches
+            ->get('magenta')
+            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->map(static fn($magenta) => (int) $magenta)
+            ->map(static fn($magenta) => new Magenta($magenta));
+        $yellow = $matches
+            ->get('yellow')
+            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->map(static fn($yellow) => (int) $yellow)
+            ->map(static fn($yellow) => new Yellow($yellow));
+        $black = $matches
+            ->get('black')
+            ->filter(static fn($black) => \is_numeric($black))
+            ->map(static fn($black) => (int) $black)
+            ->map(static fn($black) => new Black($black));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->map(static fn($alpha) => new Alpha($alpha));
+
+        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)->map(
+            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
+                $cyan,
+                $magenta,
+                $yellow,
+                $black,
+                $alpha,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function withoutAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PATTERN_WITHOUT_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $cyan = $matches
+            ->get('cyan')
+            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->map(static fn($cyan) => (int) $cyan)
+            ->map(static fn($cyan) => new Cyan($cyan));
+        $magenta = $matches
+            ->get('magenta')
+            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->map(static fn($magenta) => (int) $magenta)
+            ->map(static fn($magenta) => new Magenta($magenta));
+        $yellow = $matches
+            ->get('yellow')
+            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->map(static fn($yellow) => (int) $yellow)
+            ->map(static fn($yellow) => new Yellow($yellow));
+        $black = $matches
+            ->get('black')
+            ->filter(static fn($black) => \is_numeric($black))
+            ->map(static fn($black) => (int) $black)
+            ->map(static fn($black) => new Black($black));
+
+        return Maybe::all($cyan, $magenta, $yellow, $black)->map(
+            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
+                $cyan,
+                $magenta,
+                $yellow,
+                $black,
+            ),
+        );
     }
 }

@@ -52,93 +52,22 @@ final class HSLA implements Convertible
 
     public static function of(string $colour): self
     {
+        return self::maybe($colour)->match(
+            static fn($self) => $self,
+            static fn() => throw new DomainException($colour),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    public static function maybe(string $colour): Maybe
+    {
         $colour = Str::of($colour)->trim();
 
-        try {
-            return self::withAlpha($colour);
-        } catch (DomainException $e) {
-            return self::withoutAlpha($colour);
-        }
-    }
-
-    public static function withAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PATTERN_WITH_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $hue = $matches
-            ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
-            ->map(static fn($hue) => (int) $hue)
-            ->map(static fn($hue) => new Hue($hue));
-        $saturation = $matches
-            ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
-            ->map(static fn($saturation) => (int) $saturation)
-            ->map(static fn($saturation) => new Saturation($saturation));
-        $lightness = $matches
-            ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
-            ->map(static fn($lightness) => (int) $lightness)
-            ->map(static fn($lightness) => new Lightness($lightness));
-        $alpha = $matches
-            ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
-            ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
-
-        return Maybe::all($hue, $saturation, $lightness, $alpha)
-            ->map(static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
-                $hue,
-                $saturation,
-                $lightness,
-                $alpha,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function withoutAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PATTERN_WITHOUT_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $hue = $matches
-            ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
-            ->map(static fn($hue) => (int) $hue)
-            ->map(static fn($hue) => new Hue($hue));
-        $saturation = $matches
-            ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
-            ->map(static fn($saturation) => (int) $saturation)
-            ->map(static fn($saturation) => new Saturation($saturation));
-        $lightness = $matches
-            ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
-            ->map(static fn($lightness) => (int) $lightness)
-            ->map(static fn($lightness) => new Lightness($lightness));
-
-        return Maybe::all($hue, $saturation, $lightness)
-            ->map(static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(
-                $hue,
-                $saturation,
-                $lightness,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
+        return self::withAlpha($colour)->otherwise(
+            static fn() => self::withoutAlpha($colour),
+        );
     }
 
     public function hue(): Hue
@@ -315,5 +244,87 @@ final class HSLA implements Convertible
         }
 
         return $p;
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function withAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PATTERN_WITH_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $hue = $matches
+            ->get('hue')
+            ->filter(static fn($hue) => \is_numeric($hue))
+            ->map(static fn($hue) => (int) $hue)
+            ->map(static fn($hue) => new Hue($hue));
+        $saturation = $matches
+            ->get('saturation')
+            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->map(static fn($saturation) => (int) $saturation)
+            ->map(static fn($saturation) => new Saturation($saturation));
+        $lightness = $matches
+            ->get('lightness')
+            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->map(static fn($lightness) => (int) $lightness)
+            ->map(static fn($lightness) => new Lightness($lightness));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->map(static fn($alpha) => new Alpha($alpha));
+
+        return Maybe::all($hue, $saturation, $lightness, $alpha)->map(
+            static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
+                $hue,
+                $saturation,
+                $lightness,
+                $alpha,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function withoutAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PATTERN_WITHOUT_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $hue = $matches
+            ->get('hue')
+            ->filter(static fn($hue) => \is_numeric($hue))
+            ->map(static fn($hue) => (int) $hue)
+            ->map(static fn($hue) => new Hue($hue));
+        $saturation = $matches
+            ->get('saturation')
+            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->map(static fn($saturation) => (int) $saturation)
+            ->map(static fn($saturation) => new Saturation($saturation));
+        $lightness = $matches
+            ->get('lightness')
+            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->map(static fn($lightness) => (int) $lightness)
+            ->map(static fn($lightness) => new Lightness($lightness));
+
+        return Maybe::all($hue, $saturation, $lightness)->map(
+            static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(
+                $hue,
+                $saturation,
+                $lightness,
+            ),
+        );
     }
 }

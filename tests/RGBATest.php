@@ -14,7 +14,6 @@ use Innmind\Colour\{
     Convertible,
     Exception\DomainException,
 };
-use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
 
 class RGBATest extends TestCase
@@ -221,25 +220,13 @@ class RGBATest extends TestCase
         int $blue,
         float $alpha
     ) {
-        $rgba = RGBA::fromHexadecimalWithAlpha(
-            Str::of($string)
-        );
+        $rgba = RGBA::of($string);
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($red, $rgba->red()->toInt());
         $this->assertSame($blue, $rgba->blue()->toInt());
         $this->assertSame($green, $rgba->green()->toInt());
         $this->assertSame($alpha, $rgba->alpha()->toFloat());
-    }
-
-    public function testThrowWhenBuildingFromHexadecimalWithUnfoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('#39F');
-
-        RGBA::fromHexadecimalWithAlpha(
-            Str::of('#39F')
-        );
     }
 
     public function hexadecimalWithAlpha()
@@ -262,9 +249,7 @@ class RGBATest extends TestCase
         int $blue,
         string $hexa
     ) {
-        $rgba = RGBA::fromHexadecimalWithoutAlpha(
-            Str::of($string)
-        );
+        $rgba = RGBA::of($string);
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($red, $rgba->red()->toInt());
@@ -272,16 +257,6 @@ class RGBATest extends TestCase
         $this->assertSame($green, $rgba->green()->toInt());
         $this->assertTrue($rgba->alpha()->atMaximum());
         $this->assertSame($hexa, $rgba->toHexadecimal());
-    }
-
-    public function testThrowWhenBuildingFromStringWithFoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('39FF');
-
-        RGBA::fromHexadecimalWithoutAlpha(
-            Str::of('#39FF')
-        );
     }
 
     public function hexadecimalWithoutAlpha()
@@ -305,7 +280,7 @@ class RGBATest extends TestCase
         int $blue,
         float $alpha = null
     ) {
-        $rgba = RGBA::fromHexadecimal($string);
+        $rgba = RGBA::of($string);
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($red, $rgba->red()->toInt());
@@ -330,9 +305,7 @@ class RGBATest extends TestCase
 
     public function testFromRGBFunctionWithPoints()
     {
-        $rgb = RGBA::fromRGBFunctionWithPoints(
-            Str::of('rgb(10, 20, 30)')
-        );
+        $rgb = RGBA::of('rgb(10, 20, 30)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(10, $rgb->red()->toInt());
@@ -346,16 +319,12 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('rgb(10, 20%, 30)');
 
-        RGBA::fromRGBFunctionWithPoints(
-            Str::of('rgb(10, 20%, 30)')
-        );
+        RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunctionWithPercents()
     {
-        $rgb = RGBA::fromRGBFunctionWithPercents(
-            Str::of('rgb(10%, 20%, 30%)')
-        );
+        $rgb = RGBA::of('rgb(10%, 20%, 30%)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(26, $rgb->red()->toInt());
@@ -369,14 +338,12 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('rgb(10, 20%, 30)');
 
-        RGBA::fromRGBFunctionWithPercents(
-            Str::of('rgb(10, 20%, 30)')
-        );
+        RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunction()
     {
-        $rgb = RGBA::fromRGBFunction('rgb(10, 20, 30)');
+        $rgb = RGBA::of('rgb(10, 20, 30)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(10, $rgb->red()->toInt());
@@ -384,7 +351,7 @@ class RGBATest extends TestCase
         $this->assertSame(30, $rgb->blue()->toInt());
         $this->assertTrue($rgb->alpha()->atMaximum());
 
-        $rgb = RGBA::fromRGBFunction('rgb(10%, 20%, 30%)');
+        $rgb = RGBA::of('rgb(10%, 20%, 30%)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(26, $rgb->red()->toInt());
@@ -395,9 +362,7 @@ class RGBATest extends TestCase
 
     public function testFromRGBAFunctionWithPoints()
     {
-        $rgb = RGBA::fromRGBAFunctionWithPoints(
-            Str::of('rgba(10, 20, 30, 0.5)')
-        );
+        $rgb = RGBA::of('rgba(10, 20, 30, 0.5)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(10, $rgb->red()->toInt());
@@ -411,16 +376,12 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('rgba(10, 20%, 30, 2.0)');
 
-        RGBA::fromRGBAFunctionWithPoints(
-            Str::of('rgba(10, 20%, 30, 2.0)')
-        );
+        RGBA::of('rgba(10, 20%, 30, 2.0)');
     }
 
     public function testFromRGBAFunctionWithPercents()
     {
-        $rgb = RGBA::fromRGBAFunctionWithPercents(
-            Str::of('rgba(10%, 20%, 30%, 0)')
-        );
+        $rgb = RGBA::of('rgba(10%, 20%, 30%, 0)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(26, $rgb->red()->toInt());
@@ -434,14 +395,12 @@ class RGBATest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('rgba(10, 20%, 30, 1)');
 
-        RGBA::fromRGBFunctionWithPercents(
-            Str::of('rgba(10, 20%, 30, 1)')
-        );
+        RGBA::of('rgba(10, 20%, 30, 1)');
     }
 
     public function testFromRGBAFunction()
     {
-        $rgb = RGBA::fromRGBAFunction('rgba(10, 20, 30, 1)');
+        $rgb = RGBA::of('rgba(10, 20, 30, 1)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(10, $rgb->red()->toInt());
@@ -449,7 +408,7 @@ class RGBATest extends TestCase
         $this->assertSame(30, $rgb->blue()->toInt());
         $this->assertTrue($rgb->alpha()->atMaximum());
 
-        $rgb = RGBA::fromRGBAFunction('rgba(10%, 20%, 30%, 1.0)');
+        $rgb = RGBA::of('rgba(10%, 20%, 30%, 1.0)');
 
         $this->assertInstanceOf(RGBA::class, $rgb);
         $this->assertSame(26, $rgb->red()->toInt());

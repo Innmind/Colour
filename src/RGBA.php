@@ -52,300 +52,22 @@ final class RGBA implements Convertible
 
     public static function of(string $colour): self
     {
-        try {
-            return self::fromHexadecimal($colour);
-        } catch (DomainException $e) {
-            //attempt next format
-        }
-
-        try {
-            return self::fromRGBFunction($colour);
-        } catch (DomainException $e) {
-            //attempt next format
-        }
-
-        return self::fromRGBAFunction($colour);
+        return self::maybe($colour)->match(
+            static fn($self) => $self,
+            static fn() => throw new DomainException($colour),
+        );
     }
 
-    public static function fromHexadecimal(string $colour): self
+    /**
+     * @return Maybe<self>
+     */
+    public static function maybe(string $colour): Maybe
     {
         $colour = Str::of($colour)->trim();
 
-        try {
-            return self::fromHexadecimalWithAlpha($colour);
-        } catch (DomainException $e) {
-            return self::fromHexadecimalWithoutAlpha($colour);
-        }
-    }
-
-    public static function fromHexadecimalWithAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        if ($colour->matches('/^#/')) {
-            $colour = $colour->substring(1);
-        }
-
-        if (
-            $colour->length() !== 4 &&
-            $colour->length() !== 8
-        ) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->map(static fn($red) => Red::fromHexadecimal($red));
-        $green = $matches
-            ->get('green')
-            ->map(static fn($green) => Green::fromHexadecimal($green));
-        $blue = $matches
-            ->get('blue')
-            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
-        $alpha = $matches
-            ->get('alpha')
-            ->map(static fn($alpha) => Alpha::fromHexadecimal($alpha));
-
-        return Maybe::all($red, $green, $blue, $alpha)
-            ->map(static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function fromHexadecimalWithoutAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        if ($colour->matches('/^#/')) {
-            $colour = $colour->substring(1);
-        }
-
-        if (
-            $colour->length() !== 3 &&
-            $colour->length() !== 6
-        ) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->map(static fn($red) => Red::fromHexadecimal($red));
-        $green = $matches
-            ->get('green')
-            ->map(static fn($green) => Green::fromHexadecimal($green));
-        $blue = $matches
-            ->get('blue')
-            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
-
-        return Maybe::all($red, $green, $blue)
-            ->map(static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function fromRGBFunction(string $colour): self
-    {
-        $colour = Str::of($colour)->trim();
-
-        try {
-            return self::fromRGBFunctionWithPoints($colour);
-        } catch (DomainException $e) {
-            return self::fromRGBFunctionWithPercents($colour);
-        }
-    }
-
-    public static function fromRGBFunctionWithPoints(Str $colour): self
-    {
-        if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::RGB_FUNCTION_PATTERN)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
-            ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => new Red($red));
-        $green = $matches
-            ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
-            ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => new Green($green));
-        $blue = $matches
-            ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
-            ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => new Blue($blue));
-
-        return Maybe::all($red, $green, $blue)
-            ->map(static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function fromRGBFunctionWithPercents(Str $colour): self
-    {
-        if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PERCENTED_RGB_FUNCTION_PATTERN)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
-            ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
-        $green = $matches
-            ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
-            ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
-        $blue = $matches
-            ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
-            ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
-
-        return Maybe::all($red, $green, $blue)
-            ->map(static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function fromRGBAFunction(string $colour): self
-    {
-        $colour = Str::of($colour)->trim();
-
-        try {
-            return self::fromRGBAFunctionWithPoints($colour);
-        } catch (DomainException $e) {
-            return self::fromRGBAFunctionWithPercents($colour);
-        }
-    }
-
-    public static function fromRGBAFunctionWithPoints(Str $colour): self
-    {
-        if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::RGBA_FUNCTION_PATTERN)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
-            ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => new Red($red));
-        $green = $matches
-            ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
-            ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => new Green($green));
-        $blue = $matches
-            ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
-            ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => new Blue($blue));
-        $alpha = $matches
-            ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
-            ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
-
-        return Maybe::all($red, $green, $blue, $alpha)
-            ->map(static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
-    }
-
-    public static function fromRGBAFunctionWithPercents(Str $colour): self
-    {
-        if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour
-            ->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN)
-            ->map(static fn($_, $match) => $match->toString());
-        $red = $matches
-            ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
-            ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
-        $green = $matches
-            ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
-            ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
-        $blue = $matches
-            ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
-            ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
-        $alpha = $matches
-            ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
-            ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
-
-        return Maybe::all($red, $green, $blue, $alpha)
-            ->map(static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
-            ))
-            ->match(
-                static fn($self) => $self,
-                static fn() => throw new DomainException($colour->toString()),
-            );
+        return self::fromHexadecimal($colour)
+            ->otherwise(static fn() => self::fromRGBFunction($colour))
+            ->otherwise(static fn() => self::fromRGBAFunction($colour));
     }
 
     public function red(): Red
@@ -562,5 +284,291 @@ final class RGBA implements Convertible
     public function toString(): string
     {
         return $this->string;
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromHexadecimal(Str $colour): Maybe
+    {
+        return self::fromHexadecimalWithAlpha($colour)->otherwise(
+            static fn() => self::fromHexadecimalWithoutAlpha($colour),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromHexadecimalWithAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        if ($colour->matches('/^#/')) {
+            $colour = $colour->substring(1);
+        }
+
+        if (
+            $colour->length() !== 4 &&
+            $colour->length() !== 8
+        ) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::HEXADECIMAL_PATTERN_WITH_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->map(static fn($red) => Red::fromHexadecimal($red));
+        $green = $matches
+            ->get('green')
+            ->map(static fn($green) => Green::fromHexadecimal($green));
+        $blue = $matches
+            ->get('blue')
+            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
+        $alpha = $matches
+            ->get('alpha')
+            ->map(static fn($alpha) => Alpha::fromHexadecimal($alpha));
+
+        return Maybe::all($red, $green, $blue, $alpha)->map(
+            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
+                $red,
+                $green,
+                $blue,
+                $alpha,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromHexadecimalWithoutAlpha(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        if ($colour->matches('/^#/')) {
+            $colour = $colour->substring(1);
+        }
+
+        if (
+            $colour->length() !== 3 &&
+            $colour->length() !== 6
+        ) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->map(static fn($red) => Red::fromHexadecimal($red));
+        $green = $matches
+            ->get('green')
+            ->map(static fn($green) => Green::fromHexadecimal($green));
+        $blue = $matches
+            ->get('blue')
+            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
+
+        return Maybe::all($red, $green, $blue)->map(
+            static fn(Red $red, Green $green, Blue $blue) => new self(
+                $red,
+                $green,
+                $blue,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBFunction(Str $colour): Maybe
+    {
+        return self::fromRGBFunctionWithPoints($colour)->otherwise(
+            static fn() => self::fromRGBFunctionWithPercents($colour),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBFunctionWithPoints(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::RGB_FUNCTION_PATTERN)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->filter(static fn($red) => \is_numeric($red))
+            ->map(static fn($red) => (int) $red)
+            ->map(static fn($red) => new Red($red));
+        $green = $matches
+            ->get('green')
+            ->filter(static fn($green) => \is_numeric($green))
+            ->map(static fn($green) => (int) $green)
+            ->map(static fn($green) => new Green($green));
+        $blue = $matches
+            ->get('blue')
+            ->filter(static fn($blue) => \is_numeric($blue))
+            ->map(static fn($blue) => (int) $blue)
+            ->map(static fn($blue) => new Blue($blue));
+
+        return Maybe::all($red, $green, $blue)->map(
+            static fn(Red $red, Green $green, Blue $blue) => new self(
+                $red,
+                $green,
+                $blue,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBFunctionWithPercents(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PERCENTED_RGB_FUNCTION_PATTERN)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->filter(static fn($red) => \is_numeric($red))
+            ->map(static fn($red) => (int) $red)
+            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
+        $green = $matches
+            ->get('green')
+            ->filter(static fn($green) => \is_numeric($green))
+            ->map(static fn($green) => (int) $green)
+            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
+        $blue = $matches
+            ->get('blue')
+            ->filter(static fn($blue) => \is_numeric($blue))
+            ->map(static fn($blue) => (int) $blue)
+            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
+
+        return Maybe::all($red, $green, $blue)->map(
+            static fn(Red $red, Green $green, Blue $blue) => new self(
+                $red,
+                $green,
+                $blue,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBAFunction(Str $colour): Maybe
+    {
+        return self::fromRGBAFunctionWithPoints($colour)->otherwise(
+            static fn() => self::fromRGBAFunctionWithPercents($colour),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBAFunctionWithPoints(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::RGBA_FUNCTION_PATTERN)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->filter(static fn($red) => \is_numeric($red))
+            ->map(static fn($red) => (int) $red)
+            ->map(static fn($red) => new Red($red));
+        $green = $matches
+            ->get('green')
+            ->filter(static fn($green) => \is_numeric($green))
+            ->map(static fn($green) => (int) $green)
+            ->map(static fn($green) => new Green($green));
+        $blue = $matches
+            ->get('blue')
+            ->filter(static fn($blue) => \is_numeric($blue))
+            ->map(static fn($blue) => (int) $blue)
+            ->map(static fn($blue) => new Blue($blue));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->map(static fn($alpha) => new Alpha($alpha));
+
+        return Maybe::all($red, $green, $blue, $alpha)->map(
+            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
+                $red,
+                $green,
+                $blue,
+                $alpha,
+            ),
+        );
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    private static function fromRGBAFunctionWithPercents(Str $colour): Maybe
+    {
+        if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+
+        $matches = $colour
+            ->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN)
+            ->map(static fn($_, $match) => $match->toString());
+        $red = $matches
+            ->get('red')
+            ->filter(static fn($red) => \is_numeric($red))
+            ->map(static fn($red) => (int) $red)
+            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
+        $green = $matches
+            ->get('green')
+            ->filter(static fn($green) => \is_numeric($green))
+            ->map(static fn($green) => (int) $green)
+            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
+        $blue = $matches
+            ->get('blue')
+            ->filter(static fn($blue) => \is_numeric($blue))
+            ->map(static fn($blue) => (int) $blue)
+            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->map(static fn($alpha) => new Alpha($alpha));
+
+        return Maybe::all($red, $green, $blue, $alpha)->map(
+            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
+                $red,
+                $green,
+                $blue,
+                $alpha,
+            ),
+        );
     }
 }

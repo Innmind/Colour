@@ -7,6 +7,7 @@ use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Map,
     Str,
+    Maybe,
 };
 
 final class Colour
@@ -16,26 +17,24 @@ final class Colour
 
     public static function of(string $colour): Convertible
     {
-        try {
-            return RGBA::of($colour);
-        } catch (DomainException $e) {
-            //attempt next format
-        }
+        return self::maybe($colour)->match(
+            static fn($colour) => $colour,
+            static fn() => throw new DomainException($colour),
+        );
+    }
 
-        try {
-            return HSLA::of($colour);
-        } catch (DomainException $e) {
-            //attempt next format
-        }
-
-        $literal = Str::of($colour)->trim()->toLower()->toString();
-
-        return self::literals()
-            ->get($literal)
-            ->match(
-                static fn($rgba) => $rgba,
-                static fn() => CMYKA::of($colour),
-            );
+    /**
+     * @return Maybe<Convertible>
+     */
+    public static function maybe(string $colour): Maybe
+    {
+        /** @var Maybe<Convertible> */
+        return RGBA::maybe($colour)
+            ->otherwise(static fn() => HSLA::maybe($colour))
+            ->otherwise(static fn() => self::literals()->get(
+                Str::of($colour)->trim()->toLower()->toString(),
+            ))
+            ->otherwise(static fn() => CMYKA::maybe($colour));
     }
 
     /**

@@ -14,7 +14,6 @@ use Innmind\Colour\{
     Convertible,
     Exception\DomainException,
 };
-use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
 
 class HSLATest extends TestCase
@@ -209,25 +208,13 @@ class HSLATest extends TestCase
         int $lightness,
         float $alpha
     ) {
-        $hsla = HSLA::withAlpha(
-            Str::of($string)
-        );
+        $hsla = HSLA::of($string);
 
         $this->assertInstanceOf(HSLA::class, $hsla);
         $this->assertSame($hue, $hsla->hue()->toInt());
         $this->assertSame($saturation, $hsla->saturation()->toInt());
         $this->assertSame($lightness, $hsla->lightness()->toInt());
         $this->assertSame($alpha, $hsla->alpha()->toFloat());
-    }
-
-    public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('hsl(10, 20%, 30%)');
-
-        HSLA::withAlpha(
-            Str::of('hsl(10, 20%, 30%)')
-        );
     }
 
     public function withAlpha()
@@ -251,25 +238,13 @@ class HSLATest extends TestCase
         int $saturation,
         int $lightness
     ) {
-        $hsla = HSLA::withoutAlpha(
-            Str::of($string)
-        );
+        $hsla = HSLA::of($string);
 
         $this->assertInstanceOf(HSLA::class, $hsla);
         $this->assertSame($hue, $hsla->hue()->toInt());
         $this->assertSame($saturation, $hsla->saturation()->toInt());
         $this->assertSame($lightness, $hsla->lightness()->toInt());
         $this->assertTrue($hsla->alpha()->atMaximum());
-    }
-
-    public function testThrowWhenBuildingFromStringWithFoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('hsla(10, 20%, 30%, 1.0)');
-
-        HSLA::withoutAlpha(
-            Str::of('hsla(10, 20%, 30%, 1.0)')
-        );
     }
 
     public function withoutAlpha()
