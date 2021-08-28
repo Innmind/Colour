@@ -12,9 +12,15 @@ use Innmind\Colour\{
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    Set,
+};
 
 class ColourTest extends TestCase
 {
+    use BlackBox;
+
     public function testOf()
     {
         $this->assertInstanceOf(
@@ -29,6 +35,18 @@ class ColourTest extends TestCase
             CMYKA::class,
             Colour::of('device-cmyk(10%, 20%, 30%, 40%)')
         );
+    }
+
+    public function testReturnNothingForRandomStrings()
+    {
+        $this
+            ->forAll(Set\Unicode::strings())
+            ->then(function($string) {
+                $this->assertNull(Colour::maybe($string)->match(
+                    static fn($colour) => $colour,
+                    static fn() => null,
+                ));
+            });
     }
 
     public function testThrowWhenNoFormatRecognized()
