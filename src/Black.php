@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidValueRangeException;
+use Innmind\Immutable\Maybe;
 
 final class Black
 {
@@ -16,6 +17,19 @@ final class Black
         }
 
         $this->value = $value;
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    public static function of(int $value): Maybe
+    {
+        try {
+            return Maybe::just(new self($value));
+        } catch (InvalidValueRangeException $e) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
     }
 
     public function add(self $black): self

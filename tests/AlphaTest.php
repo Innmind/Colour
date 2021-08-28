@@ -85,7 +85,10 @@ class AlphaTest extends TestCase
             (new Alpha($percent))->toHexadecimal()
         );
 
-        $alpha = Alpha::fromHexadecimal($hex);
+        $alpha = Alpha::fromHexadecimal($hex)->match(
+            static fn($alpha) => $alpha,
+            static fn() => null,
+        );
         $this->assertInstanceOf(Alpha::class, $alpha);
         $this->assertSame($percent, $alpha->toFloat());
     }

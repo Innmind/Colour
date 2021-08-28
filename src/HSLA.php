@@ -263,22 +263,22 @@ final class HSLA
             ->get('hue')
             ->filter(static fn($hue) => \is_numeric($hue))
             ->map(static fn($hue) => (int) $hue)
-            ->map(static fn($hue) => new Hue($hue));
+            ->flatMap(static fn($hue) => Hue::of($hue));
         $saturation = $matches
             ->get('saturation')
             ->filter(static fn($saturation) => \is_numeric($saturation))
             ->map(static fn($saturation) => (int) $saturation)
-            ->map(static fn($saturation) => new Saturation($saturation));
+            ->flatMap(static fn($saturation) => Saturation::of($saturation));
         $lightness = $matches
             ->get('lightness')
             ->filter(static fn($lightness) => \is_numeric($lightness))
             ->map(static fn($lightness) => (int) $lightness)
-            ->map(static fn($lightness) => new Lightness($lightness));
+            ->flatMap(static fn($lightness) => Lightness::of($lightness));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
         return Maybe::all($hue, $saturation, $lightness, $alpha)->map(
             static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
@@ -307,17 +307,17 @@ final class HSLA
             ->get('hue')
             ->filter(static fn($hue) => \is_numeric($hue))
             ->map(static fn($hue) => (int) $hue)
-            ->map(static fn($hue) => new Hue($hue));
+            ->flatMap(static fn($hue) => Hue::of($hue));
         $saturation = $matches
             ->get('saturation')
             ->filter(static fn($saturation) => \is_numeric($saturation))
             ->map(static fn($saturation) => (int) $saturation)
-            ->map(static fn($saturation) => new Saturation($saturation));
+            ->flatMap(static fn($saturation) => Saturation::of($saturation));
         $lightness = $matches
             ->get('lightness')
             ->filter(static fn($lightness) => \is_numeric($lightness))
             ->map(static fn($lightness) => (int) $lightness)
-            ->map(static fn($lightness) => new Lightness($lightness));
+            ->flatMap(static fn($lightness) => Lightness::of($lightness));
 
         return Maybe::all($hue, $saturation, $lightness)->map(
             static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(

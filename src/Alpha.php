@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidValueRangeException;
+use Innmind\Immutable\Maybe;
 
 final class Alpha
 {
@@ -27,13 +28,29 @@ final class Alpha
         );
     }
 
-    public static function fromHexadecimal(string $hex): self
+    /**
+     * @return Maybe<self>
+     */
+    public static function of(float $value): Maybe
+    {
+        try {
+            return Maybe::just(new self($value));
+        } catch (InvalidValueRangeException $e) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+    }
+
+    /**
+     * @return Maybe<self>
+     */
+    public static function fromHexadecimal(string $hex): Maybe
     {
         if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
         }
 
-        return new self(\round(\hexdec($hex) / 255, 2));
+        return self::of(\round(\hexdec($hex) / 255, 2));
     }
 
     public function add(self $alpha): self

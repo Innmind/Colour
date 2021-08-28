@@ -323,16 +323,16 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->map(static fn($red) => Red::fromHexadecimal($red));
+            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
         $green = $matches
             ->get('green')
-            ->map(static fn($green) => Green::fromHexadecimal($green));
+            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
         $blue = $matches
             ->get('blue')
-            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
         $alpha = $matches
             ->get('alpha')
-            ->map(static fn($alpha) => Alpha::fromHexadecimal($alpha));
+            ->flatMap(static fn($alpha) => Alpha::fromHexadecimal($alpha));
 
         return Maybe::all($red, $green, $blue, $alpha)->map(
             static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
@@ -371,13 +371,13 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->map(static fn($red) => Red::fromHexadecimal($red));
+            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
         $green = $matches
             ->get('green')
-            ->map(static fn($green) => Green::fromHexadecimal($green));
+            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
         $blue = $matches
             ->get('blue')
-            ->map(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
 
         return Maybe::all($red, $green, $blue)->map(
             static fn(Red $red, Green $green, Blue $blue) => new self(
@@ -415,17 +415,17 @@ final class RGBA
             ->get('red')
             ->filter(static fn($red) => \is_numeric($red))
             ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => new Red($red));
+            ->flatMap(static fn($red) => Red::of($red));
         $green = $matches
             ->get('green')
             ->filter(static fn($green) => \is_numeric($green))
             ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => new Green($green));
+            ->flatMap(static fn($green) => Green::of($green));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => new Blue($blue));
+            ->flatMap(static fn($blue) => Blue::of($blue));
 
         return Maybe::all($red, $green, $blue)->map(
             static fn(Red $red, Green $green, Blue $blue) => new self(
@@ -453,17 +453,20 @@ final class RGBA
             ->get('red')
             ->filter(static fn($red) => \is_numeric($red))
             ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
+            ->flatMap(static fn($red) => Intensity::of($red))
+            ->flatMap(static fn($red) => Red::fromIntensity($red));
         $green = $matches
             ->get('green')
             ->filter(static fn($green) => \is_numeric($green))
             ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
+            ->flatMap(static fn($green) => Intensity::of($green))
+            ->flatMap(static fn($green) => Green::fromIntensity($green));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
+            ->flatMap(static fn($blue) => Intensity::of($blue))
+            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
 
         return Maybe::all($red, $green, $blue)->map(
             static fn(Red $red, Green $green, Blue $blue) => new self(
@@ -501,22 +504,22 @@ final class RGBA
             ->get('red')
             ->filter(static fn($red) => \is_numeric($red))
             ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => new Red($red));
+            ->flatMap(static fn($red) => Red::of($red));
         $green = $matches
             ->get('green')
             ->filter(static fn($green) => \is_numeric($green))
             ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => new Green($green));
+            ->flatMap(static fn($green) => Green::of($green));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => new Blue($blue));
+            ->flatMap(static fn($blue) => Blue::of($blue));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
         return Maybe::all($red, $green, $blue, $alpha)->map(
             static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
@@ -545,22 +548,25 @@ final class RGBA
             ->get('red')
             ->filter(static fn($red) => \is_numeric($red))
             ->map(static fn($red) => (int) $red)
-            ->map(static fn($red) => Red::fromIntensity(new Intensity($red)));
+            ->flatMap(static fn($red) => Intensity::of($red))
+            ->flatMap(static fn($red) => Red::fromIntensity($red));
         $green = $matches
             ->get('green')
             ->filter(static fn($green) => \is_numeric($green))
             ->map(static fn($green) => (int) $green)
-            ->map(static fn($green) => Green::fromIntensity(new Intensity($green)));
+            ->flatMap(static fn($green) => Intensity::of($green))
+            ->flatMap(static fn($green) => Green::fromIntensity($green));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
-            ->map(static fn($blue) => Blue::fromIntensity(new Intensity($blue)));
+            ->flatMap(static fn($blue) => Intensity::of($blue))
+            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
         return Maybe::all($red, $green, $blue, $alpha)->map(
             static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(

@@ -274,27 +274,27 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->map(static fn($cyan) => new Cyan($cyan));
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->map(static fn($magenta) => new Magenta($magenta));
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->map(static fn($yellow) => new Yellow($yellow));
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->map(static fn($black) => new Black($black));
+            ->flatMap(static fn($black) => Black::of($black));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->map(static fn($alpha) => new Alpha($alpha));
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
         return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)->map(
             static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
@@ -324,22 +324,22 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->map(static fn($cyan) => new Cyan($cyan));
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->map(static fn($magenta) => new Magenta($magenta));
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->map(static fn($yellow) => new Yellow($yellow));
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->map(static fn($black) => new Black($black));
+            ->flatMap(static fn($black) => Black::of($black));
 
         return Maybe::all($cyan, $magenta, $yellow, $black)->map(
             static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(

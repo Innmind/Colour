@@ -22,7 +22,10 @@ class GreenTest extends TestCase
 
     public function testFromHexadecimal()
     {
-        $green = Green::fromHexadecimal('0f');
+        $green = Green::fromHexadecimal('0f')->match(
+            static fn($green) => $green,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(Green::class, $green);
         $this->assertSame(15, $green->toInt());
@@ -87,25 +90,40 @@ class GreenTest extends TestCase
 
     public function testFromIntensity()
     {
-        $green = Green::fromIntensity(new Intensity(100));
+        $green = Green::fromIntensity(new Intensity(100))->match(
+            static fn($green) => $green,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(Green::class, $green);
         $this->assertSame(255, $green->toInt());
         $this->assertSame(
             191,
-            Green::fromIntensity(new Intensity(75))->toInt()
+            Green::fromIntensity(new Intensity(75))->match(
+                static fn($green) => $green->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             128,
-            Green::fromIntensity(new Intensity(50))->toInt()
+            Green::fromIntensity(new Intensity(50))->match(
+                static fn($green) => $green->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             64,
-            Green::fromIntensity(new Intensity(25))->toInt()
+            Green::fromIntensity(new Intensity(25))->match(
+                static fn($green) => $green->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             0,
-            Green::fromIntensity(new Intensity(0))->toInt()
+            Green::fromIntensity(new Intensity(0))->match(
+                static fn($green) => $green->toInt(),
+                static fn() => null,
+            ),
         );
     }
 
