@@ -11,7 +11,6 @@ use Innmind\Colour\{
     Black,
     Alpha,
     RGBA,
-    Convertible,
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
@@ -422,7 +421,6 @@ class CMYKATest extends TestCase
     {
         $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
-        $this->assertInstanceOf(Convertible::class, $cmyka);
         $this->assertSame($cmyka, $cmyka->toCMYKA());
     }
 }

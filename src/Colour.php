@@ -15,7 +15,7 @@ final class Colour
     /** @var Map<string, RGBA> */
     private static ?Map $literals = null;
 
-    public static function of(string $colour): Convertible
+    public static function of(string $colour): RGBA|HSLA|CMYKA
     {
         return self::maybe($colour)->match(
             static fn($colour) => $colour,
@@ -24,11 +24,10 @@ final class Colour
     }
 
     /**
-     * @return Maybe<Convertible>
+     * @return Maybe<RGBA|HSLA|CMYKA>
      */
     public static function maybe(string $colour): Maybe
     {
-        /** @var Maybe<Convertible> */
         return RGBA::maybe($colour)
             ->otherwise(static fn() => HSLA::maybe($colour))
             ->otherwise(static fn() => self::literals()->get(

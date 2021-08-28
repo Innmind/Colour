@@ -11,7 +11,6 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    Convertible,
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
@@ -529,7 +528,6 @@ class RGBATest extends TestCase
     {
         $rgba = RGBA::of('39F');
 
-        $this->assertInstanceOf(Convertible::class, $rgba);
         $this->assertSame($rgba, $rgba->toRGBA());
     }
 }

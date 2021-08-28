@@ -11,7 +11,6 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     CMYKA,
-    Convertible,
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
@@ -325,7 +324,6 @@ class HSLATest extends TestCase
     {
         $hsla = HSLA::of('hsl(0, 0%, 0%)');
 
-        $this->assertInstanceOf(Convertible::class, $hsla);
         $this->assertSame($hsla, $hsla->toHSLA());
     }
 }
