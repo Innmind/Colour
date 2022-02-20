@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Colour/issues"
     },
     "require": {
-        "php": "~8.0",
+        "php": "~8.1",
         "innmind/immutable": "~4.0"
     },
     "autoload": {

@@ -16,6 +16,9 @@ final class Colour
      */
     public static function any(): Set
     {
-        return Set\Elements::of(...Colours::literals()->values()->toList());
+        return Set\Decorate::immutable(
+            static fn($case) => $case->toRGBA(),
+            Set\Elements::of(...Colours::cases()),
+        );
     }
 }
