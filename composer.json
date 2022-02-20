@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "~8.0",
-        "innmind/immutable": "dev-next"
+        "innmind/immutable": "~4.0"
     },
     "autoload": {
         "psr-4": {
