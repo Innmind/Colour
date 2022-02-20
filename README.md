@@ -33,7 +33,7 @@ use Innmind\Colour\Colour;
 $rgba = Colour::of('39f');
 $hsla = Colour::of('hsl(210, 100%, 60%)');
 $cmyka = Colour::of('device-cmyk(80%, 40%, 0%, 0%)');
-$rgba = Colour::of('blue');
+$rgba = Colour::blue->toRGBA();
 ```
 
 Each representation can be represented to the other two so you can always work with your preferred format.

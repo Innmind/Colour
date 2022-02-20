@@ -4,12 +4,18 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidValueRangeException;
+use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class Red
 {
     private int $integer;
-    private string $hexadecimal;
 
+    /**
+     * @throws InvalidValueRangeException
+     */
     public function __construct(int $integer)
     {
         if ($integer < 0 || $integer > 255) {
@@ -17,26 +23,45 @@ final class Red
         }
 
         $this->integer = $integer;
-        $this->hexadecimal = \str_pad(
-            \dechex($integer),
-            2,
-            '0',
-            \STR_PAD_LEFT,
-        );
     }
 
-    public static function fromHexadecimal(string $hex): self
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    public static function of(int $value): Maybe
+    {
+        try {
+            return Maybe::just(new self($value));
+        } catch (InvalidValueRangeException $e) {
+            /** @var Maybe<self> */
+            return Maybe::nothing();
+        }
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    public static function fromHexadecimal(string $hex): Maybe
     {
         if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
         }
 
-        return new self((int) \hexdec($hex));
+        return self::of((int) \hexdec($hex));
     }
 
-    public static function fromIntensity(Intensity $intensity): self
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    public static function fromIntensity(Intensity $intensity): Maybe
     {
-        return new self(
+        return self::of(
             (int) \round((255 * $intensity->toInt()) / 100),
         );
     }
@@ -83,6 +108,11 @@ final class Red
 
     public function toString(): string
     {
-        return $this->hexadecimal;
+        return \str_pad(
+            \dechex($this->integer),
+            2,
+            '0',
+            \STR_PAD_LEFT,
+        );
     }
 }

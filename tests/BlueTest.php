@@ -22,7 +22,10 @@ class BlueTest extends TestCase
 
     public function testFromHexadecimal()
     {
-        $blue = Blue::fromHexadecimal('0f');
+        $blue = Blue::fromHexadecimal('0f')->match(
+            static fn($blue) => $blue,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(Blue::class, $blue);
         $this->assertSame(15, $blue->toInt());
@@ -38,7 +41,7 @@ class BlueTest extends TestCase
 
         $this->assertSame(
             255,
-            (new Blue(150))->add(new Blue(150))->toInt()
+            (new Blue(150))->add(new Blue(150))->toInt(),
         );
     }
 
@@ -51,7 +54,7 @@ class BlueTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Blue(150))->subtract(new Blue(255))->toInt()
+            (new Blue(150))->subtract(new Blue(255))->toInt(),
         );
     }
 
@@ -87,25 +90,40 @@ class BlueTest extends TestCase
 
     public function testFromIntensity()
     {
-        $blue = Blue::fromIntensity(new Intensity(100));
+        $blue = Blue::fromIntensity(new Intensity(100))->match(
+            static fn($blue) => $blue,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(Blue::class, $blue);
         $this->assertSame(255, $blue->toInt());
         $this->assertSame(
             191,
-            Blue::fromIntensity(new Intensity(75))->toInt()
+            Blue::fromIntensity(new Intensity(75))->match(
+                static fn($blue) => $blue->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             128,
-            Blue::fromIntensity(new Intensity(50))->toInt()
+            Blue::fromIntensity(new Intensity(50))->match(
+                static fn($blue) => $blue->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             64,
-            Blue::fromIntensity(new Intensity(25))->toInt()
+            Blue::fromIntensity(new Intensity(25))->match(
+                static fn($blue) => $blue->toInt(),
+                static fn() => null,
+            ),
         );
         $this->assertSame(
             0,
-            Blue::fromIntensity(new Intensity(0))->toInt()
+            Blue::fromIntensity(new Intensity(0))->match(
+                static fn($blue) => $blue->toInt(),
+                static fn() => null,
+            ),
         );
     }
 

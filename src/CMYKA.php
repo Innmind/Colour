@@ -4,9 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\DomainException;
-use Innmind\Immutable\Str;
+use Innmind\Immutable\{
+    Str,
+    Maybe,
+};
 
-final class CMYKA implements Convertible
+/**
+ * @psalm-immutable
+ */
+final class CMYKA
 {
     private const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     private const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
@@ -16,83 +22,45 @@ final class CMYKA implements Convertible
     private Yellow $yellow;
     private Black $black;
     private Alpha $alpha;
-    private string $string;
-    private ?RGBA $rgba = null;
 
     public function __construct(
         Cyan $cyan,
         Magenta $magenta,
         Yellow $yellow,
         Black $black,
-        Alpha $alpha = null
+        Alpha $alpha = null,
     ) {
         $this->cyan = $cyan;
         $this->magenta = $magenta;
         $this->yellow = $yellow;
         $this->black = $black;
         $this->alpha = $alpha ?? new Alpha(1);
-
-        if ($this->alpha->atMaximum()) {
-            $this->string = \sprintf(
-                'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
-                $this->cyan->toString(),
-                $this->magenta->toString(),
-                $this->yellow->toString(),
-                $this->black->toString(),
-            );
-        } else {
-            $this->string = \sprintf(
-                'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
-                $this->cyan->toString(),
-                $this->magenta->toString(),
-                $this->yellow->toString(),
-                $this->black->toString(),
-                $this->alpha->toFloat(),
-            );
-        }
     }
 
+    /**
+     * @psalm-pure
+     *
+     * @throws DomainException
+     */
     public static function of(string $colour): self
     {
-        $colour = Str::of($colour)->trim();
-
-        try {
-            return self::withAlpha($colour);
-        } catch (DomainException $e) {
-            return self::withoutAlpha($colour);
-        }
-    }
-
-    public static function withAlpha(Str $colour): self
-    {
-        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
-
-        $matches = $colour->capture(self::PATTERN_WITH_ALPHA);
-
-        return new self(
-            new Cyan((int) $matches->get('cyan')->toString()),
-            new Magenta((int) $matches->get('magenta')->toString()),
-            new Yellow((int) $matches->get('yellow')->toString()),
-            new Black((int) $matches->get('black')->toString()),
-            new Alpha((float) $matches->get('alpha')->toString()),
+        return self::maybe($colour)->match(
+            static fn($self) => $self,
+            static fn() => throw new DomainException($colour),
         );
     }
 
-    public static function withoutAlpha(Str $colour): self
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    public static function maybe(string $colour): Maybe
     {
-        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            throw new DomainException($colour->toString());
-        }
+        $colour = Str::of($colour)->trim();
 
-        $matches = $colour->capture(self::PATTERN_WITHOUT_ALPHA);
-
-        return new self(
-            new Cyan((int) $matches->get('cyan')->toString()),
-            new Magenta((int) $matches->get('magenta')->toString()),
-            new Yellow((int) $matches->get('yellow')->toString()),
-            new Black((int) $matches->get('black')->toString()),
+        return self::withAlpha($colour)->otherwise(
+            static fn() => self::withoutAlpha($colour),
         );
     }
 
@@ -242,10 +210,6 @@ final class CMYKA implements Convertible
 
     public function toRGBA(): RGBA
     {
-        if ($this->rgba instanceof RGBA) {
-            return $this->rgba;
-        }
-
         $cyan = $this->cyan->toInt() / 100;
         $magenta = $this->magenta->toInt() / 100;
         $yellow = $this->yellow->toInt() / 100;
@@ -255,7 +219,7 @@ final class CMYKA implements Convertible
         $green = 1 - \min(1, $magenta * (1 - $black) + $black);
         $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
-        return $this->rgba = new RGBA(
+        return new RGBA(
             new Red((int) \round($red * 255)),
             new Green((int) \round($green * 255)),
             new Blue((int) \round($blue * 255)),
@@ -275,6 +239,111 @@ final class CMYKA implements Convertible
 
     public function toString(): string
     {
-        return $this->string;
+        if ($this->alpha->atMaximum()) {
+            return \sprintf(
+                'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
+            );
+        }
+
+        return \sprintf(
+            'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
+            $this->cyan->toString(),
+            $this->magenta->toString(),
+            $this->yellow->toString(),
+            $this->black->toString(),
+            $this->alpha->toFloat(),
+        );
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    private static function withAlpha(Str $colour): Maybe
+    {
+        $matches = $colour
+            ->capture(self::PATTERN_WITH_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $cyan = $matches
+            ->get('cyan')
+            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->map(static fn($cyan) => (int) $cyan)
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+        $magenta = $matches
+            ->get('magenta')
+            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->map(static fn($magenta) => (int) $magenta)
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+        $yellow = $matches
+            ->get('yellow')
+            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->map(static fn($yellow) => (int) $yellow)
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+        $black = $matches
+            ->get('black')
+            ->filter(static fn($black) => \is_numeric($black))
+            ->map(static fn($black) => (int) $black)
+            ->flatMap(static fn($black) => Black::of($black));
+        $alpha = $matches
+            ->get('alpha')
+            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->map(static fn($alpha) => (float) $alpha)
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+
+        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)->map(
+            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
+                $cyan,
+                $magenta,
+                $yellow,
+                $black,
+                $alpha,
+            ),
+        );
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Maybe<self>
+     */
+    private static function withoutAlpha(Str $colour): Maybe
+    {
+        $matches = $colour
+            ->capture(self::PATTERN_WITHOUT_ALPHA)
+            ->map(static fn($_, $match) => $match->toString());
+        $cyan = $matches
+            ->get('cyan')
+            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->map(static fn($cyan) => (int) $cyan)
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+        $magenta = $matches
+            ->get('magenta')
+            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->map(static fn($magenta) => (int) $magenta)
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+        $yellow = $matches
+            ->get('yellow')
+            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->map(static fn($yellow) => (int) $yellow)
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+        $black = $matches
+            ->get('black')
+            ->filter(static fn($black) => \is_numeric($black))
+            ->map(static fn($black) => (int) $black)
+            ->flatMap(static fn($black) => Black::of($black));
+
+        return Maybe::all($cyan, $magenta, $yellow, $black)->map(
+            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
+                $cyan,
+                $magenta,
+                $yellow,
+                $black,
+            ),
+        );
     }
 }
