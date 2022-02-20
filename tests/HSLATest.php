@@ -300,7 +300,7 @@ class HSLATest extends TestCase
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame('3399ff80', $rgba->toHexadecimal());
-        $this->assertSame($rgba, $hsla->toRGBA());
+        $this->assertTrue($rgba->equals($hsla->toRGBA()));
 
         $hsla = HSLA::of('hsla(210, 0%, 60%, 0.5)');
         $rgba = $hsla->toRGBA();
@@ -308,7 +308,7 @@ class HSLATest extends TestCase
             '99999980',
             $rgba->toHexadecimal(),
         );
-        $this->assertSame($rgba, $hsla->toRGBA());
+        $this->assertTrue($rgba->equals($hsla->toRGBA()));
     }
 
     public function testToCMYKA()
@@ -316,7 +316,6 @@ class HSLATest extends TestCase
         $hsla = HSLA::of('hsla(210, 100%, 60%, 0.5)');
 
         $this->assertInstanceOf(CMYKA::class, $hsla->toCMYKA());
-        $this->assertSame($hsla->toCMYKA(), $hsla->toCMYKA());
         $this->assertTrue($hsla->toCMYKA()->equals($hsla->toRGBA()->toCMYKA()));
     }
 

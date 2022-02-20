@@ -392,7 +392,7 @@ class CMYKATest extends TestCase
         $this->assertSame(153, $rgba->green()->toInt());
         $this->assertSame(255, $rgba->blue()->toInt());
         $this->assertSame(0.5, $rgba->alpha()->toFloat());
-        $this->assertSame($rgba, $cmyka->toRGBA());
+        $this->assertTrue($rgba->equals($cmyka->toRGBA()));
     }
 
     public function testToHSLA()
@@ -400,7 +400,6 @@ class CMYKATest extends TestCase
         $cmyka = CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)');
 
         $this->assertTrue($cmyka->toHSLA()->equals($cmyka->toRGBA()->toHSLA()));
-        $this->assertSame($cmyka->toHSLA(), $cmyka->toHSLA());
     }
 
     public function testEquals()

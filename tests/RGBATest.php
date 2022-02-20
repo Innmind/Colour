@@ -466,7 +466,7 @@ class RGBATest extends TestCase
         $this->assertSame(100, $hsla->saturation()->toInt());
         $this->assertSame(60, $hsla->lightness()->toInt());
         $this->assertSame(0.5, $hsla->alpha()->toFloat());
-        $this->assertSame($hsla, $rgba->toHSLA());
+        $this->assertTrue($hsla->equals($rgba->toHSLA()));
 
         $white = ($rgba = RGBA::of('fff'))->toHSLA();
 
@@ -475,7 +475,7 @@ class RGBATest extends TestCase
         $this->assertSame(0, $white->saturation()->toInt());
         $this->assertSame(100, $white->lightness()->toInt());
         $this->assertSame(1.0, $white->alpha()->toFloat());
-        $this->assertSame($white, $rgba->toHSLA());
+        $this->assertTrue($white->equals($rgba->toHSLA()));
 
         $black = ($rgba = RGBA::of('000'))->toHSLA();
 
@@ -484,7 +484,7 @@ class RGBATest extends TestCase
         $this->assertSame(0, $black->saturation()->toInt());
         $this->assertSame(0, $black->lightness()->toInt());
         $this->assertSame(1.0, $black->alpha()->toFloat());
-        $this->assertSame($black, $rgba->toHSLA());
+        $this->assertTrue($black->equals($rgba->toHSLA()));
     }
 
     public function testToCMYKA()
@@ -497,7 +497,7 @@ class RGBATest extends TestCase
         $this->assertSame(0, $cmyka->yellow()->toInt());
         $this->assertSame(0, $cmyka->black()->toInt());
         $this->assertSame(0.5, $cmyka->alpha()->toFloat());
-        $this->assertSame($cmyka, $rgba->toCMYKA());
+        $this->assertTrue($cmyka->equals($rgba->toCMYKA()));
 
         $black = ($rgba = RGBA::of('00000080'))->toCMYKA();
 
@@ -507,7 +507,7 @@ class RGBATest extends TestCase
         $this->assertSame(0, $black->yellow()->toInt());
         $this->assertSame(100, $black->black()->toInt());
         $this->assertSame(0.5, $black->alpha()->toFloat());
-        $this->assertSame($black, $rgba->toCMYKA());
+        $this->assertTrue($black->equals($rgba->toCMYKA()));
     }
 
     public function testEquals()

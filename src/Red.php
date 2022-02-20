@@ -9,7 +9,6 @@ use Innmind\Immutable\Maybe;
 final class Red
 {
     private int $integer;
-    private string $hexadecimal;
 
     public function __construct(int $integer)
     {
@@ -18,12 +17,6 @@ final class Red
         }
 
         $this->integer = $integer;
-        $this->hexadecimal = \str_pad(
-            \dechex($integer),
-            2,
-            '0',
-            \STR_PAD_LEFT,
-        );
     }
 
     /**
@@ -103,6 +96,11 @@ final class Red
 
     public function toString(): string
     {
-        return $this->hexadecimal;
+        return \str_pad(
+            \dechex($this->integer),
+            2,
+            '0',
+            \STR_PAD_LEFT,
+        );
     }
 }

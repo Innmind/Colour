@@ -18,8 +18,6 @@ final class HSLA
     private Saturation $saturation;
     private Lightness $lightness;
     private Alpha $alpha;
-    private string $string;
-    private ?RGBA $rgba = null;
 
     public function __construct(
         Hue $hue,
@@ -31,23 +29,6 @@ final class HSLA
         $this->saturation = $saturation;
         $this->lightness = $lightness;
         $this->alpha = $alpha ?? new Alpha(1);
-
-        if ($this->alpha->atMaximum()) {
-            $this->string = \sprintf(
-                'hsl(%s, %s%%, %s%%)',
-                $this->hue->toString(),
-                $this->saturation->toString(),
-                $this->lightness->toString(),
-            );
-        } else {
-            $this->string = \sprintf(
-                'hsla(%s, %s%%, %s%%, %s)',
-                $this->hue->toString(),
-                $this->saturation->toString(),
-                $this->lightness->toString(),
-                $this->alpha->toFloat(),
-            );
-        }
     }
 
     public static function of(string $colour): self
@@ -170,14 +151,10 @@ final class HSLA
 
     public function toRGBA(): RGBA
     {
-        if ($this->rgba instanceof RGBA) {
-            return $this->rgba;
-        }
-
         $lightness = $this->lightness->toInt() / 100;
 
         if ($this->saturation->atMinimum()) {
-            return $this->rgba = new RGBA(
+            return new RGBA(
                 new Red((int) \round($lightness * 255)),
                 new Green((int) \round($lightness * 255)),
                 new Blue((int) \round($lightness * 255)),
@@ -192,7 +169,7 @@ final class HSLA
         $q = $lightness < 0.5 ? $lightness * (1 + $saturation) : $lightness + $saturation - $lightness * $saturation;
         $p = 2 * $lightness - $q;
 
-        return $this->rgba = new RGBA(
+        return new RGBA(
             new Red((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
             new Green((int) \round($this->hueToPoint($p, $q, $hue) * 255)),
             new Blue((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
@@ -212,7 +189,22 @@ final class HSLA
 
     public function toString(): string
     {
-        return $this->string;
+        if ($this->alpha->atMaximum()) {
+            return \sprintf(
+                'hsl(%s, %s%%, %s%%)',
+                $this->hue->toString(),
+                $this->saturation->toString(),
+                $this->lightness->toString(),
+            );
+        }
+
+        return \sprintf(
+            'hsla(%s, %s%%, %s%%, %s)',
+            $this->hue->toString(),
+            $this->saturation->toString(),
+            $this->lightness->toString(),
+            $this->alpha->toFloat(),
+        );
     }
 
     /**

@@ -9,7 +9,6 @@ use Innmind\Immutable\Maybe;
 final class Alpha
 {
     private float $value;
-    private string $hexadecimal;
 
     public function __construct(float $value)
     {
@@ -18,14 +17,6 @@ final class Alpha
         }
 
         $this->value = $value;
-        $this->hexadecimal = \str_pad(
-            \dechex(
-                (int) \round(255 * $this->value),
-            ),
-            2,
-            '0',
-            \STR_PAD_LEFT,
-        );
     }
 
     /**
@@ -95,7 +86,14 @@ final class Alpha
 
     public function toHexadecimal(): string
     {
-        return $this->hexadecimal;
+        return \str_pad(
+            \dechex(
+                (int) \round(255 * $this->value),
+            ),
+            2,
+            '0',
+            \STR_PAD_LEFT,
+        );
     }
 
     public function toString(): string

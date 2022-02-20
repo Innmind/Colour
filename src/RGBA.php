@@ -22,9 +22,6 @@ final class RGBA
     private Blue $blue;
     private Green $green;
     private Alpha $alpha;
-    private string $string;
-    private ?HSLA $hsla = null;
-    private ?CMYKA $cmyka = null;
 
     public function __construct(
         Red $red,
@@ -36,18 +33,6 @@ final class RGBA
         $this->blue = $blue;
         $this->green = $green;
         $this->alpha = $alpha ?? new Alpha(1);
-
-        if ($this->alpha->atMaximum()) {
-            $this->string = '#'.$this->toHexadecimal();
-        } else {
-            $this->string = \sprintf(
-                'rgba(%s, %s, %s, %s)',
-                $this->red->toInt(),
-                $this->green->toInt(),
-                $this->blue->toInt(),
-                $this->alpha->toFloat(),
-            );
-        }
     }
 
     public static function of(string $colour): self
@@ -191,10 +176,6 @@ final class RGBA
 
     public function toHSLA(): HSLA
     {
-        if ($this->hsla instanceof HSLA) {
-            return $this->hsla;
-        }
-
         $red = $this->red->toInt() / 255;
         $green = $this->green->toInt() / 255;
         $blue = $this->blue->toInt() / 255;
@@ -204,7 +185,7 @@ final class RGBA
         $lightness = ($max + $min) / 2;
 
         if ($max === $min) {
-            return $this->hsla = new HSLA(
+            return new HSLA(
                 new Hue(0),
                 new Saturation(0),
                 new Lightness((int) \round($lightness * 100)),
@@ -230,7 +211,7 @@ final class RGBA
 
         $hue *= 60;
 
-        return $this->hsla = new HSLA(
+        return new HSLA(
             new Hue((int) \round($hue)),
             new Saturation((int) \round($saturation * 100)),
             new Lightness((int) \round($lightness * 100)),
@@ -240,10 +221,6 @@ final class RGBA
 
     public function toCMYKA(): CMYKA
     {
-        if ($this->cmyka instanceof CMYKA) {
-            return $this->cmyka;
-        }
-
         $red = $this->red->toInt() / 255;
         $green = $this->green->toInt() / 255;
         $blue = $this->blue->toInt() / 255;
@@ -253,7 +230,7 @@ final class RGBA
             $this->green->atMinimum() &&
             $this->blue->atMinimum()
         ) {
-            return $this->cmyka = new CMYKA(
+            return new CMYKA(
                 new Cyan(0),
                 new Magenta(0),
                 new Yellow(0),
@@ -267,7 +244,7 @@ final class RGBA
         $magenta = (1 - $green - $black) / (1 - $black);
         $yellow = (1 - $blue - $black) / (1 - $black);
 
-        return $this->cmyka = new CMYKA(
+        return new CMYKA(
             new Cyan((int) \round($cyan * 100)),
             new Magenta((int) \round($magenta * 100)),
             new Yellow((int) \round($yellow * 100)),
@@ -283,7 +260,17 @@ final class RGBA
 
     public function toString(): string
     {
-        return $this->string;
+        if ($this->alpha->atMaximum()) {
+            return '#'.$this->toHexadecimal();
+        }
+
+        return \sprintf(
+            'rgba(%s, %s, %s, %s)',
+            $this->red->toInt(),
+            $this->green->toInt(),
+            $this->blue->toInt(),
+            $this->alpha->toFloat(),
+        );
     }
 
     /**

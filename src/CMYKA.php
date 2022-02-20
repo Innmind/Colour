@@ -19,8 +19,6 @@ final class CMYKA
     private Yellow $yellow;
     private Black $black;
     private Alpha $alpha;
-    private string $string;
-    private ?RGBA $rgba = null;
 
     public function __construct(
         Cyan $cyan,
@@ -34,25 +32,6 @@ final class CMYKA
         $this->yellow = $yellow;
         $this->black = $black;
         $this->alpha = $alpha ?? new Alpha(1);
-
-        if ($this->alpha->atMaximum()) {
-            $this->string = \sprintf(
-                'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
-                $this->cyan->toString(),
-                $this->magenta->toString(),
-                $this->yellow->toString(),
-                $this->black->toString(),
-            );
-        } else {
-            $this->string = \sprintf(
-                'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
-                $this->cyan->toString(),
-                $this->magenta->toString(),
-                $this->yellow->toString(),
-                $this->black->toString(),
-                $this->alpha->toFloat(),
-            );
-        }
     }
 
     public static function of(string $colour): self
@@ -221,10 +200,6 @@ final class CMYKA
 
     public function toRGBA(): RGBA
     {
-        if ($this->rgba instanceof RGBA) {
-            return $this->rgba;
-        }
-
         $cyan = $this->cyan->toInt() / 100;
         $magenta = $this->magenta->toInt() / 100;
         $yellow = $this->yellow->toInt() / 100;
@@ -234,7 +209,7 @@ final class CMYKA
         $green = 1 - \min(1, $magenta * (1 - $black) + $black);
         $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
-        return $this->rgba = new RGBA(
+        return new RGBA(
             new Red((int) \round($red * 255)),
             new Green((int) \round($green * 255)),
             new Blue((int) \round($blue * 255)),
@@ -254,7 +229,24 @@ final class CMYKA
 
     public function toString(): string
     {
-        return $this->string;
+        if ($this->alpha->atMaximum()) {
+            return \sprintf(
+                'device-cmyk(%s%%, %s%%, %s%%, %s%%)',
+                $this->cyan->toString(),
+                $this->magenta->toString(),
+                $this->yellow->toString(),
+                $this->black->toString(),
+            );
+        }
+
+        return \sprintf(
+            'device-cmyk(%s%%, %s%%, %s%%, %s%%, %s)',
+            $this->cyan->toString(),
+            $this->magenta->toString(),
+            $this->yellow->toString(),
+            $this->black->toString(),
+            $this->alpha->toFloat(),
+        );
     }
 
     /**
