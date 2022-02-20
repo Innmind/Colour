@@ -12,6 +12,8 @@ use Innmind\Immutable\{
 
 enum Colour
 {
+    // variants are accessible via methods to avoid having too many cases on the
+    // enum, because Psalm can't handle more than 101 cases
     case aliceblue;
     case antiquewhite;
     case aqua;
@@ -33,28 +35,8 @@ enum Colour
     case cornsilk;
     case crimson;
     case cyan;
-    case darkblue;
-    case darkcyan;
-    case darkgoldenrod;
-    case darkgray;
-    case darkgrey;
-    case darkgreen;
-    case darkkhaki;
-    case darkmagenta;
-    case darkolivegreen;
-    case darkorange;
-    case darkorchid;
-    case darkred;
-    case darksalmon;
-    case darkseagreen;
-    case darkslateblue;
-    case darkslategray;
-    case darkslategrey;
-    case darkturquoise;
-    case darkviolet;
     case deeppink;
     case deepskyblue;
-    case dimgray;
     case dimgrey;
     case dodgerblue;
     case firebrick;
@@ -65,7 +47,6 @@ enum Colour
     case ghostwhite;
     case gold;
     case goldenrod;
-    case gray;
     case grey;
     case green;
     case greenyellow;
@@ -79,35 +60,11 @@ enum Colour
     case lavenderblush;
     case lawngreen;
     case lemonchiffon;
-    case lightblue;
-    case lightcoral;
-    case lightcyan;
-    case lightgoldenrodyellow;
-    case lightgray;
-    case lightgrey;
-    case lightgreen;
-    case lightpink;
-    case lightsalmon;
-    case lightseagreen;
-    case lightskyblue;
-    case lightslategray;
-    case lightslategrey;
-    case lightsteelblue;
-    case lightyellow;
     case lime;
     case limegreen;
     case linen;
     case magenta;
     case maroon;
-    case mediumaquamarine;
-    case mediumblue;
-    case mediumorchid;
-    case mediumpurple;
-    case mediumseagreen;
-    case mediumslateblue;
-    case mediumspringgreen;
-    case mediumturquoise;
-    case mediumvioletred;
     case midnightblue;
     case mintcream;
     case mistyrose;
@@ -120,10 +77,6 @@ enum Colour
     case orange;
     case orangered;
     case orchid;
-    case palegoldenrod;
-    case palegreen;
-    case paleturquoise;
-    case palevioletred;
     case papayawhip;
     case peachpuff;
     case peru;
@@ -144,7 +97,6 @@ enum Colour
     case silver;
     case skyblue;
     case slateblue;
-    case slategray;
     case slategrey;
     case snow;
     case springgreen;
@@ -206,28 +158,8 @@ enum Colour
             self::cornsilk => RGBA::of('fff8dc'),
             self::crimson => RGBA::of('dc143c'),
             self::cyan => RGBA::of('00ffff'),
-            self::darkblue => RGBA::of('00008b'),
-            self::darkcyan => RGBA::of('008b8b'),
-            self::darkgoldenrod => RGBA::of('b8860b'),
-            self::darkgray => RGBA::of('a9a9a9'),
-            self::darkgrey => RGBA::of('a9a9a9'),
-            self::darkgreen => RGBA::of('006400'),
-            self::darkkhaki => RGBA::of('bdb76b'),
-            self::darkmagenta => RGBA::of('8b008b'),
-            self::darkolivegreen => RGBA::of('556b2f'),
-            self::darkorange => RGBA::of('ff8c00'),
-            self::darkorchid => RGBA::of('9932cc'),
-            self::darkred => RGBA::of('8b0000'),
-            self::darksalmon => RGBA::of('e9967a'),
-            self::darkseagreen => RGBA::of('8fbc8f'),
-            self::darkslateblue => RGBA::of('483d8b'),
-            self::darkslategray => RGBA::of('2f4f4f'),
-            self::darkslategrey => RGBA::of('2f4f4f'),
-            self::darkturquoise => RGBA::of('00ced1'),
-            self::darkviolet => RGBA::of('9400d3'),
             self::deeppink => RGBA::of('ff1493'),
             self::deepskyblue => RGBA::of('00bfff'),
-            self::dimgray => RGBA::of('696969'),
             self::dimgrey => RGBA::of('696969'),
             self::dodgerblue => RGBA::of('1e90ff'),
             self::firebrick => RGBA::of('b22222'),
@@ -238,7 +170,6 @@ enum Colour
             self::ghostwhite => RGBA::of('f8f8ff'),
             self::gold => RGBA::of('ffd700'),
             self::goldenrod => RGBA::of('daa520'),
-            self::gray => RGBA::of('808080'),
             self::grey => RGBA::of('808080'),
             self::green => RGBA::of('008000'),
             self::greenyellow => RGBA::of('adff2f'),
@@ -252,35 +183,11 @@ enum Colour
             self::lavenderblush => RGBA::of('fff0f5'),
             self::lawngreen => RGBA::of('7cfc00'),
             self::lemonchiffon => RGBA::of('fffacd'),
-            self::lightblue => RGBA::of('add8e6'),
-            self::lightcoral => RGBA::of('f08080'),
-            self::lightcyan => RGBA::of('e0ffff'),
-            self::lightgoldenrodyellow => RGBA::of('fafad2'),
-            self::lightgray => RGBA::of('d3d3d3'),
-            self::lightgrey => RGBA::of('d3d3d3'),
-            self::lightgreen => RGBA::of('90ee90'),
-            self::lightpink => RGBA::of('ffb6c1'),
-            self::lightsalmon => RGBA::of('ffa07a'),
-            self::lightseagreen => RGBA::of('20b2aa'),
-            self::lightskyblue => RGBA::of('87cefa'),
-            self::lightslategray => RGBA::of('778899'),
-            self::lightslategrey => RGBA::of('778899'),
-            self::lightsteelblue => RGBA::of('b0c4de'),
-            self::lightyellow => RGBA::of('ffffe0'),
             self::lime => RGBA::of('00ff00'),
             self::limegreen => RGBA::of('32cd32'),
             self::linen => RGBA::of('faf0e6'),
             self::magenta => RGBA::of('ff00ff'),
             self::maroon => RGBA::of('800000'),
-            self::mediumaquamarine => RGBA::of('66cdaa'),
-            self::mediumblue => RGBA::of('0000cd'),
-            self::mediumorchid => RGBA::of('ba55d3'),
-            self::mediumpurple => RGBA::of('9370db'),
-            self::mediumseagreen => RGBA::of('3cb371'),
-            self::mediumslateblue => RGBA::of('7b68ee'),
-            self::mediumspringgreen => RGBA::of('00fa9a'),
-            self::mediumturquoise => RGBA::of('48d1cc'),
-            self::mediumvioletred => RGBA::of('c71585'),
             self::midnightblue => RGBA::of('191970'),
             self::mintcream => RGBA::of('f5fffa'),
             self::mistyrose => RGBA::of('ffe4e1'),
@@ -293,10 +200,6 @@ enum Colour
             self::orange => RGBA::of('ffa500'),
             self::orangered => RGBA::of('ff4500'),
             self::orchid => RGBA::of('da70d6'),
-            self::palegoldenrod => RGBA::of('eee8aa'),
-            self::palegreen => RGBA::of('98fb98'),
-            self::paleturquoise => RGBA::of('afeeee'),
-            self::palevioletred => RGBA::of('db7093'),
             self::papayawhip => RGBA::of('ffefd5'),
             self::peachpuff => RGBA::of('ffdab9'),
             self::peru => RGBA::of('cd853f'),
@@ -317,7 +220,6 @@ enum Colour
             self::silver => RGBA::of('c0c0c0'),
             self::skyblue => RGBA::of('87ceeb'),
             self::slateblue => RGBA::of('6a5acd'),
-            self::slategray => RGBA::of('708090'),
             self::slategrey => RGBA::of('708090'),
             self::snow => RGBA::of('fffafa'),
             self::springgreen => RGBA::of('00ff7f'),
@@ -333,6 +235,73 @@ enum Colour
             self::whitesmoke => RGBA::of('f5f5f5'),
             self::yellow => RGBA::of('ffff00'),
             self::yellowgreen => RGBA::of('9acd32'),
+        };
+    }
+
+    public function light(): RGBA
+    {
+        /** @psalm-suppress UnhandledMatchCondition */
+        return match ($this) {
+            self::blue => RGBA::of('add8e6'),
+            self::coral => RGBA::of('f08080'),
+            self::cyan => RGBA::of('e0ffff'),
+            self::grey => RGBA::of('d3d3d3'),
+            self::green => RGBA::of('90ee90'),
+            self::pink => RGBA::of('ffb6c1'),
+            self::salmon => RGBA::of('ffa07a'),
+            self::seagreen => RGBA::of('20b2aa'),
+            self::skyblue => RGBA::of('87cefa'),
+            self::slategrey => RGBA::of('778899'),
+            self::steelblue => RGBA::of('b0c4de'),
+            self::yellow => RGBA::of('ffffe0'),
+        };
+    }
+
+    public function dark(): RGBA
+    {
+        /** @psalm-suppress UnhandledMatchCondition */
+        return match ($this) {
+            self::blue => RGBA::of('00008b'),
+            self::cyan => RGBA::of('008b8b'),
+            self::goldenrod => RGBA::of('b8860b'),
+            self::grey => RGBA::of('a9a9a9'),
+            self::green => RGBA::of('006400'),
+            self::khaki => RGBA::of('bdb76b'),
+            self::magenta => RGBA::of('8b008b'),
+            self::orange => RGBA::of('ff8c00'),
+            self::orchid => RGBA::of('9932cc'),
+            self::red => RGBA::of('8b0000'),
+            self::salmon => RGBA::of('e9967a'),
+            self::seagreen => RGBA::of('8fbc8f'),
+            self::slateblue => RGBA::of('483d8b'),
+            self::slategrey => RGBA::of('2f4f4f'),
+            self::turquoise => RGBA::of('00ced1'),
+            self::violet => RGBA::of('9400d3'),
+        };
+    }
+
+    public function medium(): RGBA
+    {
+        /** @psalm-suppress UnhandledMatchCondition */
+        return match ($this) {
+            self::aquamarine => RGBA::of('66cdaa'),
+            self::blue => RGBA::of('0000cd'),
+            self::orchid => RGBA::of('ba55d3'),
+            self::purple => RGBA::of('9370db'),
+            self::seagreen => RGBA::of('3cb371'),
+            self::slateblue => RGBA::of('7b68ee'),
+            self::springgreen => RGBA::of('00fa9a'),
+            self::turquoise => RGBA::of('48d1cc'),
+        };
+    }
+
+    public function pale(): RGBA
+    {
+        /** @psalm-suppress UnhandledMatchCondition */
+        return match ($this) {
+            self::goldenrod => RGBA::of('eee8aa'),
+            self::green => RGBA::of('98fb98'),
+            self::turquoise => RGBA::of('afeeee'),
         };
     }
 }
