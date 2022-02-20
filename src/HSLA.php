@@ -255,11 +255,6 @@ final class HSLA
      */
     private static function withAlpha(Str $colour): Maybe
     {
-        if (!$colour->matches(self::PATTERN_WITH_ALPHA)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::PATTERN_WITH_ALPHA)
             ->map(static fn($_, $match) => $match->toString());
@@ -301,11 +296,6 @@ final class HSLA
      */
     private static function withoutAlpha(Str $colour): Maybe
     {
-        if (!$colour->matches(self::PATTERN_WITHOUT_ALPHA)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::PATTERN_WITHOUT_ALPHA)
             ->map(static fn($_, $match) => $match->toString());

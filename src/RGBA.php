@@ -302,11 +302,6 @@ final class RGBA
      */
     private static function fromHexadecimalWithAlpha(Str $colour): Maybe
     {
-        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITH_ALPHA)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         if ($colour->startsWith('#')) {
             $colour = $colour->drop(1);
         }
@@ -352,11 +347,6 @@ final class RGBA
      */
     private static function fromHexadecimalWithoutAlpha(Str $colour): Maybe
     {
-        if (!$colour->matches(self::HEXADECIMAL_PATTERN_WITHOUT_ALPHA)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         if ($colour->startsWith('#')) {
             $colour = $colour->drop(1);
         }
@@ -410,11 +400,6 @@ final class RGBA
      */
     private static function fromRGBFunctionWithPoints(Str $colour): Maybe
     {
-        if (!$colour->matches(self::RGB_FUNCTION_PATTERN)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::RGB_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
@@ -450,11 +435,6 @@ final class RGBA
      */
     private static function fromRGBFunctionWithPercents(Str $colour): Maybe
     {
-        if (!$colour->matches(self::PERCENTED_RGB_FUNCTION_PATTERN)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::PERCENTED_RGB_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
@@ -505,11 +485,6 @@ final class RGBA
      */
     private static function fromRGBAFunctionWithPoints(Str $colour): Maybe
     {
-        if (!$colour->matches(self::RGBA_FUNCTION_PATTERN)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::RGBA_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
@@ -551,11 +526,6 @@ final class RGBA
      */
     private static function fromRGBAFunctionWithPercents(Str $colour): Maybe
     {
-        if (!$colour->matches(self::PERCENTED_RGBA_FUNCTION_PATTERN)) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
-
         $matches = $colour
             ->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
