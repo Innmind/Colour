@@ -30,7 +30,7 @@ final class RGBA
         Red $red,
         Green $green,
         Blue $blue,
-        Alpha $alpha = null
+        Alpha $alpha = null,
     ) {
         $this->red = $red;
         $this->blue = $blue;

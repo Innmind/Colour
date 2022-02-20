@@ -41,7 +41,7 @@ class RedTest extends TestCase
 
         $this->assertSame(
             255,
-            (new Red(150))->add(new Red(150))->toInt()
+            (new Red(150))->add(new Red(150))->toInt(),
         );
     }
 
@@ -54,7 +54,7 @@ class RedTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Red(150))->subtract(new Red(255))->toInt()
+            (new Red(150))->subtract(new Red(255))->toInt(),
         );
     }
 

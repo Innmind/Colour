@@ -22,7 +22,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             $hue = new Hue(150),
             $saturation = new Saturation(42),
-            $lightness = new Lightness(24)
+            $lightness = new Lightness(24),
         );
 
         $this->assertSame($hue, $hsl->hue());
@@ -35,7 +35,7 @@ class HSLATest extends TestCase
             new Hue(150),
             new Saturation(42),
             new Lightness(24),
-            $alpha = new Alpha(0.5)
+            $alpha = new Alpha(0.5),
         );
 
         $this->assertSame($alpha, $hsla->alpha());
@@ -47,7 +47,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->rotateBy(50);
@@ -69,7 +69,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->addSaturation(new Saturation(58));
@@ -91,7 +91,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->SubtractSaturation(new Saturation(22));
@@ -113,7 +113,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->addLightness(new Lightness(6));
@@ -135,7 +135,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->subtractLightness(new Lightness(22));
@@ -158,7 +158,7 @@ class HSLATest extends TestCase
             new Hue(150),
             new Saturation(42),
             new Lightness(24),
-            new Alpha(0.1)
+            new Alpha(0.1),
         );
 
         $hsl2 = $hsl->addALpha(new Alpha(0.1));
@@ -180,7 +180,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->subtractAlpha(new Alpha(0.3));
@@ -205,7 +205,7 @@ class HSLATest extends TestCase
         int $hue,
         int $saturation,
         int $lightness,
-        float $alpha
+        float $alpha,
     ) {
         $hsla = HSLA::of($string);
 
@@ -235,7 +235,7 @@ class HSLATest extends TestCase
         string $string,
         int $hue,
         int $saturation,
-        int $lightness
+        int $lightness,
     ) {
         $hsla = HSLA::of($string);
 
@@ -262,7 +262,7 @@ class HSLATest extends TestCase
         int $hue,
         int $saturation,
         int $lightness,
-        float $alpha = null
+        float $alpha = null,
     ) {
         $hsla = HSLA::of($string);
 
@@ -282,13 +282,13 @@ class HSLATest extends TestCase
     {
         $this->assertTrue(
             HSLA::of('hsl(10, 20%, 30%)')->equals(
-                HSLA::of('hsl(10, 20%, 30%)')
-            )
+                HSLA::of('hsl(10, 20%, 30%)'),
+            ),
         );
         $this->assertFalse(
             HSLA::of('hsla(10, 20%, 30%, 0.5)')->equals(
-                HSLA::of('hsl(10, 20%, 30%)')
-            )
+                HSLA::of('hsl(10, 20%, 30%)'),
+            ),
         );
     }
 
@@ -306,7 +306,7 @@ class HSLATest extends TestCase
         $rgba = $hsla->toRGBA();
         $this->assertSame(
             '99999980',
-            $rgba->toHexadecimal()
+            $rgba->toHexadecimal(),
         );
         $this->assertSame($rgba, $hsla->toRGBA());
     }

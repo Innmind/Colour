@@ -28,7 +28,7 @@ class LightnessTest extends TestCase
 
         $this->assertSame(
             100,
-            (new Lightness(50))->add(new Lightness(75))->toInt()
+            (new Lightness(50))->add(new Lightness(75))->toInt(),
         );
     }
 
@@ -41,7 +41,7 @@ class LightnessTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Lightness(50))->subtract(new Lightness(75))->toInt()
+            (new Lightness(50))->subtract(new Lightness(75))->toInt(),
         );
     }
 

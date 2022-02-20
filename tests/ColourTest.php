@@ -25,15 +25,15 @@ class ColourTest extends TestCase
     {
         $this->assertInstanceOf(
             RGBA::class,
-            Colour::of('39F')
+            Colour::of('39F'),
         );
         $this->assertInstanceOf(
             HSLA::class,
-            Colour::of('hsl(0, 0%, 0%)')
+            Colour::of('hsl(0, 0%, 0%)'),
         );
         $this->assertInstanceOf(
             CMYKA::class,
-            Colour::of('device-cmyk(10%, 20%, 30%, 40%)')
+            Colour::of('device-cmyk(10%, 20%, 30%, 40%)'),
         );
     }
 

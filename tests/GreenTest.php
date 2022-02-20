@@ -41,7 +41,7 @@ class GreenTest extends TestCase
 
         $this->assertSame(
             255,
-            (new Green(150))->add(new Green(150))->toInt()
+            (new Green(150))->add(new Green(150))->toInt(),
         );
     }
 
@@ -54,7 +54,7 @@ class GreenTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Green(150))->subtract(new Green(255))->toInt()
+            (new Green(150))->subtract(new Green(255))->toInt(),
         );
     }
 

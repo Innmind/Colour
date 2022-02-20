@@ -27,7 +27,7 @@ final class CMYKA
         Magenta $magenta,
         Yellow $yellow,
         Black $black,
-        Alpha $alpha = null
+        Alpha $alpha = null,
     ) {
         $this->cyan = $cyan;
         $this->magenta = $magenta;

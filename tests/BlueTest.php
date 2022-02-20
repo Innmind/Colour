@@ -41,7 +41,7 @@ class BlueTest extends TestCase
 
         $this->assertSame(
             255,
-            (new Blue(150))->add(new Blue(150))->toInt()
+            (new Blue(150))->add(new Blue(150))->toInt(),
         );
     }
 
@@ -54,7 +54,7 @@ class BlueTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Blue(150))->subtract(new Blue(255))->toInt()
+            (new Blue(150))->subtract(new Blue(255))->toInt(),
         );
     }
 

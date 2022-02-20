@@ -23,7 +23,7 @@ class RGBATest extends TestCase
             $red = new Red(0),
             $green = new Green(255),
             $blue = new Blue(122),
-            $alpha = new Alpha(0.5)
+            $alpha = new Alpha(0.5),
         );
 
         $this->assertSame($red, $rgba->red());
@@ -38,7 +38,7 @@ class RGBATest extends TestCase
         $rgba = new RGBA(
             new Red(0),
             new Green(255),
-            new Blue(122)
+            new Blue(122),
         );
 
         $this->assertSame(1.0, $rgba->alpha()->toFloat());
@@ -49,13 +49,13 @@ class RGBATest extends TestCase
         $rgba = new RGBA(
             new Red(0),
             new Green(255),
-            new Blue(122)
+            new Blue(122),
         );
 
         $this->assertSame('#00ff7a', $rgba->toString());
         $this->assertSame(
             'rgba(0, 255, 122, 0.5)',
-            $rgba->subtractAlpha(new Alpha(0.5))->toString()
+            $rgba->subtractAlpha(new Alpha(0.5))->toString(),
         );
     }
 
@@ -64,16 +64,16 @@ class RGBATest extends TestCase
         $rgba = new RGBA(
             new Red(0),
             new Green(255),
-            new Blue(122)
+            new Blue(122),
         );
 
         $this->assertSame(
             '00ff7a',
-            $rgba->toHexadecimal()
+            $rgba->toHexadecimal(),
         );
         $this->assertSame(
             '00ff7a80',
-            $rgba->subtractAlpha(new Alpha(0.5))->toHexadecimal()
+            $rgba->subtractAlpha(new Alpha(0.5))->toHexadecimal(),
         );
     }
 
@@ -83,7 +83,7 @@ class RGBATest extends TestCase
             new Red(10),
             new Green(255),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->addRed(new Red(150));
@@ -105,7 +105,7 @@ class RGBATest extends TestCase
             new Red(150),
             new Green(255),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->subtractRed(new Red(10));
@@ -127,7 +127,7 @@ class RGBATest extends TestCase
             new Red(10),
             new Green(255),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->addBlue(new Blue(12));
@@ -149,7 +149,7 @@ class RGBATest extends TestCase
             new Red(10),
             new Green(255),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->subtractBlue(new Blue(10));
@@ -171,7 +171,7 @@ class RGBATest extends TestCase
             new Red(10),
             new Green(205),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->addGreen(new Green(15));
@@ -193,7 +193,7 @@ class RGBATest extends TestCase
             new Red(10),
             new Green(255),
             new Blue(122),
-            new Alpha(0.5)
+            new Alpha(0.5),
         );
 
         $rgba2 = $rgba->subtractGreen(new Green(10));
@@ -217,7 +217,7 @@ class RGBATest extends TestCase
         int $red,
         int $green,
         int $blue,
-        float $alpha
+        float $alpha,
     ) {
         $rgba = RGBA::of($string);
 
@@ -246,7 +246,7 @@ class RGBATest extends TestCase
         int $red,
         int $green,
         int $blue,
-        string $hexa
+        string $hexa,
     ) {
         $rgba = RGBA::of($string);
 
@@ -277,7 +277,7 @@ class RGBATest extends TestCase
         int $red,
         int $green,
         int $blue,
-        float $alpha = null
+        float $alpha = null,
     ) {
         $rgba = RGBA::of($string);
 
@@ -296,7 +296,7 @@ class RGBATest extends TestCase
 
                 return $value;
             },
-            $this->hexadecimalWithoutAlpha()
+            $this->hexadecimalWithoutAlpha(),
         );
 
         return \array_merge($this->hexadecimalWithAlpha(), $withoutAlpha);
@@ -424,7 +424,7 @@ class RGBATest extends TestCase
         int $red,
         int $green,
         int $blue,
-        float $alpha
+        float $alpha,
     ) {
         $rgba = RGBA::of($colour);
 
@@ -514,13 +514,13 @@ class RGBATest extends TestCase
     {
         $this->assertTrue(
             RGBA::of('39F')->equals(
-                RGBA::of('39F')
-            )
+                RGBA::of('39F'),
+            ),
         );
         $this->assertFalse(
             RGBA::of('39F8')->equals(
-                RGBA::of('39F')
-            )
+                RGBA::of('39F'),
+            ),
         );
     }
 

@@ -23,7 +23,7 @@ class CMYKATest extends TestCase
             $cyan = new Cyan(10),
             $magenta = new Magenta(20),
             $yellow = new Yellow(30),
-            $black = new Black(40)
+            $black = new Black(40),
         );
 
         $this->assertSame($cyan, $cmyk->cyan());
@@ -38,7 +38,7 @@ class CMYKATest extends TestCase
             new Magenta(20),
             new Yellow(30),
             new Black(40),
-            $alpha = new Alpha(0.5)
+            $alpha = new Alpha(0.5),
         );
 
         $this->assertSame($alpha, $cmyka->alpha());
@@ -51,7 +51,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->addCyan(new Cyan(1));
@@ -76,7 +76,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->subtractCyan(new Cyan(1));
@@ -101,7 +101,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->addMagenta(new Magenta(1));
@@ -126,7 +126,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->subtractMagenta(new Magenta(1));
@@ -151,7 +151,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->addYellow(new Yellow(1));
@@ -176,7 +176,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->subtractYellow(new Yellow(1));
@@ -201,7 +201,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->addBlack(new Black(1));
@@ -226,7 +226,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->subtractBlack(new Black(1));
@@ -252,7 +252,7 @@ class CMYKATest extends TestCase
             new Magenta(20),
             new Yellow(30),
             new Black(40),
-            new Alpha(0.1)
+            new Alpha(0.1),
         );
 
         $cmyk2 = $cmyk->addAlpha(new Alpha(0.1));
@@ -277,7 +277,7 @@ class CMYKATest extends TestCase
             new Cyan(10),
             new Magenta(20),
             new Yellow(30),
-            new Black(40)
+            new Black(40),
         );
 
         $cmyk2 = $cmyk->subtractAlpha(new Alpha(0.9));
@@ -305,7 +305,7 @@ class CMYKATest extends TestCase
         int $magenta,
         int $yellow,
         int $black,
-        float $alpha
+        float $alpha,
     ) {
         $cmyka = CMYKA::of($string);
 
@@ -337,7 +337,7 @@ class CMYKATest extends TestCase
         int $cyan,
         int $magenta,
         int $yellow,
-        int $black
+        int $black,
     ) {
         $cmyka = CMYKA::of($string);
 
@@ -366,7 +366,7 @@ class CMYKATest extends TestCase
         int $magenta,
         int $yellow,
         int $black,
-        float $alpha = null
+        float $alpha = null,
     ) {
         $cmyka = CMYKA::of($string);
 
@@ -407,13 +407,13 @@ class CMYKATest extends TestCase
     {
         $this->assertTrue(
             CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')->equals(
-                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
-            )
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)'),
+            ),
         );
         $this->assertFalse(
             CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 1.0)')->equals(
-                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)')
-            )
+                CMYKA::of('device-cmyk(80%, 40%, 0%, 0%, 0.5)'),
+            ),
         );
     }
 
