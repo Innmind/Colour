@@ -6,6 +6,9 @@ namespace Innmind\Colour;
 use Innmind\Colour\Exception\InvalidValueRangeException;
 use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class Blue
 {
     private int $integer;
@@ -20,6 +23,8 @@ final class Blue
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function of(int $value): Maybe
@@ -33,6 +38,8 @@ final class Blue
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function fromHexadecimal(string $hex): Maybe

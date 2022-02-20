@@ -6,6 +6,9 @@ namespace Innmind\Colour;
 use Innmind\Colour\Exception\InvalidValueRangeException;
 use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class Saturation
 {
     private int $value;
@@ -20,6 +23,8 @@ final class Saturation
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function of(int $value): Maybe

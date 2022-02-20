@@ -9,6 +9,9 @@ use Innmind\Immutable\{
     Maybe,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class CMYKA
 {
     private const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
@@ -34,6 +37,9 @@ final class CMYKA
         $this->alpha = $alpha ?? new Alpha(1);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $colour): self
     {
         return self::maybe($colour)->match(
@@ -43,6 +49,8 @@ final class CMYKA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function maybe(string $colour): Maybe
@@ -250,6 +258,8 @@ final class CMYKA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function withAlpha(Str $colour): Maybe
@@ -300,6 +310,8 @@ final class CMYKA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function withoutAlpha(Str $colour): Maybe

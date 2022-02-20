@@ -9,6 +9,9 @@ use Innmind\Immutable\{
     Maybe,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class RGBA
 {
     private const HEXADECIMAL_PATTERN_WITH_ALPHA = '~^#?(?<red>[0-9a-fA-F]{1,2})(?<green>[0-9a-fA-F]{1,2})(?<blue>[0-9a-fA-F]{1,2})(?<alpha>[0-9a-fA-F]{1,2})$~';
@@ -35,6 +38,9 @@ final class RGBA
         $this->alpha = $alpha ?? new Alpha(1);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $colour): self
     {
         return self::maybe($colour)->match(
@@ -44,6 +50,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function maybe(string $colour): Maybe
@@ -274,6 +282,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromHexadecimal(Str $colour): Maybe
@@ -284,6 +294,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromHexadecimalWithAlpha(Str $colour): Maybe
@@ -332,6 +344,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromHexadecimalWithoutAlpha(Str $colour): Maybe
@@ -376,6 +390,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBFunction(Str $colour): Maybe
@@ -386,6 +402,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBFunctionWithPoints(Str $colour): Maybe
@@ -424,6 +442,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBFunctionWithPercents(Str $colour): Maybe
@@ -465,6 +485,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBAFunction(Str $colour): Maybe
@@ -475,6 +497,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBAFunctionWithPoints(Str $colour): Maybe
@@ -519,6 +543,8 @@ final class RGBA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function fromRGBAFunctionWithPercents(Str $colour): Maybe

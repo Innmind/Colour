@@ -10,6 +10,9 @@ use Innmind\Immutable\{
     Maybe,
 };
 
+/**
+ * @psalm-immutable
+ */
 enum Colour
 {
     // variants are accessible via methods to avoid having too many cases on the
@@ -113,6 +116,9 @@ enum Colour
     case yellow;
     case yellowgreen;
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {
         return self::maybe($colour)->match(
@@ -122,6 +128,8 @@ enum Colour
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<RGBA|HSLA|CMYKA>
      */
     public static function maybe(string $colour): Maybe

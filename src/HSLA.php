@@ -9,6 +9,9 @@ use Innmind\Immutable\{
     Maybe,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class HSLA
 {
     private const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
@@ -31,6 +34,9 @@ final class HSLA
         $this->alpha = $alpha ?? new Alpha(1);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function of(string $colour): self
     {
         return self::maybe($colour)->match(
@@ -40,6 +46,8 @@ final class HSLA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     public static function maybe(string $colour): Maybe
@@ -239,6 +247,8 @@ final class HSLA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function withAlpha(Str $colour): Maybe
@@ -283,6 +293,8 @@ final class HSLA
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Maybe<self>
      */
     private static function withoutAlpha(Str $colour): Maybe
