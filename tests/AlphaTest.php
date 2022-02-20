@@ -28,7 +28,7 @@ class AlphaTest extends TestCase
 
         $this->assertSame(
             1.0,
-            (new Alpha(0.6))->add(new Alpha(0.7))->toFloat()
+            (new Alpha(0.6))->add(new Alpha(0.7))->toFloat(),
         );
     }
 
@@ -41,7 +41,7 @@ class AlphaTest extends TestCase
 
         $this->assertSame(
             0.0,
-            (new Alpha(0.5))->subtract(new Alpha(0.7))->toFloat()
+            (new Alpha(0.5))->subtract(new Alpha(0.7))->toFloat(),
         );
     }
 
@@ -82,10 +82,13 @@ class AlphaTest extends TestCase
     {
         $this->assertSame(
             $hex,
-            (new Alpha($percent))->toHexadecimal()
+            (new Alpha($percent))->toHexadecimal(),
         );
 
-        $alpha = Alpha::fromHexadecimal($hex);
+        $alpha = Alpha::fromHexadecimal($hex)->match(
+            static fn($alpha) => $alpha,
+            static fn() => null,
+        );
         $this->assertInstanceOf(Alpha::class, $alpha);
         $this->assertSame($percent, $alpha->toFloat());
     }

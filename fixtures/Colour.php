@@ -8,7 +8,6 @@ use Innmind\Colour\{
     RGBA,
 };
 use Innmind\BlackBox\Set;
-use function Innmind\Immutable\unwrap;
 
 final class Colour
 {
@@ -17,8 +16,9 @@ final class Colour
      */
     public static function any(): Set
     {
-        return Set\Elements::of(
-            ...unwrap(Colours::literals()->values()),
+        return Set\Decorate::immutable(
+            static fn($case) => $case->toRGBA(),
+            Set\Elements::of(...Colours::cases()),
         );
     }
 }

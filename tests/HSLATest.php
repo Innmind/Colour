@@ -11,10 +11,8 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     CMYKA,
-    Convertible,
     Exception\DomainException,
 };
-use Innmind\Immutable\Str;
 use PHPUnit\Framework\TestCase;
 
 class HSLATest extends TestCase
@@ -24,7 +22,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             $hue = new Hue(150),
             $saturation = new Saturation(42),
-            $lightness = new Lightness(24)
+            $lightness = new Lightness(24),
         );
 
         $this->assertSame($hue, $hsl->hue());
@@ -37,7 +35,7 @@ class HSLATest extends TestCase
             new Hue(150),
             new Saturation(42),
             new Lightness(24),
-            $alpha = new Alpha(0.5)
+            $alpha = new Alpha(0.5),
         );
 
         $this->assertSame($alpha, $hsla->alpha());
@@ -49,7 +47,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->rotateBy(50);
@@ -71,7 +69,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->addSaturation(new Saturation(58));
@@ -93,7 +91,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->SubtractSaturation(new Saturation(22));
@@ -115,7 +113,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->addLightness(new Lightness(6));
@@ -137,7 +135,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->subtractLightness(new Lightness(22));
@@ -160,7 +158,7 @@ class HSLATest extends TestCase
             new Hue(150),
             new Saturation(42),
             new Lightness(24),
-            new Alpha(0.1)
+            new Alpha(0.1),
         );
 
         $hsl2 = $hsl->addALpha(new Alpha(0.1));
@@ -182,7 +180,7 @@ class HSLATest extends TestCase
         $hsl = new HSLA(
             new Hue(150),
             new Saturation(42),
-            new Lightness(24)
+            new Lightness(24),
         );
 
         $hsl2 = $hsl->subtractAlpha(new Alpha(0.3));
@@ -207,27 +205,15 @@ class HSLATest extends TestCase
         int $hue,
         int $saturation,
         int $lightness,
-        float $alpha
+        float $alpha,
     ) {
-        $hsla = HSLA::withAlpha(
-            Str::of($string)
-        );
+        $hsla = HSLA::of($string);
 
         $this->assertInstanceOf(HSLA::class, $hsla);
         $this->assertSame($hue, $hsla->hue()->toInt());
         $this->assertSame($saturation, $hsla->saturation()->toInt());
         $this->assertSame($lightness, $hsla->lightness()->toInt());
         $this->assertSame($alpha, $hsla->alpha()->toFloat());
-    }
-
-    public function testThrowWhenBuildingFromStringWithUnfoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('hsl(10, 20%, 30%)');
-
-        HSLA::withAlpha(
-            Str::of('hsl(10, 20%, 30%)')
-        );
     }
 
     public function withAlpha()
@@ -249,27 +235,15 @@ class HSLATest extends TestCase
         string $string,
         int $hue,
         int $saturation,
-        int $lightness
+        int $lightness,
     ) {
-        $hsla = HSLA::withoutAlpha(
-            Str::of($string)
-        );
+        $hsla = HSLA::of($string);
 
         $this->assertInstanceOf(HSLA::class, $hsla);
         $this->assertSame($hue, $hsla->hue()->toInt());
         $this->assertSame($saturation, $hsla->saturation()->toInt());
         $this->assertSame($lightness, $hsla->lightness()->toInt());
         $this->assertTrue($hsla->alpha()->atMaximum());
-    }
-
-    public function testThrowWhenBuildingFromStringWithFoundAlpha()
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('hsla(10, 20%, 30%, 1.0)');
-
-        HSLA::withoutAlpha(
-            Str::of('hsla(10, 20%, 30%, 1.0)')
-        );
     }
 
     public function withoutAlpha()
@@ -288,7 +262,7 @@ class HSLATest extends TestCase
         int $hue,
         int $saturation,
         int $lightness,
-        float $alpha = null
+        float $alpha = null,
     ) {
         $hsla = HSLA::of($string);
 
@@ -308,13 +282,13 @@ class HSLATest extends TestCase
     {
         $this->assertTrue(
             HSLA::of('hsl(10, 20%, 30%)')->equals(
-                HSLA::of('hsl(10, 20%, 30%)')
-            )
+                HSLA::of('hsl(10, 20%, 30%)'),
+            ),
         );
         $this->assertFalse(
             HSLA::of('hsla(10, 20%, 30%, 0.5)')->equals(
-                HSLA::of('hsl(10, 20%, 30%)')
-            )
+                HSLA::of('hsl(10, 20%, 30%)'),
+            ),
         );
     }
 
@@ -326,15 +300,15 @@ class HSLATest extends TestCase
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame('3399ff80', $rgba->toHexadecimal());
-        $this->assertSame($rgba, $hsla->toRGBA());
+        $this->assertTrue($rgba->equals($hsla->toRGBA()));
 
         $hsla = HSLA::of('hsla(210, 0%, 60%, 0.5)');
         $rgba = $hsla->toRGBA();
         $this->assertSame(
             '99999980',
-            $rgba->toHexadecimal()
+            $rgba->toHexadecimal(),
         );
-        $this->assertSame($rgba, $hsla->toRGBA());
+        $this->assertTrue($rgba->equals($hsla->toRGBA()));
     }
 
     public function testToCMYKA()
@@ -342,7 +316,6 @@ class HSLATest extends TestCase
         $hsla = HSLA::of('hsla(210, 100%, 60%, 0.5)');
 
         $this->assertInstanceOf(CMYKA::class, $hsla->toCMYKA());
-        $this->assertSame($hsla->toCMYKA(), $hsla->toCMYKA());
         $this->assertTrue($hsla->toCMYKA()->equals($hsla->toRGBA()->toCMYKA()));
     }
 
@@ -350,7 +323,6 @@ class HSLATest extends TestCase
     {
         $hsla = HSLA::of('hsl(0, 0%, 0%)');
 
-        $this->assertInstanceOf(Convertible::class, $hsla);
         $this->assertSame($hsla, $hsla->toHSLA());
     }
 }

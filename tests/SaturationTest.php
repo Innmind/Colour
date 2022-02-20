@@ -28,7 +28,7 @@ class SaturationTest extends TestCase
 
         $this->assertSame(
             100,
-            (new Saturation(50))->add(new Saturation(75))->toInt()
+            (new Saturation(50))->add(new Saturation(75))->toInt(),
         );
     }
 
@@ -41,7 +41,7 @@ class SaturationTest extends TestCase
 
         $this->assertSame(
             0,
-            (new Saturation(50))->subtract(new Saturation(75))->toInt()
+            (new Saturation(50))->subtract(new Saturation(75))->toInt(),
         );
     }
 
