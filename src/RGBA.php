@@ -307,8 +307,8 @@ final class RGBA
             return Maybe::nothing();
         }
 
-        if ($colour->matches('/^#/')) {
-            $colour = $colour->substring(1);
+        if ($colour->startsWith('#')) {
+            $colour = $colour->drop(1);
         }
 
         if (
@@ -357,8 +357,8 @@ final class RGBA
             return Maybe::nothing();
         }
 
-        if ($colour->matches('/^#/')) {
-            $colour = $colour->substring(1);
+        if ($colour->startsWith('#')) {
+            $colour = $colour->drop(1);
         }
 
         if (
