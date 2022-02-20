@@ -118,6 +118,8 @@ enum Colour
 
     /**
      * @psalm-pure
+     *
+     * @throws DomainException
      */
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {

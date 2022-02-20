@@ -13,6 +13,9 @@ final class Alpha
 {
     private float $value;
 
+    /**
+     * @throws InvalidValueRangeException
+     */
     public function __construct(float $value)
     {
         if ($value < 0 || $value > 1) {

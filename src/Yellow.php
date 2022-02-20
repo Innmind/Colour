@@ -13,6 +13,9 @@ final class Yellow
 {
     private int $value;
 
+    /**
+     * @throws InvalidValueRangeException
+     */
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {

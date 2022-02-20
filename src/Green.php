@@ -13,6 +13,9 @@ final class Green
 {
     private int $integer;
 
+    /**
+     * @throws InvalidValueRangeException
+     */
     public function __construct(int $integer)
     {
         if ($integer < 0 || $integer > 255) {
