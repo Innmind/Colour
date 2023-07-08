@@ -46,7 +46,7 @@ class HueTest extends TestCase
         $this->assertSame($expected, $hue->toInt());
     }
 
-    public function rotations(): array
+    public static function rotations(): array
     {
         return [
             [250, 50, 300],

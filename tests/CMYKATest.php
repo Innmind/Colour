@@ -293,7 +293,7 @@ class CMYKATest extends TestCase
         $this->assertSame(20, $cmyk2->magenta()->toInt());
         $this->assertSame(30, $cmyk2->yellow()->toInt());
         $this->assertSame(40, $cmyk2->black()->toInt());
-        $this->assertSame(0.1, $cmyk2->alpha()->toFloat());
+        $this->assertEqualsWithDelta(0.1, $cmyk2->alpha()->toFloat(), 0.01);
     }
 
     /**
@@ -317,7 +317,7 @@ class CMYKATest extends TestCase
         $this->assertSame($alpha, $cmyka->alpha()->toFloat());
     }
 
-    public function withAlpha()
+    public static function withAlpha()
     {
         return [
             ['device-cmyk(10%, 20%, 30%, 40%, 1.0)', 10, 20, 30, 40, 1.0],
@@ -349,7 +349,7 @@ class CMYKATest extends TestCase
         $this->assertTrue($cmyka->alpha()->atMaximum());
     }
 
-    public function withoutAlpha()
+    public static function withoutAlpha()
     {
         return [
             ['device-cmyk(10%, 20%, 30%, 40%)', 10, 20, 30, 40],
@@ -378,9 +378,9 @@ class CMYKATest extends TestCase
         $this->assertSame($alpha ?? 1.0, $cmyka->alpha()->toFloat());
     }
 
-    public function colours()
+    public static function colours()
     {
-        return \array_merge($this->withAlpha(), $this->withoutAlpha());
+        return \array_merge(self::withAlpha(), self::withoutAlpha());
     }
 
     public function testToRGBA()

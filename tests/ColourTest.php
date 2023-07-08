@@ -72,7 +72,7 @@ class ColourTest extends TestCase
         $this->assertSame($hex, $rgba->toHexadecimal());
     }
 
-    public function literals()
+    public static function literals()
     {
         return [
             [Colour::aliceblue, 'f0f8ff'],

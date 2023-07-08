@@ -216,7 +216,7 @@ class HSLATest extends TestCase
         $this->assertSame($alpha, $hsla->alpha()->toFloat());
     }
 
-    public function withAlpha()
+    public static function withAlpha()
     {
         return [
             ['hsla(10, 20%, 30%, 1.0)', 10, 20, 30, 1.0],
@@ -246,7 +246,7 @@ class HSLATest extends TestCase
         $this->assertTrue($hsla->alpha()->atMaximum());
     }
 
-    public function withoutAlpha()
+    public static function withoutAlpha()
     {
         return [
             ['hsl(10, 20%, 30%)', 10, 20, 30],
@@ -273,9 +273,9 @@ class HSLATest extends TestCase
         $this->assertSame($alpha ?? 1.0, $hsla->alpha()->toFloat());
     }
 
-    public function colours()
+    public static function colours()
     {
-        return \array_merge($this->withAlpha(), $this->withoutAlpha());
+        return \array_merge(self::withAlpha(), self::withoutAlpha());
     }
 
     public function testEquals()
