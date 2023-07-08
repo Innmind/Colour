@@ -7,7 +7,7 @@ use Fixtures\Innmind\Colour\Colour;
 use Innmind\Colour\RGBA;
 use Innmind\BlackBox\{
     Set,
-    Random\RandomInt,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ColourTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set);
 
-        foreach ($set->values(new RandomInt) as $value) {
+        foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
             $this->assertTrue($value->isImmutable());
             $this->assertInstanceOf(RGBA::class, $value->unwrap());

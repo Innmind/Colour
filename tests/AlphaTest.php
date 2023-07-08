@@ -37,7 +37,7 @@ class AlphaTest extends TestCase
         $alpha = (new Alpha(0.54))->subtract(new Alpha(0.12));
 
         $this->assertInstanceOf(Alpha::class, $alpha);
-        $this->assertSame(0.42, $alpha->toFloat());
+        $this->assertEqualsWithDelta(0.42, $alpha->toFloat(), 0.001);
 
         $this->assertSame(
             0.0,
@@ -93,7 +93,7 @@ class AlphaTest extends TestCase
         $this->assertSame($percent, $alpha->toFloat());
     }
 
-    public function hexadecimals()
+    public static function hexadecimals()
     {
         return [
             ['ff', 1.0],

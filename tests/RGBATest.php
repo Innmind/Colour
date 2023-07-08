@@ -228,7 +228,7 @@ class RGBATest extends TestCase
         $this->assertSame($alpha, $rgba->alpha()->toFloat());
     }
 
-    public function hexadecimalWithAlpha()
+    public static function hexadecimalWithAlpha()
     {
         return [
             ['#39FF', 51, 153, 255, 1.0],
@@ -258,7 +258,7 @@ class RGBATest extends TestCase
         $this->assertSame($hexa, $rgba->toHexadecimal());
     }
 
-    public function hexadecimalWithoutAlpha()
+    public static function hexadecimalWithoutAlpha()
     {
         return [
             ['#39F', 51, 153, 255, '3399ff'],
@@ -288,7 +288,7 @@ class RGBATest extends TestCase
         $this->assertSame($alpha ?? 1.0, $rgba->alpha()->toFloat());
     }
 
-    public function hexadecimals()
+    public static function hexadecimals()
     {
         $withoutAlpha = \array_map(
             static function($value) {
@@ -296,10 +296,10 @@ class RGBATest extends TestCase
 
                 return $value;
             },
-            $this->hexadecimalWithoutAlpha(),
+            self::hexadecimalWithoutAlpha(),
         );
 
-        return \array_merge($this->hexadecimalWithAlpha(), $withoutAlpha);
+        return \array_merge(self::hexadecimalWithAlpha(), $withoutAlpha);
     }
 
     public function testFromRGBFunctionWithPoints()
@@ -435,7 +435,7 @@ class RGBATest extends TestCase
         $this->assertSame($alpha, \round($rgba->alpha()->toFloat(), 1));
     }
 
-    public function allFormats()
+    public static function allFormats()
     {
         return [
             ['#39F', 51, 153, 255, 1.0],
