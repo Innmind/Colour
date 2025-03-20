@@ -5,8 +5,6 @@ namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
-    Map,
-    Str,
     Maybe,
 };
 
