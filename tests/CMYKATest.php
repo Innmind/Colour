@@ -11,7 +11,6 @@ use Innmind\Colour\{
     Black,
     Alpha,
     RGBA,
-    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
