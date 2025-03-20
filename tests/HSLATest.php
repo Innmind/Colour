@@ -11,7 +11,6 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
     CMYKA,
-    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
