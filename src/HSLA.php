@@ -26,7 +26,7 @@ final class HSLA
         Hue $hue,
         Saturation $saturation,
         Lightness $lightness,
-        Alpha $alpha = null,
+        ?Alpha $alpha = null,
     ) {
         $this->hue = $hue;
         $this->saturation = $saturation;

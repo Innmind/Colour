@@ -277,7 +277,7 @@ class RGBATest extends TestCase
         int $red,
         int $green,
         int $blue,
-        float $alpha = null,
+        ?float $alpha = null,
     ) {
         $rgba = RGBA::of($string);
 

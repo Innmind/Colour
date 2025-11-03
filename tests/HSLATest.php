@@ -262,7 +262,7 @@ class HSLATest extends TestCase
         int $hue,
         int $saturation,
         int $lightness,
-        float $alpha = null,
+        ?float $alpha = null,
     ) {
         $hsla = HSLA::of($string);
 

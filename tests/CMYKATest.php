@@ -366,7 +366,7 @@ class CMYKATest extends TestCase
         int $magenta,
         int $yellow,
         int $black,
-        float $alpha = null,
+        ?float $alpha = null,
     ) {
         $cmyka = CMYKA::of($string);
 
