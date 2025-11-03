@@ -6,10 +6,10 @@ namespace Tests\Innmind\Colour\Fixtures;
 use Fixtures\Innmind\Colour\Colour;
 use Innmind\Colour\RGBA;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Set,
     Random,
 };
-use PHPUnit\Framework\TestCase;
 
 class ColourTest extends TestCase
 {

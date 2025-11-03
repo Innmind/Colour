@@ -10,11 +10,12 @@ use Innmind\Colour\{
     CMYKA,
     Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     PHPUnit\BlackBox,
     Set,
 };
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ColourTest extends TestCase
 {
@@ -61,9 +62,7 @@ class ColourTest extends TestCase
         $this->assertCount(98, Colour::cases());
     }
 
-    /**
-     * @dataProvider literals
-     */
+    #[DataProvider('literals')]
     public function testFromLiteral(Colour|RGBA $colour, string $hex)
     {
         $rgba = $colour->toRGBA();

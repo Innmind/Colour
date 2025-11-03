@@ -7,7 +7,7 @@ use Innmind\Colour\{
     Lightness,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class LightnessTest extends TestCase
 {

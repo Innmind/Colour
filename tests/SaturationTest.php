@@ -7,7 +7,7 @@ use Innmind\Colour\{
     Saturation,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class SaturationTest extends TestCase
 {

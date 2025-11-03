@@ -8,7 +8,7 @@ use Innmind\Colour\{
     Intensity,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class GreenTest extends TestCase
 {

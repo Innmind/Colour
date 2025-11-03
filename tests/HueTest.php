@@ -7,7 +7,8 @@ use Innmind\Colour\{
     Hue,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HueTest extends TestCase
 {
@@ -35,9 +36,7 @@ class HueTest extends TestCase
         new Hue(360);
     }
 
-    /**
-     * @dataProvider rotations
-     */
+    #[DataProvider('rotations')]
     public function testRotateBy($initial, $degrees, $expected)
     {
         $hue = (new Hue($initial))->rotateBy($degrees);

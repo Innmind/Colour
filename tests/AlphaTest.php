@@ -7,7 +7,8 @@ use Innmind\Colour\{
     Alpha,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AlphaTest extends TestCase
 {
@@ -37,7 +38,8 @@ class AlphaTest extends TestCase
         $alpha = (new Alpha(0.54))->subtract(new Alpha(0.12));
 
         $this->assertInstanceOf(Alpha::class, $alpha);
-        $this->assertEqualsWithDelta(0.42, $alpha->toFloat(), 0.001);
+        $this->assertGreaterThanOrEqual(0.4199, $alpha->toFloat());
+        $this->assertLessThanOrEqual(0.421, $alpha->toFloat());
 
         $this->assertSame(
             0.0,
@@ -75,9 +77,7 @@ class AlphaTest extends TestCase
         $this->assertFalse((new Alpha(0.5))->atMinimum());
     }
 
-    /**
-     * @dataProvider hexadecimals
-     */
+    #[DataProvider('hexadecimals')]
     public function testHexadecimal($hex, $percent)
     {
         $this->assertSame(

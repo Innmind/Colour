@@ -12,7 +12,8 @@ use Innmind\Colour\{
     RGBA,
     CMYKA,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HSLATest extends TestCase
 {
@@ -196,9 +197,7 @@ class HSLATest extends TestCase
         $this->assertSame(0.7, $hsl2->alpha()->toFloat());
     }
 
-    /**
-     * @dataProvider withAlpha
-     */
+    #[DataProvider('withAlpha')]
     public function testWithAlpha(
         string $string,
         int $hue,
@@ -227,9 +226,7 @@ class HSLATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider withoutAlpha
-     */
+    #[DataProvider('withoutAlpha')]
     public function testWithoutAlpha(
         string $string,
         int $hue,
@@ -253,9 +250,7 @@ class HSLATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider colours
-     */
+    #[DataProvider('colours')]
     public function testOf(
         string $string,
         int $hue,

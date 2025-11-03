@@ -7,7 +7,7 @@ use Innmind\Colour\{
     Cyan,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class CyanTest extends TestCase
 {

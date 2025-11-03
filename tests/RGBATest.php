@@ -13,7 +13,8 @@ use Innmind\Colour\{
     CMYKA,
     Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RGBATest extends TestCase
 {
@@ -209,9 +210,7 @@ class RGBATest extends TestCase
         $this->assertSame(0.5, $rgba2->alpha()->toFloat());
     }
 
-    /**
-     * @dataProvider hexadecimalWithAlpha
-     */
+    #[DataProvider('hexadecimalWithAlpha')]
     public function testFromHexadecimalWithAlpha(
         string $string,
         int $red,
@@ -238,9 +237,7 @@ class RGBATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider hexadecimalWithoutAlpha
-     */
+    #[DataProvider('hexadecimalWithoutAlpha')]
     public function testFromHexadecimalWithoutAlpha(
         string $string,
         int $red,
@@ -269,9 +266,7 @@ class RGBATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider hexadecimals
-     */
+    #[DataProvider('hexadecimals')]
     public function testFromHexadecimal(
         string $string,
         int $red,
@@ -416,9 +411,7 @@ class RGBATest extends TestCase
         $this->assertTrue($rgb->alpha()->atMaximum());
     }
 
-    /**
-     * @dataProvider allFormats
-     */
+    #[DataProvider('allFormats')]
     public function testOf(
         string $colour,
         int $red,

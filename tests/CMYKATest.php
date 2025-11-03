@@ -12,7 +12,8 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CMYKATest extends TestCase
 {
@@ -292,12 +293,11 @@ class CMYKATest extends TestCase
         $this->assertSame(20, $cmyk2->magenta()->toInt());
         $this->assertSame(30, $cmyk2->yellow()->toInt());
         $this->assertSame(40, $cmyk2->black()->toInt());
-        $this->assertEqualsWithDelta(0.1, $cmyk2->alpha()->toFloat(), 0.01);
+        $this->assertGreaterThanOrEqual(0.09, $cmyk2->alpha()->toFloat());
+        $this->assertLessThanOrEqual(0.11, $cmyk2->alpha()->toFloat());
     }
 
-    /**
-     * @dataProvider withAlpha
-     */
+    #[DataProvider('withAlpha')]
     public function testWithAlpha(
         string $string,
         int $cyan,
@@ -328,9 +328,7 @@ class CMYKATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider withoutAlpha
-     */
+    #[DataProvider('withoutAlpha')]
     public function testWithoutAlpha(
         string $string,
         int $cyan,
@@ -356,9 +354,7 @@ class CMYKATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider colours
-     */
+    #[DataProvider('colours')]
     public function testOf(
         string $string,
         int $cyan,

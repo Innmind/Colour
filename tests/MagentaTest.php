@@ -7,7 +7,7 @@ use Innmind\Colour\{
     Magenta,
     Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class MagentaTest extends TestCase
 {
