@@ -13,7 +13,7 @@ class LightnessTest extends TestCase
 {
     public function testInterface()
     {
-        $lightness = new Lightness(100);
+        $lightness = Lightness::at(100);
 
         $this->assertSame(100, $lightness->toInt());
         $this->assertSame('100', $lightness->toString());
@@ -21,27 +21,27 @@ class LightnessTest extends TestCase
 
     public function testAdd()
     {
-        $lightness = (new Lightness(12))->add(new Lightness(30));
+        $lightness = Lightness::at(12)->add(Lightness::at(30));
 
         $this->assertInstanceOf(Lightness::class, $lightness);
         $this->assertSame(42, $lightness->toInt());
 
         $this->assertSame(
             100,
-            (new Lightness(50))->add(new Lightness(75))->toInt(),
+            Lightness::at(50)->add(Lightness::at(75))->toInt(),
         );
     }
 
     public function testSub()
     {
-        $lightness = (new Lightness(54))->subtract(new Lightness(12));
+        $lightness = Lightness::at(54)->subtract(Lightness::at(12));
 
         $this->assertInstanceOf(Lightness::class, $lightness);
         $this->assertSame(42, $lightness->toInt());
 
         $this->assertSame(
             0,
-            (new Lightness(50))->subtract(new Lightness(75))->toInt(),
+            Lightness::at(50)->subtract(Lightness::at(75))->toInt(),
         );
     }
 
@@ -50,7 +50,7 @@ class LightnessTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-42');
 
-        new Lightness(-42);
+        Lightness::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -58,26 +58,26 @@ class LightnessTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('101');
 
-        new Lightness(101);
+        Lightness::of(101)->unwrap();
     }
 
     public function testEquals()
     {
-        $this->assertTrue((new Lightness(50))->equals(new Lightness(50)));
-        $this->assertFalse((new Lightness(100))->equals(new Lightness(50)));
+        $this->assertTrue(Lightness::at(50)->equals(Lightness::at(50)));
+        $this->assertFalse(Lightness::at(100)->equals(Lightness::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Lightness(100))->atMaximum());
-        $this->assertFalse((new Lightness(0))->atMaximum());
-        $this->assertFalse((new Lightness(50))->atMaximum());
+        $this->assertTrue(Lightness::at(100)->atMaximum());
+        $this->assertFalse(Lightness::at(0)->atMaximum());
+        $this->assertFalse(Lightness::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Lightness(100))->atMinimum());
-        $this->assertTrue((new Lightness(0))->atMinimum());
-        $this->assertFalse((new Lightness(50))->atMinimum());
+        $this->assertFalse(Lightness::at(100)->atMinimum());
+        $this->assertTrue(Lightness::at(0)->atMinimum());
+        $this->assertFalse(Lightness::at(50)->atMinimum());
     }
 }

@@ -27,16 +27,28 @@ final class RGBA
     private Green $green;
     private Alpha $alpha;
 
-    public function __construct(
+    private function __construct(
         Red $red,
         Green $green,
         Blue $blue,
-        ?Alpha $alpha = null,
+        Alpha $alpha,
     ) {
         $this->red = $red;
         $this->blue = $blue;
         $this->green = $green;
-        $this->alpha = $alpha ?? new Alpha(1);
+        $this->alpha = $alpha;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function from(
+        Red $red,
+        Green $green,
+        Blue $blue,
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($red, $green, $blue, $alpha ?? Alpha::max());
     }
 
     /**
@@ -203,10 +215,10 @@ final class RGBA
         $lightness = ($max + $min) / 2;
 
         if ($max === $min) {
-            return new HSLA(
-                new Hue(0),
-                new Saturation(0),
-                new Lightness((int) \round($lightness * 100)),
+            return HSLA::from(
+                Hue::at(0),
+                Saturation::at(0),
+                Lightness::of((int) \round($lightness * 100))->unwrap(),
                 $this->alpha,
             );
         }
@@ -229,10 +241,10 @@ final class RGBA
 
         $hue *= 60;
 
-        return new HSLA(
-            new Hue((int) \round($hue)),
-            new Saturation((int) \round($saturation * 100)),
-            new Lightness((int) \round($lightness * 100)),
+        return HSLA::from(
+            Hue::of((int) \round($hue))->unwrap(),
+            Saturation::of((int) \round($saturation * 100))->unwrap(),
+            Lightness::of((int) \round($lightness * 100))->unwrap(),
             $this->alpha,
         );
     }
@@ -248,11 +260,11 @@ final class RGBA
             $this->green->atMinimum() &&
             $this->blue->atMinimum()
         ) {
-            return new CMYKA(
-                new Cyan(0),
-                new Magenta(0),
-                new Yellow(0),
-                new Black(100),
+            return CMYKA::from(
+                Cyan::at(0),
+                Magenta::at(0),
+                Yellow::at(0),
+                Black::at(100),
                 $this->alpha,
             );
         }
@@ -262,11 +274,11 @@ final class RGBA
         $magenta = (1 - $green - $black) / (1 - $black);
         $yellow = (1 - $blue - $black) / (1 - $black);
 
-        return new CMYKA(
-            new Cyan((int) \round($cyan * 100)),
-            new Magenta((int) \round($magenta * 100)),
-            new Yellow((int) \round($yellow * 100)),
-            new Black((int) \round($black * 100)),
+        return CMYKA::from(
+            Cyan::of((int) \round($cyan * 100))->unwrap(),
+            Magenta::of((int) \round($magenta * 100))->unwrap(),
+            Yellow::of((int) \round($yellow * 100))->unwrap(),
+            Black::of((int) \round($black * 100))->unwrap(),
             $this->alpha,
         );
     }
@@ -339,14 +351,7 @@ final class RGBA
             ->flatMap(static fn($alpha) => Alpha::fromHexadecimal($alpha)->maybe());
 
         return Maybe::all($red, $green, $blue, $alpha)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                    $alpha,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -383,13 +388,7 @@ final class RGBA
             ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue)->maybe());
 
         return Maybe::all($red, $green, $blue)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -432,13 +431,7 @@ final class RGBA
             ->flatMap(static fn($blue) => Blue::of($blue)->maybe());
 
         return Maybe::all($red, $green, $blue)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -472,13 +465,7 @@ final class RGBA
             ->flatMap(static fn($blue) => Blue::fromIntensity($blue)->maybe());
 
         return Maybe::all($red, $green, $blue)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -526,14 +513,7 @@ final class RGBA
             ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
 
         return Maybe::all($red, $green, $blue, $alpha)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                    $alpha,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -572,14 +552,7 @@ final class RGBA
             ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
 
         return Maybe::all($red, $green, $blue, $alpha)
-            ->map(
-                static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                    $red,
-                    $green,
-                    $blue,
-                    $alpha,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 }

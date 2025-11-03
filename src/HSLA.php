@@ -23,16 +23,28 @@ final class HSLA
     private Lightness $lightness;
     private Alpha $alpha;
 
-    public function __construct(
+    private function __construct(
         Hue $hue,
         Saturation $saturation,
         Lightness $lightness,
-        ?Alpha $alpha = null,
+        Alpha $alpha,
     ) {
         $this->hue = $hue;
         $this->saturation = $saturation;
         $this->lightness = $lightness;
-        $this->alpha = $alpha ?? new Alpha(1);
+        $this->alpha = $alpha;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function from(
+        Hue $hue,
+        Saturation $saturation,
+        Lightness $lightness,
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($hue, $saturation, $lightness, $alpha ?? Alpha::max());
     }
 
     /**
@@ -172,10 +184,10 @@ final class HSLA
         $lightness = $this->lightness->toInt() / 100;
 
         if ($this->saturation->atMinimum()) {
-            return new RGBA(
-                new Red((int) \round($lightness * 255)),
-                new Green((int) \round($lightness * 255)),
-                new Blue((int) \round($lightness * 255)),
+            return RGBA::from(
+                Red::of((int) \round($lightness * 255))->unwrap(),
+                Green::of((int) \round($lightness * 255))->unwrap(),
+                Blue::of((int) \round($lightness * 255))->unwrap(),
                 $this->alpha,
             );
         }
@@ -187,10 +199,10 @@ final class HSLA
         $q = $lightness < 0.5 ? $lightness * (1 + $saturation) : $lightness + $saturation - $lightness * $saturation;
         $p = 2 * $lightness - $q;
 
-        return new RGBA(
-            new Red((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
-            new Green((int) \round($this->hueToPoint($p, $q, $hue) * 255)),
-            new Blue((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
+        return RGBA::from(
+            Red::of((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255))->unwrap(),
+            Green::of((int) \round($this->hueToPoint($p, $q, $hue) * 255))->unwrap(),
+            Blue::of((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255))->unwrap(),
             $this->alpha,
         );
     }
@@ -288,14 +300,7 @@ final class HSLA
             ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
 
         return Maybe::all($hue, $saturation, $lightness, $alpha)
-            ->map(
-                static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
-                    $hue,
-                    $saturation,
-                    $lightness,
-                    $alpha,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -326,13 +331,7 @@ final class HSLA
             ->flatMap(static fn($lightness) => Lightness::of($lightness)->maybe());
 
         return Maybe::all($hue, $saturation, $lightness)
-            ->map(
-                static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(
-                    $hue,
-                    $saturation,
-                    $lightness,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 }

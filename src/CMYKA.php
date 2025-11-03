@@ -24,18 +24,31 @@ final class CMYKA
     private Black $black;
     private Alpha $alpha;
 
-    public function __construct(
+    private function __construct(
         Cyan $cyan,
         Magenta $magenta,
         Yellow $yellow,
         Black $black,
-        ?Alpha $alpha = null,
+        Alpha $alpha,
     ) {
         $this->cyan = $cyan;
         $this->magenta = $magenta;
         $this->yellow = $yellow;
         $this->black = $black;
-        $this->alpha = $alpha ?? new Alpha(1);
+        $this->alpha = $alpha;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function from(
+        Cyan $cyan,
+        Magenta $magenta,
+        Yellow $yellow,
+        Black $black,
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($cyan, $magenta, $yellow, $black, $alpha ?? Alpha::max());
     }
 
     /**
@@ -227,10 +240,10 @@ final class CMYKA
         $green = 1 - \min(1, $magenta * (1 - $black) + $black);
         $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
-        return new RGBA(
-            new Red((int) \round($red * 255)),
-            new Green((int) \round($green * 255)),
-            new Blue((int) \round($blue * 255)),
+        return RGBA::from(
+            Red::of((int) \round($red * 255))->unwrap(),
+            Green::of((int) \round($green * 255))->unwrap(),
+            Blue::of((int) \round($blue * 255))->unwrap(),
             $this->alpha,
         );
     }
@@ -304,15 +317,7 @@ final class CMYKA
             ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
 
         return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)
-            ->map(
-                static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
-                    $cyan,
-                    $magenta,
-                    $yellow,
-                    $black,
-                    $alpha,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
@@ -348,14 +353,7 @@ final class CMYKA
             ->flatMap(static fn($black) => Black::of($black)->maybe());
 
         return Maybe::all($cyan, $magenta, $yellow, $black)
-            ->map(
-                static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
-                    $cyan,
-                    $magenta,
-                    $yellow,
-                    $black,
-                ),
-            )
+            ->map(self::from(...))
             ->attempt(static fn() => new DomainException($colour->toString()));
     }
 }

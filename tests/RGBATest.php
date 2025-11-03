@@ -20,11 +20,11 @@ class RGBATest extends TestCase
 {
     public function testInterface()
     {
-        $rgba = new RGBA(
-            $red = new Red(0),
-            $green = new Green(255),
-            $blue = new Blue(122),
-            $alpha = new Alpha(0.5),
+        $rgba = RGBA::from(
+            $red = Red::at(0),
+            $green = Green::at(255),
+            $blue = Blue::at(122),
+            $alpha = Alpha::of(0.5)->unwrap(),
         );
 
         $this->assertSame($red, $rgba->red());
@@ -36,10 +36,10 @@ class RGBATest extends TestCase
 
     public function testWithoutAlpha()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame(1.0, $rgba->alpha()->toFloat());
@@ -47,25 +47,25 @@ class RGBATest extends TestCase
 
     public function testStringCast()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame('#00ff7a', $rgba->toString());
         $this->assertSame(
             'rgba(0, 255, 122, 0.5)',
-            $rgba->subtractAlpha(new Alpha(0.5))->toString(),
+            $rgba->subtractAlpha(Alpha::of(0.5)->unwrap())->toString(),
         );
     }
 
     public function testToHexadecimal()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame(
@@ -74,20 +74,20 @@ class RGBATest extends TestCase
         );
         $this->assertSame(
             '00ff7a80',
-            $rgba->subtractAlpha(new Alpha(0.5))->toHexadecimal(),
+            $rgba->subtractAlpha(Alpha::of(0.5)->unwrap())->toHexadecimal(),
         );
     }
 
     public function testAddRed()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addRed(new Red(150));
+        $rgba2 = $rgba->addRed(Red::at(150));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -102,14 +102,14 @@ class RGBATest extends TestCase
 
     public function testSubtractRed()
     {
-        $rgba = new RGBA(
-            new Red(150),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(150),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractRed(new Red(10));
+        $rgba2 = $rgba->subtractRed(Red::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(150, $rgba->red()->toInt());
@@ -124,14 +124,14 @@ class RGBATest extends TestCase
 
     public function testAddBlue()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addBlue(new Blue(12));
+        $rgba2 = $rgba->addBlue(Blue::at(12));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -146,14 +146,14 @@ class RGBATest extends TestCase
 
     public function testSubtractBlue()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractBlue(new Blue(10));
+        $rgba2 = $rgba->subtractBlue(Blue::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -168,14 +168,14 @@ class RGBATest extends TestCase
 
     public function testAddGreen()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(205),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(205),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addGreen(new Green(15));
+        $rgba2 = $rgba->addGreen(Green::at(15));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -190,14 +190,14 @@ class RGBATest extends TestCase
 
     public function testSubtractGreen()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractGreen(new Green(10));
+        $rgba2 = $rgba->subtractGreen(Green::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());

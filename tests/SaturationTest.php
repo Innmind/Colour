@@ -13,7 +13,7 @@ class SaturationTest extends TestCase
 {
     public function testInterface()
     {
-        $saturation = new Saturation(100);
+        $saturation = Saturation::at(100);
 
         $this->assertSame(100, $saturation->toInt());
         $this->assertSame('100', $saturation->toString());
@@ -21,27 +21,27 @@ class SaturationTest extends TestCase
 
     public function testAdd()
     {
-        $saturation = (new Saturation(12))->add(new Saturation(30));
+        $saturation = Saturation::at(12)->add(Saturation::at(30));
 
         $this->assertInstanceOf(Saturation::class, $saturation);
         $this->assertSame(42, $saturation->toInt());
 
         $this->assertSame(
             100,
-            (new Saturation(50))->add(new Saturation(75))->toInt(),
+            Saturation::at(50)->add(Saturation::at(75))->toInt(),
         );
     }
 
     public function testSub()
     {
-        $saturation = (new Saturation(54))->subtract(new Saturation(12));
+        $saturation = Saturation::at(54)->subtract(Saturation::at(12));
 
         $this->assertInstanceOf(Saturation::class, $saturation);
         $this->assertSame(42, $saturation->toInt());
 
         $this->assertSame(
             0,
-            (new Saturation(50))->subtract(new Saturation(75))->toInt(),
+            Saturation::at(50)->subtract(Saturation::at(75))->toInt(),
         );
     }
 
@@ -50,7 +50,7 @@ class SaturationTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-42');
 
-        new Saturation(-42);
+        Saturation::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -58,26 +58,26 @@ class SaturationTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('101');
 
-        new Saturation(101);
+        Saturation::of(101)->unwrap();
     }
 
     public function testEquals()
     {
-        $this->assertTrue((new Saturation(50))->equals(new Saturation(50)));
-        $this->assertFalse((new Saturation(100))->equals(new Saturation(50)));
+        $this->assertTrue(Saturation::at(50)->equals(Saturation::at(50)));
+        $this->assertFalse(Saturation::at(100)->equals(Saturation::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Saturation(100))->atMaximum());
-        $this->assertFalse((new Saturation(0))->atMaximum());
-        $this->assertFalse((new Saturation(50))->atMaximum());
+        $this->assertTrue(Saturation::at(100)->atMaximum());
+        $this->assertFalse(Saturation::at(0)->atMaximum());
+        $this->assertFalse(Saturation::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Saturation(100))->atMinimum());
-        $this->assertTrue((new Saturation(0))->atMinimum());
-        $this->assertFalse((new Saturation(50))->atMinimum());
+        $this->assertFalse(Saturation::at(100)->atMinimum());
+        $this->assertTrue(Saturation::at(0)->atMinimum());
+        $this->assertFalse(Saturation::at(50)->atMinimum());
     }
 }

@@ -19,10 +19,10 @@ class HSLATest extends TestCase
 {
     public function testInterface()
     {
-        $hsl = new HSLA(
-            $hue = new Hue(150),
-            $saturation = new Saturation(42),
-            $lightness = new Lightness(24),
+        $hsl = HSLA::from(
+            $hue = Hue::at(150),
+            $saturation = Saturation::at(42),
+            $lightness = Lightness::at(24),
         );
 
         $this->assertSame($hue, $hsl->hue());
@@ -31,11 +31,11 @@ class HSLATest extends TestCase
         $this->assertSame(1.0, $hsl->alpha()->toFloat());
         $this->assertSame('hsl(150, 42%, 24%)', $hsl->toString());
 
-        $hsla = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
-            $alpha = new Alpha(0.5),
+        $hsla = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
+            $alpha = Alpha::of(0.5)->unwrap(),
         );
 
         $this->assertSame($alpha, $hsla->alpha());
@@ -44,10 +44,10 @@ class HSLATest extends TestCase
 
     public function testRotateBy()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
         $hsl2 = $hsl->rotateBy(50);
@@ -66,13 +66,13 @@ class HSLATest extends TestCase
 
     public function testAddSaturation()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
-        $hsl2 = $hsl->addSaturation(new Saturation(58));
+        $hsl2 = $hsl->addSaturation(Saturation::at(58));
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);
@@ -88,13 +88,13 @@ class HSLATest extends TestCase
 
     public function testSubtractSaturation()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
-        $hsl2 = $hsl->SubtractSaturation(new Saturation(22));
+        $hsl2 = $hsl->SubtractSaturation(Saturation::at(22));
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);
@@ -110,13 +110,13 @@ class HSLATest extends TestCase
 
     public function testAddLightness()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
-        $hsl2 = $hsl->addLightness(new Lightness(6));
+        $hsl2 = $hsl->addLightness(Lightness::at(6));
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);
@@ -132,13 +132,13 @@ class HSLATest extends TestCase
 
     public function testSubtractLightness()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
-        $hsl2 = $hsl->subtractLightness(new Lightness(22));
+        $hsl2 = $hsl->subtractLightness(Lightness::at(22));
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);
@@ -154,14 +154,14 @@ class HSLATest extends TestCase
 
     public function testAddAlpha()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
-            new Alpha(0.1),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
+            Alpha::of(0.1)->unwrap(),
         );
 
-        $hsl2 = $hsl->addALpha(new Alpha(0.1));
+        $hsl2 = $hsl->addALpha(Alpha::of(0.1)->unwrap());
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);
@@ -177,13 +177,13 @@ class HSLATest extends TestCase
 
     public function testSubtractAlpha()
     {
-        $hsl = new HSLA(
-            new Hue(150),
-            new Saturation(42),
-            new Lightness(24),
+        $hsl = HSLA::from(
+            Hue::at(150),
+            Saturation::at(42),
+            Lightness::at(24),
         );
 
-        $hsl2 = $hsl->subtractAlpha(new Alpha(0.3));
+        $hsl2 = $hsl->subtractAlpha(Alpha::of(0.3)->unwrap());
 
         $this->assertInstanceOf(HSLA::class, $hsl2);
         $this->assertNotSame($hsl, $hsl2);

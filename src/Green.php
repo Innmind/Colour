@@ -16,13 +16,23 @@ final class Green
     /**
      * @throws InvalidValueRangeException
      */
-    public function __construct(int $integer)
+    private function __construct(int $integer)
     {
         if ($integer < 0 || $integer > 255) {
             throw new InvalidValueRangeException((string) $integer);
         }
 
         $this->integer = $integer;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param int<0, 255> $value
+     */
+    public static function at(int $value): self
+    {
+        return new self($value);
     }
 
     /**

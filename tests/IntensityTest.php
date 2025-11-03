@@ -13,7 +13,7 @@ class IntensityTest extends TestCase
 {
     public function testInterface()
     {
-        $intensity = new Intensity(42);
+        $intensity = Intensity::at(42);
 
         $this->assertSame(42, $intensity->toInt());
     }
@@ -23,7 +23,7 @@ class IntensityTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-1');
 
-        new Intensity(-1);
+        Intensity::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -31,6 +31,6 @@ class IntensityTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('101');
 
-        new Intensity(101);
+        Intensity::of(101)->unwrap();
     }
 }

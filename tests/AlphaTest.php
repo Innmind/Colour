@@ -14,7 +14,7 @@ class AlphaTest extends TestCase
 {
     public function testInterface()
     {
-        $alpha = new Alpha(0.5);
+        $alpha = Alpha::of(0.5)->unwrap();
 
         $this->assertSame(0.5, $alpha->toFloat());
         $this->assertSame('0.5', $alpha->toString());
@@ -22,20 +22,20 @@ class AlphaTest extends TestCase
 
     public function testAdd()
     {
-        $alpha = (new Alpha(0.12))->add(new Alpha(0.30));
+        $alpha = Alpha::of(0.12)->unwrap()->add(Alpha::of(0.30)->unwrap());
 
         $this->assertInstanceOf(Alpha::class, $alpha);
         $this->assertSame(0.42, $alpha->toFloat());
 
         $this->assertSame(
             1.0,
-            (new Alpha(0.6))->add(new Alpha(0.7))->toFloat(),
+            Alpha::of(0.6)->unwrap()->add(Alpha::of(0.7)->unwrap())->toFloat(),
         );
     }
 
     public function testSub()
     {
-        $alpha = (new Alpha(0.54))->subtract(new Alpha(0.12));
+        $alpha = Alpha::of(0.54)->unwrap()->subtract(Alpha::of(0.12)->unwrap());
 
         $this->assertInstanceOf(Alpha::class, $alpha);
         $this->assertGreaterThanOrEqual(0.4199, $alpha->toFloat());
@@ -43,7 +43,7 @@ class AlphaTest extends TestCase
 
         $this->assertSame(
             0.0,
-            (new Alpha(0.5))->subtract(new Alpha(0.7))->toFloat(),
+            Alpha::of(0.5)->unwrap()->subtract(Alpha::of(0.7)->unwrap())->toFloat(),
         );
     }
 
@@ -52,7 +52,7 @@ class AlphaTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-0.1');
 
-        new Alpha(-0.1);
+        Alpha::of(-0.1)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -60,21 +60,21 @@ class AlphaTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('1.1');
 
-        new Alpha(1.1);
+        Alpha::of(1.1)->unwrap();
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Alpha(1))->atMaximum());
-        $this->assertFalse((new Alpha(0))->atMaximum());
-        $this->assertFalse((new Alpha(0.5))->atMaximum());
+        $this->assertTrue(Alpha::of(1)->unwrap()->atMaximum());
+        $this->assertFalse(Alpha::of(0)->unwrap()->atMaximum());
+        $this->assertFalse(Alpha::of(0.5)->unwrap()->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Alpha(1))->atMinimum());
-        $this->assertTrue((new Alpha(0))->atMinimum());
-        $this->assertFalse((new Alpha(0.5))->atMinimum());
+        $this->assertFalse(Alpha::of(1)->unwrap()->atMinimum());
+        $this->assertTrue(Alpha::of(0)->unwrap()->atMinimum());
+        $this->assertFalse(Alpha::of(0.5)->unwrap()->atMinimum());
     }
 
     #[DataProvider('hexadecimals')]
@@ -82,7 +82,7 @@ class AlphaTest extends TestCase
     {
         $this->assertSame(
             $hex,
-            (new Alpha($percent))->toHexadecimal(),
+            Alpha::of($percent)->unwrap()->toHexadecimal(),
         );
 
         $alpha = Alpha::fromHexadecimal($hex)->match(
@@ -122,7 +122,7 @@ class AlphaTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Alpha(0.5))->equals(new Alpha(0.5)));
-        $this->assertFalse((new Alpha(1.0))->equals(new Alpha(0.5)));
+        $this->assertTrue(Alpha::of(0.5)->unwrap()->equals(Alpha::of(0.5)->unwrap()));
+        $this->assertFalse(Alpha::of(1.0)->unwrap()->equals(Alpha::of(0.5)->unwrap()));
     }
 }

@@ -14,7 +14,7 @@ class HueTest extends TestCase
 {
     public function testInterface()
     {
-        $hue = new Hue(260);
+        $hue = Hue::at(260);
 
         $this->assertSame(260, $hue->toInt());
         $this->assertSame('260', $hue->toString());
@@ -25,7 +25,7 @@ class HueTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-20');
 
-        new Hue(-20);
+        Hue::at(-20)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -33,13 +33,13 @@ class HueTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('360');
 
-        new Hue(360);
+        Hue::at(360)->unwrap();
     }
 
     #[DataProvider('rotations')]
     public function testRotateBy($initial, $degrees, $expected)
     {
-        $hue = (new Hue($initial))->rotateBy($degrees);
+        $hue = Hue::at($initial)->rotateBy($degrees);
 
         $this->assertInstanceOf(Hue::class, $hue);
         $this->assertSame($expected, $hue->toInt());
@@ -57,7 +57,7 @@ class HueTest extends TestCase
 
     public function testOpposite()
     {
-        $hue = (new Hue(150))->opposite();
+        $hue = Hue::at(150)->opposite();
 
         $this->assertInstanceOf(Hue::class, $hue);
         $this->assertSame(330, $hue->toInt());
@@ -65,21 +65,21 @@ class HueTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Hue(50))->equals(new Hue(50)));
-        $this->assertFalse((new Hue(100))->equals(new Hue(50)));
+        $this->assertTrue(Hue::at(50)->equals(Hue::at(50)));
+        $this->assertFalse(Hue::at(100)->equals(Hue::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Hue(359))->atMaximum());
-        $this->assertFalse((new Hue(0))->atMaximum());
-        $this->assertFalse((new Hue(50))->atMaximum());
+        $this->assertTrue(Hue::at(359)->atMaximum());
+        $this->assertFalse(Hue::at(0)->atMaximum());
+        $this->assertFalse(Hue::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Hue(359))->atMinimum());
-        $this->assertTrue((new Hue(0))->atMinimum());
-        $this->assertFalse((new Hue(50))->atMinimum());
+        $this->assertFalse(Hue::at(359)->atMinimum());
+        $this->assertTrue(Hue::at(0)->atMinimum());
+        $this->assertFalse(Hue::at(50)->atMinimum());
     }
 }

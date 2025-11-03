@@ -16,13 +16,23 @@ final class Black
     /**
      * @throws InvalidValueRangeException
      */
-    public function __construct(int $value)
+    private function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
             throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param int<0, 100> $value
+     */
+    public static function at(int $value): self
+    {
+        return new self($value);
     }
 
     /**

@@ -16,13 +16,21 @@ final class Alpha
     /**
      * @throws InvalidValueRangeException
      */
-    public function __construct(float $value)
+    private function __construct(float $value)
     {
         if ($value < 0 || $value > 1) {
             throw new InvalidValueRangeException((string) $value);
         }
 
         $this->value = $value;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function max(): self
+    {
+        return new self(1);
     }
 
     /**

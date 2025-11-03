@@ -13,7 +13,7 @@ class YellowTest extends TestCase
 {
     public function testInterface()
     {
-        $yellow = new Yellow(50);
+        $yellow = Yellow::at(50);
 
         $this->assertSame(50, $yellow->toInt());
         $this->assertSame('50', $yellow->toString());
@@ -24,7 +24,7 @@ class YellowTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('-1');
 
-        new Yellow(-1);
+        Yellow::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -32,14 +32,14 @@ class YellowTest extends TestCase
         $this->expectException(InvalidValueRangeException::class);
         $this->expectExceptionMessage('101');
 
-        new Yellow(101);
+        Yellow::of(101)->unwrap();
     }
 
     public function testAdd()
     {
-        $yellow = new Yellow(50);
+        $yellow = Yellow::at(50);
 
-        $yellow2 = $yellow->add(new Yellow(25));
+        $yellow2 = $yellow->add(Yellow::at(25));
 
         $this->assertInstanceOf(Yellow::class, $yellow2);
         $this->assertNotSame($yellow, $yellow2);
@@ -49,9 +49,9 @@ class YellowTest extends TestCase
 
     public function testSubtract()
     {
-        $yellow = new Yellow(50);
+        $yellow = Yellow::at(50);
 
-        $yellow2 = $yellow->subtract(new Yellow(25));
+        $yellow2 = $yellow->subtract(Yellow::at(25));
 
         $this->assertInstanceOf(Yellow::class, $yellow2);
         $this->assertNotSame($yellow, $yellow2);
@@ -61,21 +61,21 @@ class YellowTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Yellow(50))->equals(new Yellow(50)));
-        $this->assertFalse((new Yellow(100))->equals(new Yellow(50)));
+        $this->assertTrue(Yellow::at(50)->equals(Yellow::at(50)));
+        $this->assertFalse(Yellow::at(100)->equals(Yellow::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Yellow(100))->atMaximum());
-        $this->assertFalse((new Yellow(0))->atMaximum());
-        $this->assertFalse((new Yellow(50))->atMaximum());
+        $this->assertTrue(Yellow::at(100)->atMaximum());
+        $this->assertFalse(Yellow::at(0)->atMaximum());
+        $this->assertFalse(Yellow::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Yellow(100))->atMinimum());
-        $this->assertTrue((new Yellow(0))->atMinimum());
-        $this->assertFalse((new Yellow(50))->atMinimum());
+        $this->assertFalse(Yellow::at(100)->atMinimum());
+        $this->assertTrue(Yellow::at(0)->atMinimum());
+        $this->assertFalse(Yellow::at(50)->atMinimum());
     }
 }
