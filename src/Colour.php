@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Maybe,
     Attempt,
@@ -118,7 +117,7 @@ enum Colour
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {

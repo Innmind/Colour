@@ -42,7 +42,7 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): self
     {

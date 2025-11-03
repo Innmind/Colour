@@ -38,7 +38,7 @@ final class HSLA
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): self
     {
