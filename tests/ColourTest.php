@@ -39,7 +39,7 @@ class ColourTest extends TestCase
     public function testReturnNothingForRandomStrings()
     {
         $this
-            ->forAll(Set\Unicode::strings())
+            ->forAll(Set::strings()->unicode())
             ->then(function($string) {
                 $this->assertNull(Colour::maybe($string)->match(
                     static fn($colour) => $colour,

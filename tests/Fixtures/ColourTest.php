@@ -21,7 +21,7 @@ class ColourTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(RGBA::class, $value->unwrap());
         }
     }
