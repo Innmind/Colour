@@ -7,6 +7,7 @@ use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
+    Attempt,
 };
 
 /**
@@ -44,10 +45,7 @@ final class CMYKA
      */
     public static function of(string $colour): self
     {
-        return self::maybe($colour)->match(
-            static fn($self) => $self,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -57,9 +55,19 @@ final class CMYKA
      */
     public static function maybe(string $colour): Maybe
     {
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function attempt(string $colour): Attempt
+    {
         $colour = Str::of($colour)->trim();
 
-        return self::withAlpha($colour)->otherwise(
+        return self::withAlpha($colour)->recover(
             static fn() => self::withoutAlpha($colour),
         );
     }
@@ -262,9 +270,9 @@ final class CMYKA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withAlpha(Str $colour): Maybe
+    private static function withAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITH_ALPHA)
@@ -273,45 +281,47 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->flatMap(static fn($cyan) => Cyan::of($cyan)->maybe());
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->flatMap(static fn($magenta) => Magenta::of($magenta)->maybe());
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->flatMap(static fn($yellow) => Yellow::of($yellow)->maybe());
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black));
+            ->flatMap(static fn($black) => Black::of($black)->maybe());
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
 
-        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)->map(
-            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
-                $alpha,
-            ),
-        );
+        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)
+            ->map(
+                static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
+                    $cyan,
+                    $magenta,
+                    $yellow,
+                    $black,
+                    $alpha,
+                ),
+            )
+            ->attempt(static fn() => new DomainException($colour->toString()));
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withoutAlpha(Str $colour): Maybe
+    private static function withoutAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITHOUT_ALPHA)
@@ -320,30 +330,32 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->flatMap(static fn($cyan) => Cyan::of($cyan)->maybe());
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->flatMap(static fn($magenta) => Magenta::of($magenta)->maybe());
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->flatMap(static fn($yellow) => Yellow::of($yellow)->maybe());
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black));
+            ->flatMap(static fn($black) => Black::of($black)->maybe());
 
-        return Maybe::all($cyan, $magenta, $yellow, $black)->map(
-            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
-            ),
-        );
+        return Maybe::all($cyan, $magenta, $yellow, $black)
+            ->map(
+                static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
+                    $cyan,
+                    $magenta,
+                    $yellow,
+                    $black,
+                ),
+            )
+            ->attempt(static fn() => new DomainException($colour->toString()));
     }
 }

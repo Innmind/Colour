@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Colour;
 
 use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
@@ -28,24 +28,19 @@ final class Blue
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function of(int $value): Maybe
+    public static function of(int $value): Attempt
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return Attempt::of(static fn() => new self($value));
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function fromHexadecimal(string $hex): Maybe
+    public static function fromHexadecimal(string $hex): Attempt
     {
         if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
@@ -55,9 +50,9 @@ final class Blue
     }
 
     /**
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function fromIntensity(Intensity $intensity): Maybe
+    public static function fromIntensity(Intensity $intensity): Attempt
     {
         return self::of(
             (int) \round((255 * $intensity->toInt()) / 100),

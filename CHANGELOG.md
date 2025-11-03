@@ -5,6 +5,7 @@
 ### Changed
 
 - Requires PHP `8.4`
+- Named constructors `::of()`, `::fromHexadecimal()` and `::fromIntensity()` now return instances of `Innmind\Immutable\Attempt`
 
 ### Fixed
 
