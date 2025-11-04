@@ -270,28 +270,28 @@ final class HSLA
             ->map(static fn($_, $match) => $match->toString());
         $hue = $matches
             ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
+            ->filter(\is_numeric(...))
             ->map(static fn($hue) => (int) $hue)
             ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($hue) => Hue::of($hue));
+            ->flatMap(Hue::of(...));
         $saturation = $matches
             ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->filter(\is_numeric(...))
             ->map(static fn($saturation) => (int) $saturation)
             ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($saturation) => Saturation::of($saturation));
+            ->flatMap(Saturation::of(...));
         $lightness = $matches
             ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->filter(\is_numeric(...))
             ->map(static fn($lightness) => (int) $lightness)
             ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($lightness) => Lightness::of($lightness));
+            ->flatMap(Lightness::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
             ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->flatMap(Alpha::of(...));
 
         return $hue->flatMap(
             static fn($hue) => $saturation->flatMap(
@@ -321,22 +321,22 @@ final class HSLA
             ->map(static fn($_, $match) => $match->toString());
         $hue = $matches
             ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
+            ->filter(\is_numeric(...))
             ->map(static fn($hue) => (int) $hue)
             ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($hue) => Hue::of($hue));
+            ->flatMap(Hue::of(...));
         $saturation = $matches
             ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->filter(\is_numeric(...))
             ->map(static fn($saturation) => (int) $saturation)
             ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($saturation) => Saturation::of($saturation));
+            ->flatMap(Saturation::of(...));
         $lightness = $matches
             ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->filter(\is_numeric(...))
             ->map(static fn($lightness) => (int) $lightness)
             ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($lightness) => Lightness::of($lightness));
+            ->flatMap(Lightness::of(...));
 
         return $hue->flatMap(
             static fn($hue) => $saturation->flatMap(

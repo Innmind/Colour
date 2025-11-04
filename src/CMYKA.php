@@ -280,34 +280,34 @@ final class CMYKA
             ->map(static fn($_, $match) => $match->toString());
         $cyan = $matches
             ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->filter(\is_numeric(...))
             ->map(static fn($cyan) => (int) $cyan)
             ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->flatMap(Cyan::of(...));
         $magenta = $matches
             ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->filter(\is_numeric(...))
             ->map(static fn($magenta) => (int) $magenta)
             ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->flatMap(Magenta::of(...));
         $yellow = $matches
             ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->filter(\is_numeric(...))
             ->map(static fn($yellow) => (int) $yellow)
             ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->flatMap(Yellow::of(...));
         $black = $matches
             ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
+            ->filter(\is_numeric(...))
             ->map(static fn($black) => (int) $black)
             ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($black) => Black::of($black));
+            ->flatMap(Black::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
             ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->flatMap(Alpha::of(...));
 
         return $cyan->flatMap(
             static fn($cyan) => $magenta->flatMap(
@@ -340,28 +340,28 @@ final class CMYKA
             ->map(static fn($_, $match) => $match->toString());
         $cyan = $matches
             ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->filter(\is_numeric(...))
             ->map(static fn($cyan) => (int) $cyan)
             ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->flatMap(Cyan::of(...));
         $magenta = $matches
             ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->filter(\is_numeric(...))
             ->map(static fn($magenta) => (int) $magenta)
             ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->flatMap(Magenta::of(...));
         $yellow = $matches
             ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->filter(\is_numeric(...))
             ->map(static fn($yellow) => (int) $yellow)
             ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->flatMap(Yellow::of(...));
         $black = $matches
             ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
+            ->filter(\is_numeric(...))
             ->map(static fn($black) => (int) $black)
             ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($black) => Black::of($black));
+            ->flatMap(Black::of(...));
 
         return $cyan->flatMap(
             static fn($cyan) => $magenta->flatMap(

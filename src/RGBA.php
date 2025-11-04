@@ -330,19 +330,19 @@ final class RGBA
         $red = $matches
             ->get('red')
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
+            ->flatMap(Red::fromHexadecimal(...));
         $green = $matches
             ->get('green')
             ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
+            ->flatMap(Green::fromHexadecimal(...));
         $blue = $matches
             ->get('blue')
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->flatMap(Blue::fromHexadecimal(...));
         $alpha = $matches
             ->get('alpha')
             ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($alpha) => Alpha::fromHexadecimal($alpha));
+            ->flatMap(Alpha::fromHexadecimal(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
@@ -385,15 +385,15 @@ final class RGBA
         $red = $matches
             ->get('red')
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
+            ->flatMap(Red::fromHexadecimal(...));
         $green = $matches
             ->get('green')
             ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
+            ->flatMap(Green::fromHexadecimal(...));
         $blue = $matches
             ->get('blue')
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->flatMap(Blue::fromHexadecimal(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
@@ -432,22 +432,22 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Red::of($red));
+            ->flatMap(Red::of(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
             ->attempt(static fn() => new \DomainException("Grren not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Green::of($green));
+            ->flatMap(Green::of(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Blue::of($blue));
+            ->flatMap(Blue::of(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
@@ -474,25 +474,25 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Intensity::of($red))
-            ->flatMap(static fn($red) => Red::fromIntensity($red));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Red::fromIntensity(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
             ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Intensity::of($green))
-            ->flatMap(static fn($green) => Green::fromIntensity($green));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Green::fromIntensity(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Intensity::of($blue))
-            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Blue::fromIntensity(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
@@ -531,28 +531,28 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Red::of($red));
+            ->flatMap(Red::of(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
             ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Green::of($green));
+            ->flatMap(Green::of(...));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Blue::of($blue));
+            ->flatMap(Blue::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
             ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->flatMap(Alpha::of(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
@@ -582,31 +582,31 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
             ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($red) => Intensity::of($red))
-            ->flatMap(static fn($red) => Red::fromIntensity($red));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Red::fromIntensity(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
             ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($green) => Intensity::of($green))
-            ->flatMap(static fn($green) => Green::fromIntensity($green));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Green::fromIntensity(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
             ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($blue) => Intensity::of($blue))
-            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Blue::fromIntensity(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
             ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->flatMap(Alpha::of(...));
 
         return $red->flatMap(
             static fn($red) => $green->flatMap(
