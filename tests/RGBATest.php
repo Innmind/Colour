@@ -310,7 +310,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('rgb(10, 20%, 30)');
+        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
         RGBA::of('rgb(10, 20%, 30)');
     }
@@ -329,7 +329,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('rgb(10, 20%, 30)');
+        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
         RGBA::of('rgb(10, 20%, 30)');
     }
@@ -367,7 +367,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('rgba(10, 20%, 30, 2.0)');
+        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 2.0)'");
 
         RGBA::of('rgba(10, 20%, 30, 2.0)');
     }
@@ -386,7 +386,7 @@ class RGBATest extends TestCase
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('rgba(10, 20%, 30, 1)');
+        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 1)'");
 
         RGBA::of('rgba(10, 20%, 30, 1)');
     }

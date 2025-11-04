@@ -282,31 +282,50 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan)->maybe());
+            ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta)->maybe());
+            ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow)->maybe());
+            ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black)->maybe());
+            ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($black) => Black::of($black));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
-        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)
-            ->map(self::from(...))
-            ->attempt(static fn() => new \DomainException($colour->toString()));
+        return $cyan->flatMap(
+            static fn($cyan) => $magenta->flatMap(
+                static fn($magenta) => $yellow->flatMap(
+                    static fn($yellow) => $black->flatMap(
+                        static fn($black) => $alpha->map(
+                            static fn($alpha) => self::from(
+                                $cyan,
+                                $magenta,
+                                $yellow,
+                                $black,
+                                $alpha,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
     /**
@@ -323,25 +342,40 @@ final class CMYKA
             ->get('cyan')
             ->filter(static fn($cyan) => \is_numeric($cyan))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan)->maybe());
+            ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($cyan) => Cyan::of($cyan));
         $magenta = $matches
             ->get('magenta')
             ->filter(static fn($magenta) => \is_numeric($magenta))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta)->maybe());
+            ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($magenta) => Magenta::of($magenta));
         $yellow = $matches
             ->get('yellow')
             ->filter(static fn($yellow) => \is_numeric($yellow))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow)->maybe());
+            ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($yellow) => Yellow::of($yellow));
         $black = $matches
             ->get('black')
             ->filter(static fn($black) => \is_numeric($black))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black)->maybe());
+            ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($black) => Black::of($black));
 
-        return Maybe::all($cyan, $magenta, $yellow, $black)
-            ->map(self::from(...))
-            ->attempt(static fn() => new \DomainException($colour->toString()));
+        return $cyan->flatMap(
+            static fn($cyan) => $magenta->flatMap(
+                static fn($magenta) => $yellow->flatMap(
+                    static fn($yellow) => $black->map(
+                        static fn($black) => self::from(
+                            $cyan,
+                            $magenta,
+                            $yellow,
+                            $black,
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 }

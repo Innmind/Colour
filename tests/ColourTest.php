@@ -51,7 +51,7 @@ class ColourTest extends TestCase
     public function testThrowWhenNoFormatRecognized()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('foo');
+        $this->expectExceptionMessage("Cyan not found in 'foo'");
 
         Colour::of('foo');
     }

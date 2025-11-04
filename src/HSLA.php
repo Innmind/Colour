@@ -272,26 +272,41 @@ final class HSLA
             ->get('hue')
             ->filter(static fn($hue) => \is_numeric($hue))
             ->map(static fn($hue) => (int) $hue)
-            ->flatMap(static fn($hue) => Hue::of($hue)->maybe());
+            ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($hue) => Hue::of($hue));
         $saturation = $matches
             ->get('saturation')
             ->filter(static fn($saturation) => \is_numeric($saturation))
             ->map(static fn($saturation) => (int) $saturation)
-            ->flatMap(static fn($saturation) => Saturation::of($saturation)->maybe());
+            ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($saturation) => Saturation::of($saturation));
         $lightness = $matches
             ->get('lightness')
             ->filter(static fn($lightness) => \is_numeric($lightness))
             ->map(static fn($lightness) => (int) $lightness)
-            ->flatMap(static fn($lightness) => Lightness::of($lightness)->maybe());
+            ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($lightness) => Lightness::of($lightness));
         $alpha = $matches
             ->get('alpha')
             ->filter(static fn($alpha) => \is_numeric($alpha))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha)->maybe());
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($alpha) => Alpha::of($alpha));
 
-        return Maybe::all($hue, $saturation, $lightness, $alpha)
-            ->map(self::from(...))
-            ->attempt(static fn() => new \DomainException($colour->toString()));
+        return $hue->flatMap(
+            static fn($hue) => $saturation->flatMap(
+                static fn($saturation) => $lightness->flatMap(
+                    static fn($lightness) => $alpha->map(
+                        static fn($alpha) => self::from(
+                            $hue,
+                            $saturation,
+                            $lightness,
+                            $alpha,
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
     /**
@@ -308,20 +323,31 @@ final class HSLA
             ->get('hue')
             ->filter(static fn($hue) => \is_numeric($hue))
             ->map(static fn($hue) => (int) $hue)
-            ->flatMap(static fn($hue) => Hue::of($hue)->maybe());
+            ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($hue) => Hue::of($hue));
         $saturation = $matches
             ->get('saturation')
             ->filter(static fn($saturation) => \is_numeric($saturation))
             ->map(static fn($saturation) => (int) $saturation)
-            ->flatMap(static fn($saturation) => Saturation::of($saturation)->maybe());
+            ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($saturation) => Saturation::of($saturation));
         $lightness = $matches
             ->get('lightness')
             ->filter(static fn($lightness) => \is_numeric($lightness))
             ->map(static fn($lightness) => (int) $lightness)
-            ->flatMap(static fn($lightness) => Lightness::of($lightness)->maybe());
+            ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
+            ->flatMap(static fn($lightness) => Lightness::of($lightness));
 
-        return Maybe::all($hue, $saturation, $lightness)
-            ->map(self::from(...))
-            ->attempt(static fn() => new \DomainException($colour->toString()));
+        return $hue->flatMap(
+            static fn($hue) => $saturation->flatMap(
+                static fn($saturation) => $lightness->map(
+                    static fn($lightness) => self::from(
+                        $hue,
+                        $saturation,
+                        $lightness,
+                    ),
+                ),
+            ),
+        );
     }
 }
