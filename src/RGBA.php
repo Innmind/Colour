@@ -21,21 +21,12 @@ final class RGBA
     private const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     private const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
 
-    private Red $red;
-    private Blue $blue;
-    private Green $green;
-    private Alpha $alpha;
-
     private function __construct(
-        Red $red,
-        Green $green,
-        Blue $blue,
-        Alpha $alpha,
+        private Red $red,
+        private Green $green,
+        private Blue $blue,
+        private Alpha $alpha,
     ) {
-        $this->red = $red;
-        $this->blue = $blue;
-        $this->green = $green;
-        $this->alpha = $alpha;
     }
 
     /**

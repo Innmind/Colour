@@ -10,15 +10,12 @@ use Innmind\Immutable\Attempt;
  */
 final class Black
 {
-    private int $value;
-
-    private function __construct(int $value)
-    {
-        if ($value < 0 || $value > 100) {
-            throw new \OutOfBoundsException((string) $value);
-        }
-
-        $this->value = $value;
+    /**
+     * @param int<0, 100> $value
+     */
+    private function __construct(
+        private int $value,
+    ) {
     }
 
     /**
@@ -38,7 +35,11 @@ final class Black
      */
     public static function of(int $value): Attempt
     {
-        return Attempt::of(static fn() => new self($value));
+        if ($value < 0 || $value > 100) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
     }
 
     public function add(self $black): self
@@ -76,6 +77,9 @@ final class Black
         return $this->value === 0;
     }
 
+    /**
+     * @return int<0, 100>
+     */
     public function toInt(): int
     {
         return $this->value;

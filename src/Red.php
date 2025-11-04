@@ -10,15 +10,12 @@ use Innmind\Immutable\Attempt;
  */
 final class Red
 {
-    private int $integer;
-
-    private function __construct(int $integer)
-    {
-        if ($integer < 0 || $integer > 255) {
-            throw new \OutOfBoundsException((string) $integer);
-        }
-
-        $this->integer = $integer;
+    /**
+     * @param int<0, 255> $integer
+     */
+    private function __construct(
+        private int $integer,
+    ) {
     }
 
     /**
@@ -38,7 +35,11 @@ final class Red
      */
     public static function of(int $value): Attempt
     {
-        return Attempt::of(static fn() => new self($value));
+        if ($value < 0 || $value > 255) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
     }
 
     /**
@@ -102,6 +103,9 @@ final class Red
         return $this->integer === 0;
     }
 
+    /**
+     * @return int<0, 255>
+     */
     public function toInt(): int
     {
         return $this->integer;

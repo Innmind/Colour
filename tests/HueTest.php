@@ -22,7 +22,7 @@ class HueTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-20');
 
-        Hue::at(-20)->unwrap();
+        Hue::of(-20)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -30,7 +30,7 @@ class HueTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('360');
 
-        Hue::at(360)->unwrap();
+        Hue::of(360)->unwrap();
     }
 
     #[DataProvider('rotations')]

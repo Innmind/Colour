@@ -10,15 +10,12 @@ use Innmind\Immutable\Attempt;
  */
 final class Hue
 {
-    private int $value;
-
-    private function __construct(int $value)
-    {
-        if ($value < 0 || $value > 359) {
-            throw new \OutOfBoundsException((string) $value);
-        }
-
-        $this->value = $value;
+    /**
+     * @param int<0, 359> $value
+     */
+    private function __construct(
+        private int $value,
+    ) {
     }
 
     /**
@@ -38,19 +35,19 @@ final class Hue
      */
     public static function of(int $value): Attempt
     {
-        return Attempt::of(static fn() => new self($value));
+        if ($value < 0 || $value > 359) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
     }
 
     public function rotateBy(int $degrees): self
     {
-        $degrees = $this->value + $degrees;
+        $degrees = ($this->value + $degrees) % 360;
 
         if ($degrees < 0) {
             return new self(360 + $degrees);
-        }
-
-        if ($degrees > 359) {
-            return new self($degrees - 360);
         }
 
         return new self($degrees);
@@ -76,6 +73,9 @@ final class Hue
         return $this->value === 0;
     }
 
+    /**
+     * @return int<0, 359>
+     */
     public function toInt(): int
     {
         return $this->value;
