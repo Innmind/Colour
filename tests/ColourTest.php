@@ -8,7 +8,6 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    Exception\DomainException,
 };
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
@@ -51,7 +50,7 @@ class ColourTest extends TestCase
 
     public function testThrowWhenNoFormatRecognized()
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('foo');
 
         Colour::of('foo');

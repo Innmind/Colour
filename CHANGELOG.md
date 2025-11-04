@@ -22,6 +22,12 @@
 - `Innmind\Colour\HSLA` constructor is now private, use `::from()` instead
 - `Innmind\Colour\RGBA` constructor is now private, use `::from()` instead
 
+### Removed
+
+- `Innmind\Colour\Exception\Exception`
+- `Innmind\Colour\Exception\DomainException`
+- `Innmind\Colour\Exception\InvalidValueRangeException`
+
 ### Fixed
 
 - PHP `8.4` deprecations

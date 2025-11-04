@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
@@ -318,7 +317,7 @@ final class CMYKA
 
         return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -354,6 +353,6 @@ final class CMYKA
 
         return Maybe::all($cyan, $magenta, $yellow, $black)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 }

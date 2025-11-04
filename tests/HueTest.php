@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Hue,
-    Exception\InvalidValueRangeException,
-};
+use Innmind\Colour\Hue;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -22,7 +19,7 @@ class HueTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-20');
 
         Hue::at(-20)->unwrap();
@@ -30,7 +27,7 @@ class HueTest extends TestCase
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('360');
 
         Hue::at(360)->unwrap();

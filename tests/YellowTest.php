@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Yellow,
-    Exception\InvalidValueRangeException,
-};
+use Innmind\Colour\Yellow;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class YellowTest extends TestCase
@@ -21,7 +18,7 @@ class YellowTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
         Yellow::of(-1)->unwrap();
@@ -29,7 +26,7 @@ class YellowTest extends TestCase
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
         Yellow::of(101)->unwrap();

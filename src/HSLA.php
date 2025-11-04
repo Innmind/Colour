@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
@@ -301,7 +300,7 @@ final class HSLA
 
         return Maybe::all($hue, $saturation, $lightness, $alpha)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -332,6 +331,6 @@ final class HSLA
 
         return Maybe::all($hue, $saturation, $lightness)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 }

@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Saturation,
-    Exception\InvalidValueRangeException,
-};
+use Innmind\Colour\Saturation;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class SaturationTest extends TestCase
@@ -47,7 +44,7 @@ class SaturationTest extends TestCase
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
         Saturation::of(-42)->unwrap();
@@ -55,7 +52,7 @@ class SaturationTest extends TestCase
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
         Saturation::of(101)->unwrap();

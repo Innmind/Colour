@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
@@ -331,7 +330,7 @@ final class RGBA
             $colour->length() !== 8
         ) {
             /** @var Attempt<self> */
-            return Attempt::error(new DomainException('Invalid length'));
+            return Attempt::error(new \DomainException('Invalid length'));
         }
 
         $matches = $colour
@@ -352,7 +351,7 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue, $alpha)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -371,7 +370,7 @@ final class RGBA
             $colour->length() !== 6
         ) {
             /** @var Attempt<self> */
-            return Attempt::error(new DomainException('Invalid length'));
+            return Attempt::error(new \DomainException('Invalid length'));
         }
 
         $matches = $colour
@@ -389,7 +388,7 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -432,7 +431,7 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -466,7 +465,7 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -514,7 +513,7 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue, $alpha)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 
     /**
@@ -553,6 +552,6 @@ final class RGBA
 
         return Maybe::all($red, $green, $blue, $alpha)
             ->map(self::from(...))
-            ->attempt(static fn() => new DomainException($colour->toString()));
+            ->attempt(static fn() => new \DomainException($colour->toString()));
     }
 }

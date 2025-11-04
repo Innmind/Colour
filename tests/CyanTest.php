@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Cyan,
-    Exception\InvalidValueRangeException,
-};
+use Innmind\Colour\Cyan;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class CyanTest extends TestCase
@@ -21,7 +18,7 @@ class CyanTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
         Cyan::of(-1)->unwrap();
@@ -29,7 +26,7 @@ class CyanTest extends TestCase
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
         Cyan::of(101)->unwrap();

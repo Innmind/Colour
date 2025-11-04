@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
 use Innmind\Immutable\Attempt;
 
 /**
@@ -13,13 +12,10 @@ final class Yellow
 {
     private int $value;
 
-    /**
-     * @throws InvalidValueRangeException
-     */
     private function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException((string) $value);
+            throw new \OutOfBoundsException((string) $value);
         }
 
         $this->value = $value;
