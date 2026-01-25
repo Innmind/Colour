@@ -249,9 +249,10 @@ final class RGBA
         }
 
         $hue *= 60;
+        $hue = ((int) \round($hue)) % 360;
 
         return HSLA::from(
-            Hue::of((int) \round($hue))->unwrap(),
+            Hue::of($hue)->unwrap(),
             Saturation::of((int) \round($saturation * 100))->unwrap(),
             Lightness::of((int) \round($lightness * 100))->unwrap(),
             $this->alpha,
