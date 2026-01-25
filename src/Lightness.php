@@ -23,6 +23,7 @@ final class Lightness
      *
      * @param int<0, 100> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Lightness
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 100) {
@@ -42,6 +44,7 @@ final class Lightness
         return Attempt::result(new self($value));
     }
 
+    #[\NoDiscard]
     public function add(self $lightness): self
     {
         return new self(
@@ -52,6 +55,7 @@ final class Lightness
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $lightness): self
     {
         return new self(
@@ -62,16 +66,19 @@ final class Lightness
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $lightness): bool
     {
         return $this->value === $lightness->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 100;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0;
@@ -80,11 +87,13 @@ final class Lightness
     /**
      * @return int<0, 100>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

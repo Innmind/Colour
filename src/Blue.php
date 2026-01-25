@@ -23,6 +23,7 @@ final class Blue
      *
      * @param int<0, 255> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Blue
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 255) {
@@ -47,6 +49,7 @@ final class Blue
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function fromHexadecimal(string $hex): Attempt
     {
         if (\mb_strlen($hex) === 1) {
@@ -59,6 +62,7 @@ final class Blue
     /**
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function fromIntensity(Intensity $intensity): Attempt
     {
         return self::of(
@@ -66,6 +70,7 @@ final class Blue
         );
     }
 
+    #[\NoDiscard]
     public function add(self $blue): self
     {
         return new self(
@@ -76,6 +81,7 @@ final class Blue
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $blue): self
     {
         return new self(
@@ -86,16 +92,19 @@ final class Blue
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $blue): bool
     {
         return $this->integer === $blue->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->integer === 255;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->integer === 0;
@@ -104,11 +113,13 @@ final class Blue
     /**
      * @return int<0, 255>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->integer;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return \str_pad(

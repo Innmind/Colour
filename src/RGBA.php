@@ -32,6 +32,7 @@ final class RGBA
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function from(
         Red $red,
         Green $green,
@@ -46,6 +47,7 @@ final class RGBA
      *
      * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): self
     {
         return self::attempt($colour)->unwrap();
@@ -56,6 +58,7 @@ final class RGBA
      *
      * @return Maybe<self>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
     {
         return self::attempt($colour)->maybe();
@@ -66,6 +69,7 @@ final class RGBA
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function attempt(string $colour): Attempt
     {
         $colour = Str::of($colour)->trim();
@@ -75,26 +79,31 @@ final class RGBA
             ->recover(static fn() => self::fromRGBAFunction($colour));
     }
 
+    #[\NoDiscard]
     public function red(): Red
     {
         return $this->red;
     }
 
+    #[\NoDiscard]
     public function blue(): Blue
     {
         return $this->blue;
     }
 
+    #[\NoDiscard]
     public function green(): Green
     {
         return $this->green;
     }
 
+    #[\NoDiscard]
     public function alpha(): Alpha
     {
         return $this->alpha;
     }
 
+    #[\NoDiscard]
     public function addRed(Red $red): self
     {
         return new self(
@@ -105,6 +114,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function subtractRed(Red $red): self
     {
         return new self(
@@ -115,6 +125,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function addBlue(Blue $blue): self
     {
         return new self(
@@ -125,6 +136,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function subtractBlue(Blue $blue): self
     {
         return new self(
@@ -135,6 +147,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function addGreen(Green $green): self
     {
         return new self(
@@ -145,6 +158,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function subtractGreen(Green $green): self
     {
         return new self(
@@ -155,6 +169,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function addAlpha(Alpha $alpha): self
     {
         return new self(
@@ -165,6 +180,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function subtractAlpha(Alpha $alpha): self
     {
         return new self(
@@ -175,6 +191,7 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $rgba): bool
     {
         return $this->red->equals($rgba->red()) &&
@@ -183,6 +200,7 @@ final class RGBA
             $this->alpha->equals($rgba->alpha());
     }
 
+    #[\NoDiscard]
     public function toHexadecimal(): string
     {
         $hex = $this->red->toString().$this->green->toString().$this->blue->toString();
@@ -194,6 +212,7 @@ final class RGBA
         return $hex;
     }
 
+    #[\NoDiscard]
     public function toHSLA(): HSLA
     {
         $red = $this->red->toInt() / 255;
@@ -230,15 +249,17 @@ final class RGBA
         }
 
         $hue *= 60;
+        $hue = ((int) \round($hue)) % 360;
 
         return HSLA::from(
-            Hue::of((int) \round($hue))->unwrap(),
+            Hue::of($hue)->unwrap(),
             Saturation::of((int) \round($saturation * 100))->unwrap(),
             Lightness::of((int) \round($lightness * 100))->unwrap(),
             $this->alpha,
         );
     }
 
+    #[\NoDiscard]
     public function toCMYKA(): CMYKA
     {
         $red = $this->red->toInt() / 255;
@@ -273,11 +294,13 @@ final class RGBA
         );
     }
 
+    #[\NoDiscard]
     public function toRGBA(): self
     {
         return $this;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         if ($this->alpha->atMaximum()) {

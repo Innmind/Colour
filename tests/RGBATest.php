@@ -522,4 +522,16 @@ class RGBATest extends TestCase
 
         $this->assertSame($rgba, $rgba->toRGBA());
     }
+
+    public function testRegressionToHSLA()
+    {
+        $colour = RGBA::from(
+            Red::at(205),
+            Green::at(32),
+            Blue::at(33),
+            Alpha::max(),
+        );
+
+        $this->assertInstanceOf(HSLA::class, $colour->toHSLA());
+    }
 }

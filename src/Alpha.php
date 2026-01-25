@@ -24,6 +24,7 @@ final class Alpha
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function max(): self
     {
         return new self(1);
@@ -34,6 +35,7 @@ final class Alpha
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(float $value): Attempt
     {
         return Attempt::of(static fn() => new self($value));
@@ -44,6 +46,7 @@ final class Alpha
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function fromHexadecimal(string $hex): Attempt
     {
         if (\mb_strlen($hex) === 1) {
@@ -53,6 +56,7 @@ final class Alpha
         return self::of(\round(\hexdec($hex) / 255, 2));
     }
 
+    #[\NoDiscard]
     public function add(self $alpha): self
     {
         return new self(
@@ -63,6 +67,7 @@ final class Alpha
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $alpha): self
     {
         return new self(
@@ -73,26 +78,31 @@ final class Alpha
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $alpha): bool
     {
         return $this->value === $alpha->toFloat();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 1.0;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0.0;
     }
 
+    #[\NoDiscard]
     public function toFloat(): float
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toHexadecimal(): string
     {
         return \str_pad(
@@ -105,6 +115,7 @@ final class Alpha
         );
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

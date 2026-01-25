@@ -38,6 +38,7 @@
 ### Fixed
 
 - PHP `8.4` deprecations
+- Fix conversion from `RGBA` to `HSLA`
 
 ## 4.3.0 - 2025-03-20
 
