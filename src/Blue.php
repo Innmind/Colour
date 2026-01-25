@@ -3,49 +3,54 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
  */
 final class Blue
 {
-    private int $integer;
-
     /**
-     * @throws InvalidValueRangeException
+     * @param int<0, 255> $integer
      */
-    public function __construct(int $integer)
-    {
-        if ($integer < 0 || $integer > 255) {
-            throw new InvalidValueRangeException((string) $integer);
-        }
-
-        $this->integer = $integer;
+    private function __construct(
+        private int $integer,
+    ) {
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @param int<0, 255> $value
      */
-    public static function of(int $value): Maybe
+    #[\NoDiscard]
+    public static function at(int $value): self
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return new self($value);
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function fromHexadecimal(string $hex): Maybe
+    #[\NoDiscard]
+    public static function of(int $value): Attempt
+    {
+        if ($value < 0 || $value > 255) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    #[\NoDiscard]
+    public static function fromHexadecimal(string $hex): Attempt
     {
         if (\mb_strlen($hex) === 1) {
             $hex .= $hex;
@@ -55,15 +60,17 @@ final class Blue
     }
 
     /**
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function fromIntensity(Intensity $intensity): Maybe
+    #[\NoDiscard]
+    public static function fromIntensity(Intensity $intensity): Attempt
     {
         return self::of(
             (int) \round((255 * $intensity->toInt()) / 100),
         );
     }
 
+    #[\NoDiscard]
     public function add(self $blue): self
     {
         return new self(
@@ -74,6 +81,7 @@ final class Blue
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $blue): self
     {
         return new self(
@@ -84,26 +92,34 @@ final class Blue
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $blue): bool
     {
         return $this->integer === $blue->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->integer === 255;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->integer === 0;
     }
 
+    /**
+     * @return int<0, 255>
+     */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->integer;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return \str_pad(

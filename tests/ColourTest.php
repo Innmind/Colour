@@ -8,13 +8,24 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    Exception\DomainException,
+    Alpha,
+    Black,
+    Blue,
+    Cyan,
+    Green,
+    Hue,
+    Lightness,
+    Magenta,
+    Red,
+    Saturation,
+    Yellow,
 };
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     PHPUnit\BlackBox,
     Set,
 };
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ColourTest extends TestCase
 {
@@ -39,7 +50,7 @@ class ColourTest extends TestCase
     public function testReturnNothingForRandomStrings()
     {
         $this
-            ->forAll(Set\Unicode::strings())
+            ->forAll(Set::strings()->unicode())
             ->then(function($string) {
                 $this->assertNull(Colour::maybe($string)->match(
                     static fn($colour) => $colour,
@@ -50,10 +61,10 @@ class ColourTest extends TestCase
 
     public function testThrowWhenNoFormatRecognized()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('foo');
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage("Cyan not found in 'foo'");
 
-        Colour::of('foo');
+        $_ = Colour::of('foo');
     }
 
     public function testLiterals()
@@ -61,15 +72,75 @@ class ColourTest extends TestCase
         $this->assertCount(98, Colour::cases());
     }
 
-    /**
-     * @dataProvider literals
-     */
+    #[DataProvider('literals')]
     public function testFromLiteral(Colour|RGBA $colour, string $hex)
     {
         $rgba = $colour->toRGBA();
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($hex, $rgba->toHexadecimal());
+    }
+
+    public function testAllColoursAreConvertibleToAnyFormat(): BlackBox\Proof
+    {
+        $alpha = Set::realNumbers()
+            ->between(0, 1)
+            ->map(static fn($value) => Alpha::of($value)->unwrap())
+            ->nullable();
+        $rgba = Set::compose(
+            RGBA::from(...),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Red::at(...)),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Green::at(...)),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Blue::at(...)),
+            $alpha,
+        );
+        $cmyka = Set::compose(
+            CMYKA::from(...),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Cyan::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Magenta::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Yellow::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Black::at(...)),
+            $alpha,
+        );
+        $hsla = Set::compose(
+            HSLA::from(...),
+            Set::integers()
+                ->between(0, 359)
+                ->map(Hue::at(...)),
+            Set::integers()
+                ->between(0, 100)
+                ->map(Saturation::at(...)),
+            Set::integers()
+                ->between(0, 100)
+                ->map(Lightness::at(...)),
+            $alpha,
+        );
+
+        return $this
+            ->forAll(Set::either(
+                $rgba,
+                $cmyka,
+                $hsla,
+            ))
+            ->prove(function($colour) {
+                $this->assertInstanceOf(RGBA::class, $colour->toRGBA());
+                $this->assertInstanceOf(CMYKA::class, $colour->toCMYKA());
+                $this->assertInstanceOf(HSLA::class, $colour->toHSLA());
+            });
     }
 
     public static function literals()

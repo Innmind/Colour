@@ -3,17 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Black,
-    Exception\InvalidValueRangeException,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Colour\Black;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class BlackTest extends TestCase
 {
     public function testInterface()
     {
-        $black = new Black(50);
+        $black = Black::at(50);
 
         $this->assertSame(50, $black->toInt());
         $this->assertSame('50', $black->toString());
@@ -21,25 +18,25 @@ class BlackTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        new Black(-1);
+        $_ = Black::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        new Black(101);
+        $_ = Black::of(101)->unwrap();
     }
 
     public function testAdd()
     {
-        $black = new Black(50);
+        $black = Black::at(50);
 
-        $black2 = $black->add(new Black(25));
+        $black2 = $black->add(Black::at(25));
 
         $this->assertInstanceOf(Black::class, $black2);
         $this->assertNotSame($black, $black2);
@@ -49,9 +46,9 @@ class BlackTest extends TestCase
 
     public function testSubtract()
     {
-        $black = new Black(50);
+        $black = Black::at(50);
 
-        $black2 = $black->subtract(new Black(25));
+        $black2 = $black->subtract(Black::at(25));
 
         $this->assertInstanceOf(Black::class, $black2);
         $this->assertNotSame($black, $black2);
@@ -61,21 +58,21 @@ class BlackTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Black(50))->equals(new Black(50)));
-        $this->assertFalse((new Black(100))->equals(new Black(50)));
+        $this->assertTrue(Black::at(50)->equals(Black::at(50)));
+        $this->assertFalse(Black::at(100)->equals(Black::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Black(100))->atMaximum());
-        $this->assertFalse((new Black(0))->atMaximum());
-        $this->assertFalse((new Black(50))->atMaximum());
+        $this->assertTrue(Black::at(100)->atMaximum());
+        $this->assertFalse(Black::at(0)->atMaximum());
+        $this->assertFalse(Black::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Black(100))->atMinimum());
-        $this->assertTrue((new Black(0))->atMinimum());
-        $this->assertFalse((new Black(50))->atMinimum());
+        $this->assertFalse(Black::at(100)->atMinimum());
+        $this->assertTrue(Black::at(0)->atMinimum());
+        $this->assertFalse(Black::at(50)->atMinimum());
     }
 }

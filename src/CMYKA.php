@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
+    Attempt,
 };
 
 /**
@@ -17,37 +17,38 @@ final class CMYKA
     private const PATTERN_WITH_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     private const PATTERN_WITHOUT_ALPHA = '~^device-cmyk\((?<cyan>\d{1,3})%, ?(?<magenta>\d{1,3})%, ?(?<yellow>\d{1,3})%, ?(?<black>\d{1,3})%\)$~';
 
-    private Cyan $cyan;
-    private Magenta $magenta;
-    private Yellow $yellow;
-    private Black $black;
-    private Alpha $alpha;
+    private function __construct(
+        private Cyan $cyan,
+        private Magenta $magenta,
+        private Yellow $yellow,
+        private Black $black,
+        private Alpha $alpha,
+    ) {
+    }
 
-    public function __construct(
+    /**
+     * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function from(
         Cyan $cyan,
         Magenta $magenta,
         Yellow $yellow,
         Black $black,
-        Alpha $alpha = null,
-    ) {
-        $this->cyan = $cyan;
-        $this->magenta = $magenta;
-        $this->yellow = $yellow;
-        $this->black = $black;
-        $this->alpha = $alpha ?? new Alpha(1);
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($cyan, $magenta, $yellow, $black, $alpha ?? Alpha::max());
     }
 
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): self
     {
-        return self::maybe($colour)->match(
-            static fn($self) => $self,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -55,40 +56,58 @@ final class CMYKA
      *
      * @return Maybe<self>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
+    {
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    #[\NoDiscard]
+    public static function attempt(string $colour): Attempt
     {
         $colour = Str::of($colour)->trim();
 
-        return self::withAlpha($colour)->otherwise(
+        return self::withAlpha($colour)->recover(
             static fn() => self::withoutAlpha($colour),
         );
     }
 
+    #[\NoDiscard]
     public function cyan(): Cyan
     {
         return $this->cyan;
     }
 
+    #[\NoDiscard]
     public function magenta(): Magenta
     {
         return $this->magenta;
     }
 
+    #[\NoDiscard]
     public function yellow(): Yellow
     {
         return $this->yellow;
     }
 
+    #[\NoDiscard]
     public function black(): Black
     {
         return $this->black;
     }
 
+    #[\NoDiscard]
     public function alpha(): Alpha
     {
         return $this->alpha;
     }
 
+    #[\NoDiscard]
     public function addCyan(Cyan $cyan): self
     {
         return new self(
@@ -100,6 +119,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractCyan(Cyan $cyan): self
     {
         return new self(
@@ -111,6 +131,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addMagenta(Magenta $magenta): self
     {
         return new self(
@@ -122,6 +143,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractMagenta(Magenta $magenta): self
     {
         return new self(
@@ -133,6 +155,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addYellow(Yellow $yellow): self
     {
         return new self(
@@ -144,6 +167,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractYellow(Yellow $yellow): self
     {
         return new self(
@@ -155,6 +179,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addBlack(Black $black): self
     {
         return new self(
@@ -166,6 +191,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractBlack(Black $black): self
     {
         return new self(
@@ -177,6 +203,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addAlpha(Alpha $alpha): self
     {
         return new self(
@@ -188,6 +215,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractAlpha(Alpha $alpha): self
     {
         return new self(
@@ -199,6 +227,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $cmyka): bool
     {
         return $this->cyan->equals($cmyka->cyan()) &&
@@ -208,6 +237,7 @@ final class CMYKA
             $this->alpha->equals($cmyka->alpha());
     }
 
+    #[\NoDiscard]
     public function toRGBA(): RGBA
     {
         $cyan = $this->cyan->toInt() / 100;
@@ -219,24 +249,27 @@ final class CMYKA
         $green = 1 - \min(1, $magenta * (1 - $black) + $black);
         $blue = 1 - \min(1, $yellow * (1 - $black) + $black);
 
-        return new RGBA(
-            new Red((int) \round($red * 255)),
-            new Green((int) \round($green * 255)),
-            new Blue((int) \round($blue * 255)),
+        return RGBA::from(
+            Red::of((int) \round($red * 255))->unwrap(),
+            Green::of((int) \round($green * 255))->unwrap(),
+            Blue::of((int) \round($blue * 255))->unwrap(),
             $this->alpha,
         );
     }
 
+    #[\NoDiscard]
     public function toHSLA(): HSLA
     {
         return $this->toRGBA()->toHSLA();
     }
 
+    #[\NoDiscard]
     public function toCMYKA(): self
     {
         return $this;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         if ($this->alpha->atMaximum()) {
@@ -262,46 +295,59 @@ final class CMYKA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withAlpha(Str $colour): Maybe
+    private static function withAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITH_ALPHA)
             ->map(static fn($_, $match) => $match->toString());
         $cyan = $matches
             ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->filter(\is_numeric(...))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
+            ->flatMap(Cyan::of(...));
         $magenta = $matches
             ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->filter(\is_numeric(...))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
+            ->flatMap(Magenta::of(...));
         $yellow = $matches
             ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->filter(\is_numeric(...))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
+            ->flatMap(Yellow::of(...));
         $black = $matches
             ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
+            ->filter(\is_numeric(...))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black));
+            ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
+            ->flatMap(Black::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(Alpha::of(...));
 
-        return Maybe::all($cyan, $magenta, $yellow, $black, $alpha)->map(
-            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black, Alpha $alpha) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
-                $alpha,
+        return $cyan->flatMap(
+            static fn($cyan) => $magenta->flatMap(
+                static fn($magenta) => $yellow->flatMap(
+                    static fn($yellow) => $black->flatMap(
+                        static fn($black) => $alpha->map(
+                            static fn($alpha) => self::from(
+                                $cyan,
+                                $magenta,
+                                $yellow,
+                                $black,
+                                $alpha,
+                            ),
+                        ),
+                    ),
+                ),
             ),
         );
     }
@@ -309,40 +355,50 @@ final class CMYKA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withoutAlpha(Str $colour): Maybe
+    private static function withoutAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITHOUT_ALPHA)
             ->map(static fn($_, $match) => $match->toString());
         $cyan = $matches
             ->get('cyan')
-            ->filter(static fn($cyan) => \is_numeric($cyan))
+            ->filter(\is_numeric(...))
             ->map(static fn($cyan) => (int) $cyan)
-            ->flatMap(static fn($cyan) => Cyan::of($cyan));
+            ->attempt(static fn() => new \DomainException("Cyan not found in '{$colour->toString()}'"))
+            ->flatMap(Cyan::of(...));
         $magenta = $matches
             ->get('magenta')
-            ->filter(static fn($magenta) => \is_numeric($magenta))
+            ->filter(\is_numeric(...))
             ->map(static fn($magenta) => (int) $magenta)
-            ->flatMap(static fn($magenta) => Magenta::of($magenta));
+            ->attempt(static fn() => new \DomainException("Magenta not found in '{$colour->toString()}'"))
+            ->flatMap(Magenta::of(...));
         $yellow = $matches
             ->get('yellow')
-            ->filter(static fn($yellow) => \is_numeric($yellow))
+            ->filter(\is_numeric(...))
             ->map(static fn($yellow) => (int) $yellow)
-            ->flatMap(static fn($yellow) => Yellow::of($yellow));
+            ->attempt(static fn() => new \DomainException("Yellow not found in '{$colour->toString()}'"))
+            ->flatMap(Yellow::of(...));
         $black = $matches
             ->get('black')
-            ->filter(static fn($black) => \is_numeric($black))
+            ->filter(\is_numeric(...))
             ->map(static fn($black) => (int) $black)
-            ->flatMap(static fn($black) => Black::of($black));
+            ->attempt(static fn() => new \DomainException("Black not found in '{$colour->toString()}'"))
+            ->flatMap(Black::of(...));
 
-        return Maybe::all($cyan, $magenta, $yellow, $black)->map(
-            static fn(Cyan $cyan, Magenta $magenta, Yellow $yellow, Black $black) => new self(
-                $cyan,
-                $magenta,
-                $yellow,
-                $black,
+        return $cyan->flatMap(
+            static fn($cyan) => $magenta->flatMap(
+                static fn($magenta) => $yellow->flatMap(
+                    static fn($yellow) => $black->map(
+                        static fn($black) => self::from(
+                            $cyan,
+                            $magenta,
+                            $yellow,
+                            $black,
+                        ),
+                    ),
+                ),
             ),
         );
     }

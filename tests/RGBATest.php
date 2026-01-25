@@ -11,19 +11,19 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
-    Exception\DomainException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RGBATest extends TestCase
 {
     public function testInterface()
     {
-        $rgba = new RGBA(
-            $red = new Red(0),
-            $green = new Green(255),
-            $blue = new Blue(122),
-            $alpha = new Alpha(0.5),
+        $rgba = RGBA::from(
+            $red = Red::at(0),
+            $green = Green::at(255),
+            $blue = Blue::at(122),
+            $alpha = Alpha::of(0.5)->unwrap(),
         );
 
         $this->assertSame($red, $rgba->red());
@@ -35,10 +35,10 @@ class RGBATest extends TestCase
 
     public function testWithoutAlpha()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame(1.0, $rgba->alpha()->toFloat());
@@ -46,25 +46,25 @@ class RGBATest extends TestCase
 
     public function testStringCast()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame('#00ff7a', $rgba->toString());
         $this->assertSame(
             'rgba(0, 255, 122, 0.5)',
-            $rgba->subtractAlpha(new Alpha(0.5))->toString(),
+            $rgba->subtractAlpha(Alpha::of(0.5)->unwrap())->toString(),
         );
     }
 
     public function testToHexadecimal()
     {
-        $rgba = new RGBA(
-            new Red(0),
-            new Green(255),
-            new Blue(122),
+        $rgba = RGBA::from(
+            Red::at(0),
+            Green::at(255),
+            Blue::at(122),
         );
 
         $this->assertSame(
@@ -73,20 +73,20 @@ class RGBATest extends TestCase
         );
         $this->assertSame(
             '00ff7a80',
-            $rgba->subtractAlpha(new Alpha(0.5))->toHexadecimal(),
+            $rgba->subtractAlpha(Alpha::of(0.5)->unwrap())->toHexadecimal(),
         );
     }
 
     public function testAddRed()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addRed(new Red(150));
+        $rgba2 = $rgba->addRed(Red::at(150));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -101,14 +101,14 @@ class RGBATest extends TestCase
 
     public function testSubtractRed()
     {
-        $rgba = new RGBA(
-            new Red(150),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(150),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractRed(new Red(10));
+        $rgba2 = $rgba->subtractRed(Red::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(150, $rgba->red()->toInt());
@@ -123,14 +123,14 @@ class RGBATest extends TestCase
 
     public function testAddBlue()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addBlue(new Blue(12));
+        $rgba2 = $rgba->addBlue(Blue::at(12));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -145,14 +145,14 @@ class RGBATest extends TestCase
 
     public function testSubtractBlue()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractBlue(new Blue(10));
+        $rgba2 = $rgba->subtractBlue(Blue::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -167,14 +167,14 @@ class RGBATest extends TestCase
 
     public function testAddGreen()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(205),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(205),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->addGreen(new Green(15));
+        $rgba2 = $rgba->addGreen(Green::at(15));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -189,14 +189,14 @@ class RGBATest extends TestCase
 
     public function testSubtractGreen()
     {
-        $rgba = new RGBA(
-            new Red(10),
-            new Green(255),
-            new Blue(122),
-            new Alpha(0.5),
+        $rgba = RGBA::from(
+            Red::at(10),
+            Green::at(255),
+            Blue::at(122),
+            Alpha::of(0.5)->unwrap(),
         );
 
-        $rgba2 = $rgba->subtractGreen(new Green(10));
+        $rgba2 = $rgba->subtractGreen(Green::at(10));
         $this->assertInstanceOf(RGBA::class, $rgba2);
         $this->assertNotSame($rgba, $rgba2);
         $this->assertSame(10, $rgba->red()->toInt());
@@ -209,9 +209,7 @@ class RGBATest extends TestCase
         $this->assertSame(0.5, $rgba2->alpha()->toFloat());
     }
 
-    /**
-     * @dataProvider hexadecimalWithAlpha
-     */
+    #[DataProvider('hexadecimalWithAlpha')]
     public function testFromHexadecimalWithAlpha(
         string $string,
         int $red,
@@ -238,9 +236,7 @@ class RGBATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider hexadecimalWithoutAlpha
-     */
+    #[DataProvider('hexadecimalWithoutAlpha')]
     public function testFromHexadecimalWithoutAlpha(
         string $string,
         int $red,
@@ -269,15 +265,13 @@ class RGBATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider hexadecimals
-     */
+    #[DataProvider('hexadecimals')]
     public function testFromHexadecimal(
         string $string,
         int $red,
         int $green,
         int $blue,
-        float $alpha = null,
+        ?float $alpha = null,
     ) {
         $rgba = RGBA::of($string);
 
@@ -315,10 +309,10 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('rgb(10, 20%, 30)');
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
-        RGBA::of('rgb(10, 20%, 30)');
+        $_ = RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunctionWithPercents()
@@ -334,10 +328,10 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('rgb(10, 20%, 30)');
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
-        RGBA::of('rgb(10, 20%, 30)');
+        $_ = RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunction()
@@ -372,8 +366,8 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('rgba(10, 20%, 30, 2.0)');
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 2.0)'");
 
         RGBA::of('rgba(10, 20%, 30, 2.0)');
     }
@@ -391,8 +385,8 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('rgba(10, 20%, 30, 1)');
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 1)'");
 
         RGBA::of('rgba(10, 20%, 30, 1)');
     }
@@ -416,9 +410,7 @@ class RGBATest extends TestCase
         $this->assertTrue($rgb->alpha()->atMaximum());
     }
 
-    /**
-     * @dataProvider allFormats
-     */
+    #[DataProvider('allFormats')]
     public function testOf(
         string $colour,
         int $red,
@@ -529,5 +521,17 @@ class RGBATest extends TestCase
         $rgba = RGBA::of('39F');
 
         $this->assertSame($rgba, $rgba->toRGBA());
+    }
+
+    public function testRegressionToHSLA()
+    {
+        $colour = RGBA::from(
+            Red::at(205),
+            Green::at(32),
+            Blue::at(33),
+            Alpha::max(),
+        );
+
+        $this->assertInstanceOf(HSLA::class, $colour->toHSLA());
     }
 }

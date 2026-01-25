@@ -3,17 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Colour;
 
-use Innmind\Colour\{
-    Magenta,
-    Exception\InvalidValueRangeException,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Colour\Magenta;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class MagentaTest extends TestCase
 {
     public function testInterface()
     {
-        $magenta = new Magenta(50);
+        $magenta = Magenta::at(50);
 
         $this->assertSame(50, $magenta->toInt());
         $this->assertSame('50', $magenta->toString());
@@ -21,25 +18,25 @@ class MagentaTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        new Magenta(-1);
+        $_ = Magenta::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        new Magenta(101);
+        $_ = Magenta::of(101)->unwrap();
     }
 
     public function testAdd()
     {
-        $magenta = new Magenta(50);
+        $magenta = Magenta::at(50);
 
-        $magenta2 = $magenta->add(new Magenta(25));
+        $magenta2 = $magenta->add(Magenta::at(25));
 
         $this->assertInstanceOf(Magenta::class, $magenta2);
         $this->assertNotSame($magenta, $magenta2);
@@ -49,9 +46,9 @@ class MagentaTest extends TestCase
 
     public function testSubtract()
     {
-        $magenta = new Magenta(50);
+        $magenta = Magenta::at(50);
 
-        $magenta2 = $magenta->subtract(new Magenta(25));
+        $magenta2 = $magenta->subtract(Magenta::at(25));
 
         $this->assertInstanceOf(Magenta::class, $magenta2);
         $this->assertNotSame($magenta, $magenta2);
@@ -61,21 +58,21 @@ class MagentaTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Magenta(50))->equals(new Magenta(50)));
-        $this->assertFalse((new Magenta(100))->equals(new Magenta(50)));
+        $this->assertTrue(Magenta::at(50)->equals(Magenta::at(50)));
+        $this->assertFalse(Magenta::at(100)->equals(Magenta::at(50)));
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Magenta(100))->atMaximum());
-        $this->assertFalse((new Magenta(0))->atMaximum());
-        $this->assertFalse((new Magenta(50))->atMaximum());
+        $this->assertTrue(Magenta::at(100)->atMaximum());
+        $this->assertFalse(Magenta::at(0)->atMaximum());
+        $this->assertFalse(Magenta::at(50)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Magenta(100))->atMinimum());
-        $this->assertTrue((new Magenta(0))->atMinimum());
-        $this->assertFalse((new Magenta(50))->atMinimum());
+        $this->assertFalse(Magenta::at(100)->atMinimum());
+        $this->assertTrue(Magenta::at(0)->atMinimum());
+        $this->assertFalse(Magenta::at(50)->atMinimum());
     }
 }

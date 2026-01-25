@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Maybe,
+    Attempt,
 };
 
 /**
@@ -117,14 +117,12 @@ enum Colour
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {
-        return self::maybe($colour)->match(
-            static fn($colour) => $colour,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -132,16 +130,29 @@ enum Colour
      *
      * @return Maybe<RGBA|HSLA|CMYKA>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
     {
-        return RGBA::maybe($colour)
-            ->otherwise(static fn() => HSLA::maybe($colour))
-            ->otherwise(static fn() => CMYKA::maybe($colour));
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<RGBA|HSLA|CMYKA>
+     */
+    #[\NoDiscard]
+    public static function attempt(string $colour): Attempt
+    {
+        return RGBA::attempt($colour)
+            ->recover(static fn() => HSLA::attempt($colour))
+            ->recover(static fn() => CMYKA::attempt($colour));
     }
 
     /**
      * @see http://www.w3schools.com/colors/colors_names.asp
      */
+    #[\NoDiscard]
     public function toRGBA(): RGBA
     {
         return match ($this) {
@@ -246,6 +257,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function light(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -265,6 +277,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function dark(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -288,6 +301,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function medium(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -303,6 +317,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function pale(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */

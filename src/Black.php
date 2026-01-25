@@ -3,43 +3,48 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
  */
 final class Black
 {
-    private int $value;
-
     /**
-     * @throws InvalidValueRangeException
+     * @param int<0, 100> $value
      */
-    public function __construct(int $value)
-    {
-        if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException((string) $value);
-        }
-
-        $this->value = $value;
+    private function __construct(
+        private int $value,
+    ) {
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @param int<0, 100> $value
      */
-    public static function of(int $value): Maybe
+    #[\NoDiscard]
+    public static function at(int $value): self
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    #[\NoDiscard]
+    public static function of(int $value): Attempt
+    {
+        if ($value < 0 || $value > 100) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
+    }
+
+    #[\NoDiscard]
     public function add(self $black): self
     {
         return new self(
@@ -50,6 +55,7 @@ final class Black
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $black): self
     {
         return new self(
@@ -60,26 +66,34 @@ final class Black
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $black): bool
     {
         return $this->value === $black->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 100;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0;
     }
 
+    /**
+     * @return int<0, 100>
+     */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

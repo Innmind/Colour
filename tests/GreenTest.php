@@ -6,15 +6,14 @@ namespace Tests\Innmind\Colour;
 use Innmind\Colour\{
     Green,
     Intensity,
-    Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class GreenTest extends TestCase
 {
     public function testInterface()
     {
-        $green = new Green(255);
+        $green = Green::at(255);
 
         $this->assertSame(255, $green->toInt());
         $this->assertSame('ff', $green->toString());
@@ -34,63 +33,63 @@ class GreenTest extends TestCase
 
     public function testAdd()
     {
-        $Green = (new Green(12))->add(new Green(30));
+        $Green = Green::at(12)->add(Green::at(30));
 
         $this->assertInstanceOf(Green::class, $Green);
         $this->assertSame(42, $Green->toInt());
 
         $this->assertSame(
             255,
-            (new Green(150))->add(new Green(150))->toInt(),
+            Green::at(150)->add(Green::at(150))->toInt(),
         );
     }
 
     public function testSub()
     {
-        $green = (new Green(54))->subtract(new Green(12));
+        $green = Green::at(54)->subtract(Green::at(12));
 
         $this->assertInstanceOf(Green::class, $green);
         $this->assertSame(42, $green->toInt());
 
         $this->assertSame(
             0,
-            (new Green(150))->subtract(new Green(255))->toInt(),
+            Green::at(150)->subtract(Green::at(255))->toInt(),
         );
     }
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        new Green(-42);
+        $_ = Green::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('512');
 
-        new Green(512);
+        $_ = Green::of(512)->unwrap();
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Green(255))->atMaximum());
-        $this->assertFalse((new Green(0))->atMaximum());
-        $this->assertFalse((new Green(122))->atMaximum());
+        $this->assertTrue(Green::at(255)->atMaximum());
+        $this->assertFalse(Green::at(0)->atMaximum());
+        $this->assertFalse(Green::at(122)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Green(255))->atMinimum());
-        $this->assertTrue((new Green(0))->atMinimum());
-        $this->assertFalse((new Green(122))->atMinimum());
+        $this->assertFalse(Green::at(255)->atMinimum());
+        $this->assertTrue(Green::at(0)->atMinimum());
+        $this->assertFalse(Green::at(122)->atMinimum());
     }
 
     public function testFromIntensity()
     {
-        $green = Green::fromIntensity(new Intensity(100))->match(
+        $green = Green::fromIntensity(Intensity::at(100))->match(
             static fn($green) => $green,
             static fn() => null,
         );
@@ -99,28 +98,28 @@ class GreenTest extends TestCase
         $this->assertSame(255, $green->toInt());
         $this->assertSame(
             191,
-            Green::fromIntensity(new Intensity(75))->match(
+            Green::fromIntensity(Intensity::at(75))->match(
                 static fn($green) => $green->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             128,
-            Green::fromIntensity(new Intensity(50))->match(
+            Green::fromIntensity(Intensity::at(50))->match(
                 static fn($green) => $green->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             64,
-            Green::fromIntensity(new Intensity(25))->match(
+            Green::fromIntensity(Intensity::at(25))->match(
                 static fn($green) => $green->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             0,
-            Green::fromIntensity(new Intensity(0))->match(
+            Green::fromIntensity(Intensity::at(0))->match(
                 static fn($green) => $green->toInt(),
                 static fn() => null,
             ),
@@ -129,7 +128,7 @@ class GreenTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Green(50))->equals(new Green(50)));
-        $this->assertFalse((new Green(100))->equals(new Green(50)));
+        $this->assertTrue(Green::at(50)->equals(Green::at(50)));
+        $this->assertFalse(Green::at(100)->equals(Green::at(50)));
     }
 }

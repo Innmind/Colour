@@ -6,10 +6,10 @@ namespace Tests\Innmind\Colour\Fixtures;
 use Fixtures\Innmind\Colour\Colour;
 use Innmind\Colour\RGBA;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Set,
     Random,
 };
-use PHPUnit\Framework\TestCase;
 
 class ColourTest extends TestCase
 {
@@ -21,13 +21,7 @@ class ColourTest extends TestCase
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-
-            if (\interface_exists(Set\Implementation::class)) {
-                $this->assertTrue($value->immutable());
-            } else {
-                $this->assertTrue($value->isImmutable());
-            }
-
+            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(RGBA::class, $value->unwrap());
         }
     }
