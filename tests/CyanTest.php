@@ -21,7 +21,7 @@ class CyanTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        Cyan::of(-1)->unwrap();
+        $_ = Cyan::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -29,7 +29,7 @@ class CyanTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Cyan::of(101)->unwrap();
+        $_ = Cyan::of(101)->unwrap();
     }
 
     public function testAdd()

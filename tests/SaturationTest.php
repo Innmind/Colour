@@ -47,7 +47,7 @@ class SaturationTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        Saturation::of(-42)->unwrap();
+        $_ = Saturation::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -55,7 +55,7 @@ class SaturationTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Saturation::of(101)->unwrap();
+        $_ = Saturation::of(101)->unwrap();
     }
 
     public function testEquals()

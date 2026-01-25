@@ -49,7 +49,7 @@ class AlphaTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-0.1');
 
-        Alpha::of(-0.1)->unwrap();
+        $_ = Alpha::of(-0.1)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -57,7 +57,7 @@ class AlphaTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('1.1');
 
-        Alpha::of(1.1)->unwrap();
+        $_ = Alpha::of(1.1)->unwrap();
     }
 
     public function testAtMaximum()

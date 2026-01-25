@@ -62,7 +62,7 @@ class RedTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        Red::of(-42)->unwrap();
+        $_ = Red::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -70,7 +70,7 @@ class RedTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('512');
 
-        Red::of(512)->unwrap();
+        $_ = Red::of(512)->unwrap();
     }
 
     public function testAtMaximum()

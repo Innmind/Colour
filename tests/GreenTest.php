@@ -62,7 +62,7 @@ class GreenTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        Green::of(-42)->unwrap();
+        $_ = Green::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -70,7 +70,7 @@ class GreenTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('512');
 
-        Green::of(512)->unwrap();
+        $_ = Green::of(512)->unwrap();
     }
 
     public function testAtMaximum()

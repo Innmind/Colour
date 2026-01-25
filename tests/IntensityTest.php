@@ -20,7 +20,7 @@ class IntensityTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        Intensity::of(-1)->unwrap();
+        $_ = Intensity::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -28,6 +28,6 @@ class IntensityTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Intensity::of(101)->unwrap();
+        $_ = Intensity::of(101)->unwrap();
     }
 }

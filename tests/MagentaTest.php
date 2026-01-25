@@ -21,7 +21,7 @@ class MagentaTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        Magenta::of(-1)->unwrap();
+        $_ = Magenta::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -29,7 +29,7 @@ class MagentaTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Magenta::of(101)->unwrap();
+        $_ = Magenta::of(101)->unwrap();
     }
 
     public function testAdd()

@@ -62,7 +62,7 @@ class BlueTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        Blue::of(-42)->unwrap();
+        $_ = Blue::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -70,7 +70,7 @@ class BlueTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('512');
 
-        Blue::of(512)->unwrap();
+        $_ = Blue::of(512)->unwrap();
     }
 
     public function testAtMaximum()

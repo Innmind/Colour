@@ -47,7 +47,7 @@ class LightnessTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        Lightness::of(-42)->unwrap();
+        $_ = Lightness::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
@@ -55,7 +55,7 @@ class LightnessTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Lightness::of(101)->unwrap();
+        $_ = Lightness::of(101)->unwrap();
     }
 
     public function testEquals()

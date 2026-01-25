@@ -312,7 +312,7 @@ class RGBATest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
-        RGBA::of('rgb(10, 20%, 30)');
+        $_ = RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunctionWithPercents()
@@ -331,7 +331,7 @@ class RGBATest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
 
-        RGBA::of('rgb(10, 20%, 30)');
+        $_ = RGBA::of('rgb(10, 20%, 30)');
     }
 
     public function testFromRGBFunction()

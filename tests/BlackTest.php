@@ -21,7 +21,7 @@ class BlackTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-1');
 
-        Black::of(-1)->unwrap();
+        $_ = Black::of(-1)->unwrap();
     }
 
     public function testThrowWhenValueTooHigh()
@@ -29,7 +29,7 @@ class BlackTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('101');
 
-        Black::of(101)->unwrap();
+        $_ = Black::of(101)->unwrap();
     }
 
     public function testAdd()

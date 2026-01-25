@@ -53,7 +53,7 @@ class ColourTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage("Cyan not found in 'foo'");
 
-        Colour::of('foo');
+        $_ = Colour::of('foo');
     }
 
     public function testLiterals()
