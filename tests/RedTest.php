@@ -6,15 +6,14 @@ namespace Tests\Innmind\Colour;
 use Innmind\Colour\{
     Red,
     Intensity,
-    Exception\InvalidValueRangeException,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class RedTest extends TestCase
 {
     public function testInterface()
     {
-        $red = new Red(255);
+        $red = Red::at(255);
 
         $this->assertSame(255, $red->toInt());
         $this->assertSame('ff', $red->toString());
@@ -34,63 +33,63 @@ class RedTest extends TestCase
 
     public function testAdd()
     {
-        $red = (new Red(12))->add(new Red(30));
+        $red = Red::at(12)->add(Red::at(30));
 
         $this->assertInstanceOf(Red::class, $red);
         $this->assertSame(42, $red->toInt());
 
         $this->assertSame(
             255,
-            (new Red(150))->add(new Red(150))->toInt(),
+            Red::at(150)->add(Red::at(150))->toInt(),
         );
     }
 
     public function testSub()
     {
-        $red = (new Red(54))->subtract(new Red(12));
+        $red = Red::at(54)->subtract(Red::at(12));
 
         $this->assertInstanceOf(Red::class, $red);
         $this->assertSame(42, $red->toInt());
 
         $this->assertSame(
             0,
-            (new Red(150))->subtract(new Red(255))->toInt(),
+            Red::at(150)->subtract(Red::at(255))->toInt(),
         );
     }
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('-42');
 
-        new Red(-42);
+        $_ = Red::of(-42)->unwrap();
     }
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(InvalidValueRangeException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('512');
 
-        new Red(512);
+        $_ = Red::of(512)->unwrap();
     }
 
     public function testAtMaximum()
     {
-        $this->assertTrue((new Red(255))->atMaximum());
-        $this->assertFalse((new Red(0))->atMaximum());
-        $this->assertFalse((new Red(122))->atMaximum());
+        $this->assertTrue(Red::at(255)->atMaximum());
+        $this->assertFalse(Red::at(0)->atMaximum());
+        $this->assertFalse(Red::at(122)->atMaximum());
     }
 
     public function testAtMinimum()
     {
-        $this->assertFalse((new Red(255))->atMinimum());
-        $this->assertTrue((new Red(0))->atMinimum());
-        $this->assertFalse((new Red(122))->atMinimum());
+        $this->assertFalse(Red::at(255)->atMinimum());
+        $this->assertTrue(Red::at(0)->atMinimum());
+        $this->assertFalse(Red::at(122)->atMinimum());
     }
 
     public function testFromIntensity()
     {
-        $red = Red::fromIntensity(new Intensity(100))->match(
+        $red = Red::fromIntensity(Intensity::at(100))->match(
             static fn($red) => $red,
             static fn() => null,
         );
@@ -99,28 +98,28 @@ class RedTest extends TestCase
         $this->assertSame(255, $red->toInt());
         $this->assertSame(
             191,
-            Red::fromIntensity(new Intensity(75))->match(
+            Red::fromIntensity(Intensity::at(75))->match(
                 static fn($red) => $red->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             128,
-            Red::fromIntensity(new Intensity(50))->match(
+            Red::fromIntensity(Intensity::at(50))->match(
                 static fn($red) => $red->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             64,
-            Red::fromIntensity(new Intensity(25))->match(
+            Red::fromIntensity(Intensity::at(25))->match(
                 static fn($red) => $red->toInt(),
                 static fn() => null,
             ),
         );
         $this->assertSame(
             0,
-            Red::fromIntensity(new Intensity(0))->match(
+            Red::fromIntensity(Intensity::at(0))->match(
                 static fn($red) => $red->toInt(),
                 static fn() => null,
             ),
@@ -129,7 +128,7 @@ class RedTest extends TestCase
 
     public function testEquals()
     {
-        $this->assertTrue((new Red(50))->equals(new Red(50)));
-        $this->assertFalse((new Red(100))->equals(new Red(50)));
+        $this->assertTrue(Red::at(50)->equals(Red::at(50)));
+        $this->assertFalse(Red::at(100)->equals(Red::at(50)));
     }
 }

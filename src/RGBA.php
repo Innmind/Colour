@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
+    Attempt,
 };
 
 /**
@@ -21,34 +21,34 @@ final class RGBA
     private const RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3}), ?(?<green>\d{1,3}), ?(?<blue>\d{1,3}), ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     private const PERCENTED_RGBA_FUNCTION_PATTERN = '~^rgba\((?<red>\d{1,3})%, ?(?<green>\d{1,3})%, ?(?<blue>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
 
-    private Red $red;
-    private Blue $blue;
-    private Green $green;
-    private Alpha $alpha;
+    private function __construct(
+        private Red $red,
+        private Green $green,
+        private Blue $blue,
+        private Alpha $alpha,
+    ) {
+    }
 
-    public function __construct(
+    /**
+     * @psalm-pure
+     */
+    public static function from(
         Red $red,
         Green $green,
         Blue $blue,
-        Alpha $alpha = null,
-    ) {
-        $this->red = $red;
-        $this->blue = $blue;
-        $this->green = $green;
-        $this->alpha = $alpha ?? new Alpha(1);
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($red, $green, $blue, $alpha ?? Alpha::max());
     }
 
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): self
     {
-        return self::maybe($colour)->match(
-            static fn($self) => $self,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -58,11 +58,21 @@ final class RGBA
      */
     public static function maybe(string $colour): Maybe
     {
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function attempt(string $colour): Attempt
+    {
         $colour = Str::of($colour)->trim();
 
         return self::fromHexadecimal($colour)
-            ->otherwise(static fn() => self::fromRGBFunction($colour))
-            ->otherwise(static fn() => self::fromRGBAFunction($colour));
+            ->recover(static fn() => self::fromRGBFunction($colour))
+            ->recover(static fn() => self::fromRGBAFunction($colour));
     }
 
     public function red(): Red
@@ -195,10 +205,10 @@ final class RGBA
         $lightness = ($max + $min) / 2;
 
         if ($max === $min) {
-            return new HSLA(
-                new Hue(0),
-                new Saturation(0),
-                new Lightness((int) \round($lightness * 100)),
+            return HSLA::from(
+                Hue::at(0),
+                Saturation::at(0),
+                Lightness::of((int) \round($lightness * 100))->unwrap(),
                 $this->alpha,
             );
         }
@@ -221,10 +231,10 @@ final class RGBA
 
         $hue *= 60;
 
-        return new HSLA(
-            new Hue((int) \round($hue)),
-            new Saturation((int) \round($saturation * 100)),
-            new Lightness((int) \round($lightness * 100)),
+        return HSLA::from(
+            Hue::of((int) \round($hue))->unwrap(),
+            Saturation::of((int) \round($saturation * 100))->unwrap(),
+            Lightness::of((int) \round($lightness * 100))->unwrap(),
             $this->alpha,
         );
     }
@@ -240,11 +250,11 @@ final class RGBA
             $this->green->atMinimum() &&
             $this->blue->atMinimum()
         ) {
-            return new CMYKA(
-                new Cyan(0),
-                new Magenta(0),
-                new Yellow(0),
-                new Black(100),
+            return CMYKA::from(
+                Cyan::at(0),
+                Magenta::at(0),
+                Yellow::at(0),
+                Black::at(100),
                 $this->alpha,
             );
         }
@@ -254,11 +264,11 @@ final class RGBA
         $magenta = (1 - $green - $black) / (1 - $black);
         $yellow = (1 - $blue - $black) / (1 - $black);
 
-        return new CMYKA(
-            new Cyan((int) \round($cyan * 100)),
-            new Magenta((int) \round($magenta * 100)),
-            new Yellow((int) \round($yellow * 100)),
-            new Black((int) \round($black * 100)),
+        return CMYKA::from(
+            Cyan::of((int) \round($cyan * 100))->unwrap(),
+            Magenta::of((int) \round($magenta * 100))->unwrap(),
+            Yellow::of((int) \round($yellow * 100))->unwrap(),
+            Black::of((int) \round($black * 100))->unwrap(),
             $this->alpha,
         );
     }
@@ -286,11 +296,11 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromHexadecimal(Str $colour): Maybe
+    private static function fromHexadecimal(Str $colour): Attempt
     {
-        return self::fromHexadecimalWithAlpha($colour)->otherwise(
+        return self::fromHexadecimalWithAlpha($colour)->recover(
             static fn() => self::fromHexadecimalWithoutAlpha($colour),
         );
     }
@@ -298,9 +308,9 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromHexadecimalWithAlpha(Str $colour): Maybe
+    private static function fromHexadecimalWithAlpha(Str $colour): Attempt
     {
         if ($colour->startsWith('#')) {
             $colour = $colour->drop(1);
@@ -310,8 +320,8 @@ final class RGBA
             $colour->length() !== 4 &&
             $colour->length() !== 8
         ) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
+            /** @var Attempt<self> */
+            return Attempt::error(new \DomainException('Invalid length'));
         }
 
         $matches = $colour
@@ -319,23 +329,33 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Red::fromHexadecimal(...));
         $green = $matches
             ->get('green')
-            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
+            ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
+            ->flatMap(Green::fromHexadecimal(...));
         $blue = $matches
             ->get('blue')
-            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Blue::fromHexadecimal(...));
         $alpha = $matches
             ->get('alpha')
-            ->flatMap(static fn($alpha) => Alpha::fromHexadecimal($alpha));
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(Alpha::fromHexadecimal(...));
 
-        return Maybe::all($red, $green, $blue, $alpha)->map(
-            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->flatMap(
+                    static fn($blue) => $alpha->map(
+                        static fn($alpha) => self::from(
+                            $red,
+                            $green,
+                            $blue,
+                            $alpha,
+                        ),
+                    ),
+                ),
             ),
         );
     }
@@ -343,9 +363,9 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromHexadecimalWithoutAlpha(Str $colour): Maybe
+    private static function fromHexadecimalWithoutAlpha(Str $colour): Attempt
     {
         if ($colour->startsWith('#')) {
             $colour = $colour->drop(1);
@@ -355,8 +375,8 @@ final class RGBA
             $colour->length() !== 3 &&
             $colour->length() !== 6
         ) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
+            /** @var Attempt<self> */
+            return Attempt::error(new \DomainException('Invalid length'));
         }
 
         $matches = $colour
@@ -364,19 +384,26 @@ final class RGBA
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->flatMap(static fn($red) => Red::fromHexadecimal($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Red::fromHexadecimal(...));
         $green = $matches
             ->get('green')
-            ->flatMap(static fn($green) => Green::fromHexadecimal($green));
+            ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
+            ->flatMap(Green::fromHexadecimal(...));
         $blue = $matches
             ->get('blue')
-            ->flatMap(static fn($blue) => Blue::fromHexadecimal($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Blue::fromHexadecimal(...));
 
-        return Maybe::all($red, $green, $blue)->map(
-            static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->map(
+                    static fn($blue) => self::from(
+                        $red,
+                        $green,
+                        $blue,
+                    ),
+                ),
             ),
         );
     }
@@ -384,11 +411,11 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBFunction(Str $colour): Maybe
+    private static function fromRGBFunction(Str $colour): Attempt
     {
-        return self::fromRGBFunctionWithPoints($colour)->otherwise(
+        return self::fromRGBFunctionWithPoints($colour)->recover(
             static fn() => self::fromRGBFunctionWithPercents($colour),
         );
     }
@@ -396,34 +423,41 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBFunctionWithPoints(Str $colour): Maybe
+    private static function fromRGBFunctionWithPoints(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::RGB_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
-            ->flatMap(static fn($red) => Red::of($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Red::of(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
-            ->flatMap(static fn($green) => Green::of($green));
+            ->attempt(static fn() => new \DomainException("Grren not found in '{$colour->toString()}'"))
+            ->flatMap(Green::of(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
-            ->flatMap(static fn($blue) => Blue::of($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Blue::of(...));
 
-        return Maybe::all($red, $green, $blue)->map(
-            static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->map(
+                    static fn($blue) => self::from(
+                        $red,
+                        $green,
+                        $blue,
+                    ),
+                ),
             ),
         );
     }
@@ -431,37 +465,44 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBFunctionWithPercents(Str $colour): Maybe
+    private static function fromRGBFunctionWithPercents(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PERCENTED_RGB_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
-            ->flatMap(static fn($red) => Intensity::of($red))
-            ->flatMap(static fn($red) => Red::fromIntensity($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Red::fromIntensity(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
-            ->flatMap(static fn($green) => Intensity::of($green))
-            ->flatMap(static fn($green) => Green::fromIntensity($green));
+            ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Green::fromIntensity(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
-            ->flatMap(static fn($blue) => Intensity::of($blue))
-            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Blue::fromIntensity(...));
 
-        return Maybe::all($red, $green, $blue)->map(
-            static fn(Red $red, Green $green, Blue $blue) => new self(
-                $red,
-                $green,
-                $blue,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->map(
+                    static fn($blue) => self::from(
+                        $red,
+                        $green,
+                        $blue,
+                    ),
+                ),
             ),
         );
     }
@@ -469,11 +510,11 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBAFunction(Str $colour): Maybe
+    private static function fromRGBAFunction(Str $colour): Attempt
     {
-        return self::fromRGBAFunctionWithPoints($colour)->otherwise(
+        return self::fromRGBAFunctionWithPoints($colour)->recover(
             static fn() => self::fromRGBAFunctionWithPercents($colour),
         );
     }
@@ -481,40 +522,50 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBAFunctionWithPoints(Str $colour): Maybe
+    private static function fromRGBAFunctionWithPoints(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::RGBA_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
-            ->flatMap(static fn($red) => Red::of($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Red::of(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
-            ->flatMap(static fn($green) => Green::of($green));
+            ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
+            ->flatMap(Green::of(...));
         $blue = $matches
             ->get('blue')
             ->filter(static fn($blue) => \is_numeric($blue))
             ->map(static fn($blue) => (int) $blue)
-            ->flatMap(static fn($blue) => Blue::of($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Blue::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(Alpha::of(...));
 
-        return Maybe::all($red, $green, $blue, $alpha)->map(
-            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->flatMap(
+                    static fn($blue) => $alpha->map(
+                        static fn($alpha) => self::from(
+                            $red,
+                            $green,
+                            $blue,
+                            $alpha,
+                        ),
+                    ),
+                ),
             ),
         );
     }
@@ -522,43 +573,53 @@ final class RGBA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function fromRGBAFunctionWithPercents(Str $colour): Maybe
+    private static function fromRGBAFunctionWithPercents(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PERCENTED_RGBA_FUNCTION_PATTERN)
             ->map(static fn($_, $match) => $match->toString());
         $red = $matches
             ->get('red')
-            ->filter(static fn($red) => \is_numeric($red))
+            ->filter(\is_numeric(...))
             ->map(static fn($red) => (int) $red)
-            ->flatMap(static fn($red) => Intensity::of($red))
-            ->flatMap(static fn($red) => Red::fromIntensity($red));
+            ->attempt(static fn() => new \DomainException("Red not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Red::fromIntensity(...));
         $green = $matches
             ->get('green')
-            ->filter(static fn($green) => \is_numeric($green))
+            ->filter(\is_numeric(...))
             ->map(static fn($green) => (int) $green)
-            ->flatMap(static fn($green) => Intensity::of($green))
-            ->flatMap(static fn($green) => Green::fromIntensity($green));
+            ->attempt(static fn() => new \DomainException("Green not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Green::fromIntensity(...));
         $blue = $matches
             ->get('blue')
-            ->filter(static fn($blue) => \is_numeric($blue))
+            ->filter(\is_numeric(...))
             ->map(static fn($blue) => (int) $blue)
-            ->flatMap(static fn($blue) => Intensity::of($blue))
-            ->flatMap(static fn($blue) => Blue::fromIntensity($blue));
+            ->attempt(static fn() => new \DomainException("Blue not found in '{$colour->toString()}'"))
+            ->flatMap(Intensity::of(...))
+            ->flatMap(Blue::fromIntensity(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(Alpha::of(...));
 
-        return Maybe::all($red, $green, $blue, $alpha)->map(
-            static fn(Red $red, Green $green, Blue $blue, Alpha $alpha) => new self(
-                $red,
-                $green,
-                $blue,
-                $alpha,
+        return $red->flatMap(
+            static fn($red) => $green->flatMap(
+                static fn($green) => $blue->flatMap(
+                    static fn($blue) => $alpha->map(
+                        static fn($alpha) => self::from(
+                            $red,
+                            $green,
+                            $blue,
+                            $alpha,
+                        ),
+                    ),
+                ),
             ),
         );
     }

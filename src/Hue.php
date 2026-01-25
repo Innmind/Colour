@@ -3,53 +3,51 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
  */
 final class Hue
 {
-    private int $value;
-
     /**
-     * @throws InvalidValueRangeException
+     * @param int<0, 359> $value
      */
-    public function __construct(int $value)
-    {
-        if ($value < 0 || $value > 359) {
-            throw new InvalidValueRangeException((string) $value);
-        }
-
-        $this->value = $value;
+    private function __construct(
+        private int $value,
+    ) {
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @param int<0, 359> $value
      */
-    public static function of(int $value): Maybe
+    public static function at(int $value): self
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
+        return new self($value);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function of(int $value): Attempt
+    {
+        if ($value < 0 || $value > 359) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
         }
+
+        return Attempt::result(new self($value));
     }
 
     public function rotateBy(int $degrees): self
     {
-        $degrees = $this->value + $degrees;
+        $degrees = ($this->value + $degrees) % 360;
 
         if ($degrees < 0) {
             return new self(360 + $degrees);
-        }
-
-        if ($degrees > 359) {
-            return new self($degrees - 360);
         }
 
         return new self($degrees);
@@ -75,6 +73,9 @@ final class Hue
         return $this->value === 0;
     }
 
+    /**
+     * @return int<0, 359>
+     */
     public function toInt(): int
     {
         return $this->value;

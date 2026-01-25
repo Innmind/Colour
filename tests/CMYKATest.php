@@ -12,17 +12,18 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CMYKATest extends TestCase
 {
     public function testInterface()
     {
-        $cmyk = new CMYKA(
-            $cyan = new Cyan(10),
-            $magenta = new Magenta(20),
-            $yellow = new Yellow(30),
-            $black = new Black(40),
+        $cmyk = CMYKA::from(
+            $cyan = Cyan::at(10),
+            $magenta = Magenta::at(20),
+            $yellow = Yellow::at(30),
+            $black = Black::at(40),
         );
 
         $this->assertSame($cyan, $cmyk->cyan());
@@ -32,12 +33,12 @@ class CMYKATest extends TestCase
         $this->assertSame(1.0, $cmyk->alpha()->toFloat());
         $this->assertSame('device-cmyk(10%, 20%, 30%, 40%)', $cmyk->toString());
 
-        $cmyka = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
-            $alpha = new Alpha(0.5),
+        $cmyka = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
+            $alpha = Alpha::of(0.5)->unwrap(),
         );
 
         $this->assertSame($alpha, $cmyka->alpha());
@@ -46,14 +47,14 @@ class CMYKATest extends TestCase
 
     public function testAddCyan()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->addCyan(new Cyan(1));
+        $cmyk2 = $cmyk->addCyan(Cyan::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -71,14 +72,14 @@ class CMYKATest extends TestCase
 
     public function testSubtractCyan()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->subtractCyan(new Cyan(1));
+        $cmyk2 = $cmyk->subtractCyan(Cyan::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -96,14 +97,14 @@ class CMYKATest extends TestCase
 
     public function testAddMagenta()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->addMagenta(new Magenta(1));
+        $cmyk2 = $cmyk->addMagenta(Magenta::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -121,14 +122,14 @@ class CMYKATest extends TestCase
 
     public function testSubtractMagenta()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->subtractMagenta(new Magenta(1));
+        $cmyk2 = $cmyk->subtractMagenta(Magenta::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -146,14 +147,14 @@ class CMYKATest extends TestCase
 
     public function testAddYellow()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->addYellow(new Yellow(1));
+        $cmyk2 = $cmyk->addYellow(Yellow::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -171,14 +172,14 @@ class CMYKATest extends TestCase
 
     public function testSubtractYellow()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->subtractYellow(new Yellow(1));
+        $cmyk2 = $cmyk->subtractYellow(Yellow::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -196,14 +197,14 @@ class CMYKATest extends TestCase
 
     public function testAddBlack()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->addBlack(new Black(1));
+        $cmyk2 = $cmyk->addBlack(Black::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -221,14 +222,14 @@ class CMYKATest extends TestCase
 
     public function testSubtractBlack()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->subtractBlack(new Black(1));
+        $cmyk2 = $cmyk->subtractBlack(Black::at(1));
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -246,15 +247,15 @@ class CMYKATest extends TestCase
 
     public function testAddAlpha()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
-            new Alpha(0.1),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
+            Alpha::of(0.1)->unwrap(),
         );
 
-        $cmyk2 = $cmyk->addAlpha(new Alpha(0.1));
+        $cmyk2 = $cmyk->addAlpha(Alpha::of(0.1)->unwrap());
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -272,14 +273,14 @@ class CMYKATest extends TestCase
 
     public function testSubtractAlpha()
     {
-        $cmyk = new CMYKA(
-            new Cyan(10),
-            new Magenta(20),
-            new Yellow(30),
-            new Black(40),
+        $cmyk = CMYKA::from(
+            Cyan::at(10),
+            Magenta::at(20),
+            Yellow::at(30),
+            Black::at(40),
         );
 
-        $cmyk2 = $cmyk->subtractAlpha(new Alpha(0.9));
+        $cmyk2 = $cmyk->subtractAlpha(Alpha::of(0.9)->unwrap());
 
         $this->assertInstanceOf(CMYKA::class, $cmyk2);
         $this->assertNotSame($cmyk, $cmyk2);
@@ -292,12 +293,11 @@ class CMYKATest extends TestCase
         $this->assertSame(20, $cmyk2->magenta()->toInt());
         $this->assertSame(30, $cmyk2->yellow()->toInt());
         $this->assertSame(40, $cmyk2->black()->toInt());
-        $this->assertEqualsWithDelta(0.1, $cmyk2->alpha()->toFloat(), 0.01);
+        $this->assertGreaterThanOrEqual(0.09, $cmyk2->alpha()->toFloat());
+        $this->assertLessThanOrEqual(0.11, $cmyk2->alpha()->toFloat());
     }
 
-    /**
-     * @dataProvider withAlpha
-     */
+    #[DataProvider('withAlpha')]
     public function testWithAlpha(
         string $string,
         int $cyan,
@@ -328,9 +328,7 @@ class CMYKATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider withoutAlpha
-     */
+    #[DataProvider('withoutAlpha')]
     public function testWithoutAlpha(
         string $string,
         int $cyan,
@@ -356,16 +354,14 @@ class CMYKATest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider colours
-     */
+    #[DataProvider('colours')]
     public function testOf(
         string $string,
         int $cyan,
         int $magenta,
         int $yellow,
         int $black,
-        float $alpha = null,
+        ?float $alpha = null,
     ) {
         $cmyka = CMYKA::of($string);
 

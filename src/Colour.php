@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Maybe,
+    Attempt,
 };
 
 /**
@@ -117,14 +117,11 @@ enum Colour
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {
-        return self::maybe($colour)->match(
-            static fn($colour) => $colour,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -134,9 +131,19 @@ enum Colour
      */
     public static function maybe(string $colour): Maybe
     {
-        return RGBA::maybe($colour)
-            ->otherwise(static fn() => HSLA::maybe($colour))
-            ->otherwise(static fn() => CMYKA::maybe($colour));
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<RGBA|HSLA|CMYKA>
+     */
+    public static function attempt(string $colour): Attempt
+    {
+        return RGBA::attempt($colour)
+            ->recover(static fn() => HSLA::attempt($colour))
+            ->recover(static fn() => CMYKA::attempt($colour));
     }
 
     /**

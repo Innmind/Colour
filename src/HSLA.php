@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\DomainException;
 use Innmind\Immutable\{
     Str,
     Maybe,
+    Attempt,
 };
 
 /**
@@ -17,34 +17,34 @@ final class HSLA
     private const PATTERN_WITH_ALPHA = '~^hsla\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%, ?(?<alpha>[01]|0?\.\d+|1\.0)\)$~';
     private const PATTERN_WITHOUT_ALPHA = '~^hsl\((?<hue>\d{1,3}), ?(?<saturation>\d{1,3})%, ?(?<lightness>\d{1,3})%\)$~';
 
-    private Hue $hue;
-    private Saturation $saturation;
-    private Lightness $lightness;
-    private Alpha $alpha;
+    private function __construct(
+        private Hue $hue,
+        private Saturation $saturation,
+        private Lightness $lightness,
+        private Alpha $alpha,
+    ) {
+    }
 
-    public function __construct(
+    /**
+     * @psalm-pure
+     */
+    public static function from(
         Hue $hue,
         Saturation $saturation,
         Lightness $lightness,
-        Alpha $alpha = null,
-    ) {
-        $this->hue = $hue;
-        $this->saturation = $saturation;
-        $this->lightness = $lightness;
-        $this->alpha = $alpha ?? new Alpha(1);
+        ?Alpha $alpha = null,
+    ): self {
+        return new self($hue, $saturation, $lightness, $alpha ?? Alpha::max());
     }
 
     /**
      * @psalm-pure
      *
-     * @throws DomainException
+     * @throws \Exception
      */
     public static function of(string $colour): self
     {
-        return self::maybe($colour)->match(
-            static fn($self) => $self,
-            static fn() => throw new DomainException($colour),
-        );
+        return self::attempt($colour)->unwrap();
     }
 
     /**
@@ -54,9 +54,19 @@ final class HSLA
      */
     public static function maybe(string $colour): Maybe
     {
+        return self::attempt($colour)->maybe();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function attempt(string $colour): Attempt
+    {
         $colour = Str::of($colour)->trim();
 
-        return self::withAlpha($colour)->otherwise(
+        return self::withAlpha($colour)->recover(
             static fn() => self::withoutAlpha($colour),
         );
     }
@@ -164,10 +174,10 @@ final class HSLA
         $lightness = $this->lightness->toInt() / 100;
 
         if ($this->saturation->atMinimum()) {
-            return new RGBA(
-                new Red((int) \round($lightness * 255)),
-                new Green((int) \round($lightness * 255)),
-                new Blue((int) \round($lightness * 255)),
+            return RGBA::from(
+                Red::of((int) \round($lightness * 255))->unwrap(),
+                Green::of((int) \round($lightness * 255))->unwrap(),
+                Blue::of((int) \round($lightness * 255))->unwrap(),
                 $this->alpha,
             );
         }
@@ -179,10 +189,10 @@ final class HSLA
         $q = $lightness < 0.5 ? $lightness * (1 + $saturation) : $lightness + $saturation - $lightness * $saturation;
         $p = 2 * $lightness - $q;
 
-        return new RGBA(
-            new Red((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255)),
-            new Green((int) \round($this->hueToPoint($p, $q, $hue) * 255)),
-            new Blue((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255)),
+        return RGBA::from(
+            Red::of((int) \round($this->hueToPoint($p, $q, $hue + 1 / 3) * 255))->unwrap(),
+            Green::of((int) \round($this->hueToPoint($p, $q, $hue) * 255))->unwrap(),
+            Blue::of((int) \round($this->hueToPoint($p, $q, $hue - 1 / 3) * 255))->unwrap(),
             $this->alpha,
         );
     }
@@ -251,40 +261,50 @@ final class HSLA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withAlpha(Str $colour): Maybe
+    private static function withAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITH_ALPHA)
             ->map(static fn($_, $match) => $match->toString());
         $hue = $matches
             ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
+            ->filter(\is_numeric(...))
             ->map(static fn($hue) => (int) $hue)
-            ->flatMap(static fn($hue) => Hue::of($hue));
+            ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
+            ->flatMap(Hue::of(...));
         $saturation = $matches
             ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->filter(\is_numeric(...))
             ->map(static fn($saturation) => (int) $saturation)
-            ->flatMap(static fn($saturation) => Saturation::of($saturation));
+            ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
+            ->flatMap(Saturation::of(...));
         $lightness = $matches
             ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->filter(\is_numeric(...))
             ->map(static fn($lightness) => (int) $lightness)
-            ->flatMap(static fn($lightness) => Lightness::of($lightness));
+            ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
+            ->flatMap(Lightness::of(...));
         $alpha = $matches
             ->get('alpha')
-            ->filter(static fn($alpha) => \is_numeric($alpha))
+            ->filter(\is_numeric(...))
             ->map(static fn($alpha) => (float) $alpha)
-            ->flatMap(static fn($alpha) => Alpha::of($alpha));
+            ->attempt(static fn() => new \DomainException("Alpha not found in '{$colour->toString()}'"))
+            ->flatMap(Alpha::of(...));
 
-        return Maybe::all($hue, $saturation, $lightness, $alpha)->map(
-            static fn(Hue $hue, Saturation $saturation, Lightness $lightness, Alpha $alpha) => new self(
-                $hue,
-                $saturation,
-                $lightness,
-                $alpha,
+        return $hue->flatMap(
+            static fn($hue) => $saturation->flatMap(
+                static fn($saturation) => $lightness->flatMap(
+                    static fn($lightness) => $alpha->map(
+                        static fn($alpha) => self::from(
+                            $hue,
+                            $saturation,
+                            $lightness,
+                            $alpha,
+                        ),
+                    ),
+                ),
             ),
         );
     }
@@ -292,34 +312,41 @@ final class HSLA
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    private static function withoutAlpha(Str $colour): Maybe
+    private static function withoutAlpha(Str $colour): Attempt
     {
         $matches = $colour
             ->capture(self::PATTERN_WITHOUT_ALPHA)
             ->map(static fn($_, $match) => $match->toString());
         $hue = $matches
             ->get('hue')
-            ->filter(static fn($hue) => \is_numeric($hue))
+            ->filter(\is_numeric(...))
             ->map(static fn($hue) => (int) $hue)
-            ->flatMap(static fn($hue) => Hue::of($hue));
+            ->attempt(static fn() => new \DomainException("Hue not found in '{$colour->toString()}'"))
+            ->flatMap(Hue::of(...));
         $saturation = $matches
             ->get('saturation')
-            ->filter(static fn($saturation) => \is_numeric($saturation))
+            ->filter(\is_numeric(...))
             ->map(static fn($saturation) => (int) $saturation)
-            ->flatMap(static fn($saturation) => Saturation::of($saturation));
+            ->attempt(static fn() => new \DomainException("Saturation not found in '{$colour->toString()}'"))
+            ->flatMap(Saturation::of(...));
         $lightness = $matches
             ->get('lightness')
-            ->filter(static fn($lightness) => \is_numeric($lightness))
+            ->filter(\is_numeric(...))
             ->map(static fn($lightness) => (int) $lightness)
-            ->flatMap(static fn($lightness) => Lightness::of($lightness));
+            ->attempt(static fn() => new \DomainException("Lightness not found in '{$colour->toString()}'"))
+            ->flatMap(Lightness::of(...));
 
-        return Maybe::all($hue, $saturation, $lightness)->map(
-            static fn(Hue $hue, Saturation $saturation, Lightness $lightness) => new self(
-                $hue,
-                $saturation,
-                $lightness,
+        return $hue->flatMap(
+            static fn($hue) => $saturation->flatMap(
+                static fn($saturation) => $lightness->map(
+                    static fn($lightness) => self::from(
+                        $hue,
+                        $saturation,
+                        $lightness,
+                    ),
+                ),
             ),
         );
     }

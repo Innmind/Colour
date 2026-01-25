@@ -3,8 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
@@ -13,13 +12,10 @@ final class Alpha
 {
     private float $value;
 
-    /**
-     * @throws InvalidValueRangeException
-     */
-    public function __construct(float $value)
+    private function __construct(float $value)
     {
         if ($value < 0 || $value > 1) {
-            throw new InvalidValueRangeException((string) $value);
+            throw new \OutOfBoundsException((string) $value);
         }
 
         $this->value = $value;
@@ -27,25 +23,28 @@ final class Alpha
 
     /**
      * @psalm-pure
-     *
-     * @return Maybe<self>
      */
-    public static function of(float $value): Maybe
+    public static function max(): self
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return new self(1);
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @return Attempt<self>
      */
-    public static function fromHexadecimal(string $hex): Maybe
+    public static function of(float $value): Attempt
+    {
+        return Attempt::of(static fn() => new self($value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function fromHexadecimal(string $hex): Attempt
     {
         if (\mb_strlen($hex) === 1) {
             $hex .= $hex;

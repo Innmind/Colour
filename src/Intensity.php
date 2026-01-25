@@ -3,43 +3,48 @@ declare(strict_types = 1);
 
 namespace Innmind\Colour;
 
-use Innmind\Colour\Exception\InvalidValueRangeException;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 
 /**
  * @psalm-immutable
  */
 final class Intensity
 {
-    private int $value;
-
     /**
-     * @throws InvalidValueRangeException
+     * @param int<0, 100> $value
      */
-    public function __construct(int $value)
-    {
-        if ($value < 0 || $value > 100) {
-            throw new InvalidValueRangeException((string) $value);
-        }
-
-        $this->value = $value;
+    private function __construct(
+        private int $value,
+    ) {
     }
 
     /**
      * @psalm-pure
      *
-     * @return Maybe<self>
+     * @param int<0, 100> $value
      */
-    public static function of(int $value): Maybe
+    public static function at(int $value): self
     {
-        try {
-            return Maybe::just(new self($value));
-        } catch (InvalidValueRangeException $e) {
-            /** @var Maybe<self> */
-            return Maybe::nothing();
-        }
+        return new self($value);
     }
 
+    /**
+     * @psalm-pure
+     *
+     * @return Attempt<self>
+     */
+    public static function of(int $value): Attempt
+    {
+        if ($value < 0 || $value > 100) {
+            return Attempt::error(new \OutOfBoundsException((string) $value));
+        }
+
+        return Attempt::result(new self($value));
+    }
+
+    /**
+     * @return int<0, 100>
+     */
     public function toInt(): int
     {
         return $this->value;
