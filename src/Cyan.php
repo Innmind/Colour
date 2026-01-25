@@ -23,6 +23,7 @@ final class Cyan
      *
      * @param int<0, 100> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Cyan
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 100) {
@@ -42,6 +44,7 @@ final class Cyan
         return Attempt::result(new self($value));
     }
 
+    #[\NoDiscard]
     public function add(self $cyan): self
     {
         return new self(
@@ -52,6 +55,7 @@ final class Cyan
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $cyan): self
     {
         return new self(
@@ -62,16 +66,19 @@ final class Cyan
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $cyan): bool
     {
         return $this->value === $cyan->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 100;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0;
@@ -80,11 +87,13 @@ final class Cyan
     /**
      * @return int<0, 100>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

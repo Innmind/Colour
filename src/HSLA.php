@@ -28,6 +28,7 @@ final class HSLA
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function from(
         Hue $hue,
         Saturation $saturation,
@@ -42,6 +43,7 @@ final class HSLA
      *
      * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): self
     {
         return self::attempt($colour)->unwrap();
@@ -52,6 +54,7 @@ final class HSLA
      *
      * @return Maybe<self>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
     {
         return self::attempt($colour)->maybe();
@@ -62,6 +65,7 @@ final class HSLA
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function attempt(string $colour): Attempt
     {
         $colour = Str::of($colour)->trim();
@@ -71,26 +75,31 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function hue(): Hue
     {
         return $this->hue;
     }
 
+    #[\NoDiscard]
     public function saturation(): Saturation
     {
         return $this->saturation;
     }
 
+    #[\NoDiscard]
     public function lightness(): Lightness
     {
         return $this->lightness;
     }
 
+    #[\NoDiscard]
     public function alpha(): Alpha
     {
         return $this->alpha;
     }
 
+    #[\NoDiscard]
     public function rotateBy(int $degress): self
     {
         return new self(
@@ -101,6 +110,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function addSaturation(Saturation $saturation): self
     {
         return new self(
@@ -111,6 +121,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function subtractSaturation(Saturation $saturation): self
     {
         return new self(
@@ -121,6 +132,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function addLightness(Lightness $lightness): self
     {
         return new self(
@@ -131,6 +143,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function subtractLightness(Lightness $lightness): self
     {
         return new self(
@@ -141,6 +154,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function addAlpha(Alpha $alpha): self
     {
         return new self(
@@ -151,6 +165,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function subtractAlpha(Alpha $alpha): self
     {
         return new self(
@@ -161,6 +176,7 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $hsla): bool
     {
         return $this->hue->equals($hsla->hue()) &&
@@ -169,6 +185,7 @@ final class HSLA
             $this->alpha->equals($hsla->alpha());
     }
 
+    #[\NoDiscard]
     public function toRGBA(): RGBA
     {
         $lightness = $this->lightness->toInt() / 100;
@@ -197,16 +214,19 @@ final class HSLA
         );
     }
 
+    #[\NoDiscard]
     public function toCMYKA(): CMYKA
     {
         return $this->toRGBA()->toCMYKA();
     }
 
+    #[\NoDiscard]
     public function toHSLA(): self
     {
         return $this;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         if ($this->alpha->atMaximum()) {
