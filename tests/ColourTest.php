@@ -8,6 +8,17 @@ use Innmind\Colour\{
     RGBA,
     HSLA,
     CMYKA,
+    Alpha,
+    Black,
+    Blue,
+    Cyan,
+    Green,
+    Hue,
+    Lightness,
+    Magenta,
+    Red,
+    Saturation,
+    Yellow,
 };
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
@@ -68,6 +79,68 @@ class ColourTest extends TestCase
 
         $this->assertInstanceOf(RGBA::class, $rgba);
         $this->assertSame($hex, $rgba->toHexadecimal());
+    }
+
+    public function testAllColoursAreConvertibleToAnyFormat(): BlackBox\Proof
+    {
+        $alpha = Set::realNumbers()
+            ->between(0, 1)
+            ->map(static fn($value) => Alpha::of($value)->unwrap())
+            ->nullable();
+        $rgba = Set::compose(
+            RGBA::from(...),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Red::at(...)),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Green::at(...)),
+            Set::integers()
+                ->between(0, 255)
+                ->map(Blue::at(...)),
+            $alpha,
+        );
+        $cmyka = Set::compose(
+            CMYKA::from(...),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Cyan::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Magenta::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Yellow::at(...)),
+            Set::integers()
+                ->between(1, 100)
+                ->map(Black::at(...)),
+            $alpha,
+        );
+        $hsla = Set::compose(
+            HSLA::from(...),
+            Set::integers()
+                ->between(0, 359)
+                ->map(Hue::at(...)),
+            Set::integers()
+                ->between(0, 100)
+                ->map(Saturation::at(...)),
+            Set::integers()
+                ->between(0, 100)
+                ->map(Lightness::at(...)),
+            $alpha,
+        );
+
+        return $this
+            ->forAll(Set::either(
+                $rgba,
+                $cmyka,
+                $hsla,
+            ))
+            ->prove(function($colour) {
+                $this->assertInstanceOf(RGBA::class, $colour->toRGBA());
+                $this->assertInstanceOf(CMYKA::class, $colour->toCMYKA());
+                $this->assertInstanceOf(HSLA::class, $colour->toHSLA());
+            });
     }
 
     public static function literals()
