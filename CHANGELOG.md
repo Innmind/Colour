@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\Colour\CMYKA::attempt()`
+- `Innmind\Colour\Colour::attempt()`
+- `Innmind\Colour\HSLA::attempt()`
+- `Innmind\Colour\RGBA::attempt()`
+
 ### Changed
 
 - Requires PHP `8.4`
