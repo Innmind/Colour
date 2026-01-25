@@ -23,6 +23,7 @@ final class Hue
      *
      * @param int<0, 359> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Hue
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 359) {
@@ -42,6 +44,7 @@ final class Hue
         return Attempt::result(new self($value));
     }
 
+    #[\NoDiscard]
     public function rotateBy(int $degrees): self
     {
         $degrees = ($this->value + $degrees) % 360;
@@ -53,21 +56,25 @@ final class Hue
         return new self($degrees);
     }
 
+    #[\NoDiscard]
     public function opposite(): self
     {
         return $this->rotateBy(180);
     }
 
+    #[\NoDiscard]
     public function equals(self $hue): bool
     {
         return $this->value === $hue->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 359;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0;
@@ -76,11 +83,13 @@ final class Hue
     /**
      * @return int<0, 359>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

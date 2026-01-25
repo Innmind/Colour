@@ -23,6 +23,7 @@ final class Intensity
      *
      * @param int<0, 100> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Intensity
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 100) {
@@ -45,6 +47,7 @@ final class Intensity
     /**
      * @return int<0, 100>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;

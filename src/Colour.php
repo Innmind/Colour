@@ -119,6 +119,7 @@ enum Colour
      *
      * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): RGBA|HSLA|CMYKA
     {
         return self::attempt($colour)->unwrap();
@@ -129,6 +130,7 @@ enum Colour
      *
      * @return Maybe<RGBA|HSLA|CMYKA>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
     {
         return self::attempt($colour)->maybe();
@@ -139,6 +141,7 @@ enum Colour
      *
      * @return Attempt<RGBA|HSLA|CMYKA>
      */
+    #[\NoDiscard]
     public static function attempt(string $colour): Attempt
     {
         return RGBA::attempt($colour)
@@ -149,6 +152,7 @@ enum Colour
     /**
      * @see http://www.w3schools.com/colors/colors_names.asp
      */
+    #[\NoDiscard]
     public function toRGBA(): RGBA
     {
         return match ($this) {
@@ -253,6 +257,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function light(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -272,6 +277,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function dark(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -295,6 +301,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function medium(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */
@@ -310,6 +317,7 @@ enum Colour
         };
     }
 
+    #[\NoDiscard]
     public function pale(): RGBA
     {
         /** @psalm-suppress UnhandledMatchCondition */

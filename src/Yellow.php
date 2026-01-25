@@ -23,6 +23,7 @@ final class Yellow
      *
      * @param int<0, 100> $value
      */
+    #[\NoDiscard]
     public static function at(int $value): self
     {
         return new self($value);
@@ -33,6 +34,7 @@ final class Yellow
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function of(int $value): Attempt
     {
         if ($value < 0 || $value > 100) {
@@ -42,6 +44,7 @@ final class Yellow
         return Attempt::result(new self($value));
     }
 
+    #[\NoDiscard]
     public function add(self $yellow): self
     {
         return new self(
@@ -52,6 +55,7 @@ final class Yellow
         );
     }
 
+    #[\NoDiscard]
     public function subtract(self $yellow): self
     {
         return new self(
@@ -62,16 +66,19 @@ final class Yellow
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $yellow): bool
     {
         return $this->value === $yellow->toInt();
     }
 
+    #[\NoDiscard]
     public function atMaximum(): bool
     {
         return $this->value === 100;
     }
 
+    #[\NoDiscard]
     public function atMinimum(): bool
     {
         return $this->value === 0;
@@ -80,11 +87,13 @@ final class Yellow
     /**
      * @return int<0, 100>
      */
+    #[\NoDiscard]
     public function toInt(): int
     {
         return $this->value;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         return (string) $this->value;

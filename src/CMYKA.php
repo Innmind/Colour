@@ -29,6 +29,7 @@ final class CMYKA
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function from(
         Cyan $cyan,
         Magenta $magenta,
@@ -44,6 +45,7 @@ final class CMYKA
      *
      * @throws \Exception
      */
+    #[\NoDiscard]
     public static function of(string $colour): self
     {
         return self::attempt($colour)->unwrap();
@@ -54,6 +56,7 @@ final class CMYKA
      *
      * @return Maybe<self>
      */
+    #[\NoDiscard]
     public static function maybe(string $colour): Maybe
     {
         return self::attempt($colour)->maybe();
@@ -64,6 +67,7 @@ final class CMYKA
      *
      * @return Attempt<self>
      */
+    #[\NoDiscard]
     public static function attempt(string $colour): Attempt
     {
         $colour = Str::of($colour)->trim();
@@ -73,31 +77,37 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function cyan(): Cyan
     {
         return $this->cyan;
     }
 
+    #[\NoDiscard]
     public function magenta(): Magenta
     {
         return $this->magenta;
     }
 
+    #[\NoDiscard]
     public function yellow(): Yellow
     {
         return $this->yellow;
     }
 
+    #[\NoDiscard]
     public function black(): Black
     {
         return $this->black;
     }
 
+    #[\NoDiscard]
     public function alpha(): Alpha
     {
         return $this->alpha;
     }
 
+    #[\NoDiscard]
     public function addCyan(Cyan $cyan): self
     {
         return new self(
@@ -109,6 +119,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractCyan(Cyan $cyan): self
     {
         return new self(
@@ -120,6 +131,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addMagenta(Magenta $magenta): self
     {
         return new self(
@@ -131,6 +143,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractMagenta(Magenta $magenta): self
     {
         return new self(
@@ -142,6 +155,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addYellow(Yellow $yellow): self
     {
         return new self(
@@ -153,6 +167,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractYellow(Yellow $yellow): self
     {
         return new self(
@@ -164,6 +179,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addBlack(Black $black): self
     {
         return new self(
@@ -175,6 +191,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractBlack(Black $black): self
     {
         return new self(
@@ -186,6 +203,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function addAlpha(Alpha $alpha): self
     {
         return new self(
@@ -197,6 +215,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function subtractAlpha(Alpha $alpha): self
     {
         return new self(
@@ -208,6 +227,7 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function equals(self $cmyka): bool
     {
         return $this->cyan->equals($cmyka->cyan()) &&
@@ -217,6 +237,7 @@ final class CMYKA
             $this->alpha->equals($cmyka->alpha());
     }
 
+    #[\NoDiscard]
     public function toRGBA(): RGBA
     {
         $cyan = $this->cyan->toInt() / 100;
@@ -236,16 +257,19 @@ final class CMYKA
         );
     }
 
+    #[\NoDiscard]
     public function toHSLA(): HSLA
     {
         return $this->toRGBA()->toHSLA();
     }
 
+    #[\NoDiscard]
     public function toCMYKA(): self
     {
         return $this;
     }
 
+    #[\NoDiscard]
     public function toString(): string
     {
         if ($this->alpha->atMaximum()) {
