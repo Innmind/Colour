@@ -23,8 +23,7 @@ Application::new($argv)
                     __DIR__.'/tests/',
                     __DIR__.'/fixtures/',
                 )
-                    ->dumpTo('coverage.clover')
-                    ->enableWhen(true),
+                    ->dumpTo('coverage.clover'),
             )
             ->scenariiPerProof(50),
     )

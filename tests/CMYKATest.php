@@ -12,8 +12,10 @@ use Innmind\Colour\{
     Alpha,
     RGBA,
 };
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class CMYKATest extends TestCase
 {

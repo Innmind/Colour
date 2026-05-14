@@ -59,18 +59,22 @@ class BlueTest extends TestCase
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-42');
-
-        $_ = Blue::of(-42)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Blue::of(-42)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('512');
-
-        $_ = Blue::of(512)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Blue::of(512)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testAtMaximum()

@@ -12,8 +12,10 @@ use Innmind\Colour\{
     RGBA,
     CMYKA,
 };
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class HSLATest extends TestCase
 {
