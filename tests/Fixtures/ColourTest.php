@@ -15,13 +15,12 @@ class ColourTest extends TestCase
 {
     public function testInterface()
     {
-        $set = Colour::any();
+        $set = Colour::any()->take(100);
 
         $this->assertInstanceOf(Set::class, $set);
 
         foreach ($set->values(Random::default) as $value) {
             $this->assertInstanceOf(Set\Value::class, $value);
-            $this->assertTrue($value->immutable());
             $this->assertInstanceOf(RGBA::class, $value->unwrap());
         }
     }

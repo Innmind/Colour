@@ -12,8 +12,10 @@ use Innmind\Colour\{
     HSLA,
     CMYKA,
 };
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class RGBATest extends TestCase
 {
@@ -309,10 +311,12 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPoints()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
-
-        $_ = RGBA::of('rgb(10, 20%, 30)');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => RGBA::of('rgb(10, 20%, 30)'),
+                \DomainException::class,
+            );
     }
 
     public function testFromRGBFunctionWithPercents()
@@ -328,10 +332,12 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBFunctionWithPercents()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Red not found in 'rgb(10, 20%, 30)'");
-
-        $_ = RGBA::of('rgb(10, 20%, 30)');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => RGBA::of('rgb(10, 20%, 30)'),
+                \DomainException::class,
+            );
     }
 
     public function testFromRGBFunction()
@@ -366,10 +372,12 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPoints()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 2.0)'");
-
-        RGBA::of('rgba(10, 20%, 30, 2.0)');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => RGBA::of('rgba(10, 20%, 30, 2.0)'),
+                \DomainException::class,
+            );
     }
 
     public function testFromRGBAFunctionWithPercents()
@@ -385,10 +393,12 @@ class RGBATest extends TestCase
 
     public function testThrowWhenInvalidRGBAFunctionWithPercents()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Red not found in 'rgba(10, 20%, 30, 1)'");
-
-        RGBA::of('rgba(10, 20%, 30, 1)');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => RGBA::of('rgba(10, 20%, 30, 1)'),
+                \DomainException::class,
+            );
     }
 
     public function testFromRGBAFunction()

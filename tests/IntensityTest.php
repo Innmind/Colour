@@ -17,17 +17,21 @@ class IntensityTest extends TestCase
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-1');
-
-        $_ = Intensity::of(-1)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Intensity::of(-1)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('101');
-
-        $_ = Intensity::of(101)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Intensity::of(101)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 }

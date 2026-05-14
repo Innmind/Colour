@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Alpha;
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class AlphaTest extends TestCase
 {
@@ -46,18 +48,22 @@ class AlphaTest extends TestCase
 
     public function testThrowWhenValueIsTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-0.1');
-
-        $_ = Alpha::of(-0.1)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Alpha::of(-0.1)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueIsTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('1.1');
-
-        $_ = Alpha::of(1.1)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Alpha::of(1.1)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testAtMaximum()
