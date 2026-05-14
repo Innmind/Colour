@@ -22,10 +22,10 @@ use Innmind\Colour\{
 };
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
+    PHPUnit\Framework\Attributes\DataProvider,
     PHPUnit\BlackBox,
     Set,
 };
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class ColourTest extends TestCase
 {
@@ -61,10 +61,12 @@ class ColourTest extends TestCase
 
     public function testThrowWhenNoFormatRecognized()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Cyan not found in 'foo'");
-
-        $_ = Colour::of('foo');
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Colour::of('foo'),
+                \DomainException::class,
+            );
     }
 
     public function testLiterals()

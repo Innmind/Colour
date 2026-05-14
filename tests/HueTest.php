@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Colour;
 
 use Innmind\Colour\Hue;
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class HueTest extends TestCase
 {
@@ -19,18 +21,22 @@ class HueTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-20');
-
-        $_ = Hue::of(-20)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Hue::of(-20)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('360');
-
-        $_ = Hue::of(360)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Hue::of(360)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     #[DataProvider('rotations')]

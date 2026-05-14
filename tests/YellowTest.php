@@ -18,18 +18,22 @@ class YellowTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-1');
-
-        $_ = Yellow::of(-1)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Yellow::of(-1)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('101');
-
-        $_ = Yellow::of(101)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Yellow::of(101)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testAdd()

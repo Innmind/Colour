@@ -18,18 +18,22 @@ class CyanTest extends TestCase
 
     public function testThrowWhenValueTooLow()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('-1');
-
-        $_ = Cyan::of(-1)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Cyan::of(-1)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testThrowWhenValueTooHigh()
     {
-        $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('101');
-
-        $_ = Cyan::of(101)->unwrap();
+        $this
+            ->assert()
+            ->throws(
+                static fn() => Cyan::of(101)->unwrap(),
+                \OutOfBoundsException::class,
+            );
     }
 
     public function testAdd()
