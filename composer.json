@@ -2,7 +2,9 @@
     "name": "innmind/colour",
     "type": "library",
     "description": "Handle colours strictly",
-    "keywords": ["colour"],
+    "keywords": [
+        "colour"
+    ],
     "homepage": "http://github.com/Innmind/Colour",
     "license": "MIT",
     "authors": [
