@@ -1,6 +1,6 @@
 # Colour
 
-[![CI](https://github.com/Innmind/Colour/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Innmind/Colour/actions/workflows/ci.yml)
+[![CI](https://github.com/Innmind/Colour/actions/workflows/ci.yml/badge.svg)](https://github.com/Innmind/Colour/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/innmind/colour/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/colour)
 [![Type Coverage](https://shepherd.dev/github/innmind/colour/coverage.svg)](https://shepherd.dev/github/innmind/colour)
 
